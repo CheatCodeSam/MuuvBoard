@@ -40,3 +40,7 @@ line-length = 89
 
 [tool.isort]
 line_length = 89
+
+[tool.pytest.ini_options]
+DJANGO_SETTINGS_MODULE = "muuvboard.settings"
+python_files = ["tests.py", "test_*.py", "*_tests.py"]
