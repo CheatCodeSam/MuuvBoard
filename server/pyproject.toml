@@ -14,6 +14,7 @@ psycopg2-binary = "^2.8.6"
 # only use this until VSCode supports pyflakes.
 pylint = "^2.8.2"
 pylint-django = "^2.4.4"
+django-taggit = "^1.4.0"
 
 [tool.poetry.dev-dependencies]
 pytest = "^6.2.4"

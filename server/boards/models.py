@@ -1,12 +1,19 @@
-# from django.db import models
+from django.db import models
+from taggit.managers import TaggableManager
+
+from muuvboard.settings import AUTH_USER_MODEL
 
 
-# class Pin(models.Model):
-#     title = models.CharField(max_length=100)
-#     # tags
+class Pin(models.Model):
+    title = models.CharField(max_length=100, blank=True)
+    tags = TaggableManager()
 
-#     x_coordinate = models.IntegerField()
-#     y_coordinate = models.IntegerField()
+    author = models.ForeignKey(
+        AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="pins"
+    )
 
-#     class Meta:
-#         abstract = True
+    x_coordinate = models.IntegerField()
+    y_coordinate = models.IntegerField()
+
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)

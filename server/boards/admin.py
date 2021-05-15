@@ -1,3 +1,8 @@
 from django.contrib import admin
 
-# Register your models here.
+from .models import Pin
+
+
+@admin.register(Pin)
+class PinAdmin(admin.ModelAdmin):
+    pass
