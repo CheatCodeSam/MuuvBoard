@@ -15,6 +15,7 @@ services:
             - PGHOST=muuvboard-database
         ports:
             - 8003:8000
+            - 3000:3000
         volumes: 
         - ./server:/usr/src/app
 
