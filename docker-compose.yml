@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+    muuvboard-server:
+        build:
+            context: ./server
+        command: python manage.py runserver 0.0.0.0:8000
+        container_name: muuvboard-server
+        depends_on:
+            - muuvboard-database
+        environment:
+            - PGDATABASE=muuv
+            - PGUSER=muuv
+            - PGPASSWORD=muuv
+            - PGHOST=muuvboard-database
+        ports:
+            - 8003:8000
+        volumes: 
+        - ./server:/usr/src/app
+
+    muuvboard-database:
+        container_name: muuvboard-database
+        image: postgres:13-alpine
+        environment:
+            - POSTGRES_USER=muuv
+            - POSTGRES_PASSWORD=muuv
+        expose:
+            - 5432
+        volumes:
+            - muuvboard-database:/var/lib/postgresql/data
+
+
+
+volumes:
+    muuvboard-database:
