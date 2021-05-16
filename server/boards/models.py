@@ -1,16 +1,16 @@
 from django.db import models
 from taggit.managers import TaggableManager
 
-from muuvboard.settings import AUTH_USER_MODEL
+
+class Board(models.Model):
+    title = models.CharField(max_length=100, blank=False)
 
 
 class Pin(models.Model):
     title = models.CharField(max_length=100, blank=True)
     tags = TaggableManager()
 
-    author = models.ForeignKey(
-        AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="pins"
-    )
+    board = models.ForeignKey(Board, on_delete=models.CASCADE, related_name="pins")
 
     x_coordinate = models.IntegerField(default=0)
     y_coordinate = models.IntegerField(default=0)
