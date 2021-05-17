@@ -5,6 +5,9 @@ from taggit.managers import TaggableManager
 class Board(models.Model):
     title = models.CharField(max_length=100, blank=False, null=True)
 
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now_add=True)
+
 
 class Pin(models.Model):
     title = models.CharField(max_length=100, blank=True, null=True)
