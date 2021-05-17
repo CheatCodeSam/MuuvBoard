@@ -27,3 +27,19 @@ def test_get_list_of_boards(client):
     assert resp.data[0]["title"] == board_one.title
     assert not "pins" in resp.data[0]
     assert resp.data[1]["title"] == board_two.title
+
+
+@pytest.mark.django_db
+def test_create_board(client):
+    boards = Board.objects.all()
+    assert len(boards) == 0
+
+    resp = client.post(
+        "/api/boards/", {"title": "Fresh Board"}, content_type="application/json"
+    )
+    assert resp.status_code == 201
+    assert resp.data["title"] == "Fresh Board"
+    assert resp.data["num_of_pins"] == 0
+
+    boards = Board.objects.all()
+    assert len(boards) == 1
