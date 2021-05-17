@@ -19,3 +19,10 @@ class BoardWithPinsSerializer(serializers.ModelSerializer):
         model = Board
         depth = 2
         fields = ["pins", "title", "id"]
+
+
+class PinSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Pin
+        fields = ["title", "x_coordinate", "x_coordinate", "tags"]
+        read_only_fields = ["id", "board", "created", "updated"]

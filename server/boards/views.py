@@ -1,3 +1,4 @@
+from functools import partial
 from os import stat
 
 from django.http import Http404
@@ -6,7 +7,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from .models import Board, Pin
-from .serializers import BoardSerializer, BoardWithPinsSerializer
+from .serializers import BoardSerializer, BoardWithPinsSerializer, PinSerializer
 
 
 class BoardList(APIView):
@@ -55,3 +56,16 @@ class BoardWithPinsDetail(APIView):
         board = self.get_object(pk)
         serializer = BoardWithPinsSerializer(board)
         return Response(serializer.data)
+
+    def patch(self, request, pk, format=None):
+        board = self.get_object(pk)
+        modified_pins = request.data["pins"]
+        print(modified_pins)
+        for pin in modified_pins:
+            if pin["action"] == "move":
+                pin_to_be_modified = Pin.objects.get(pk=pin["id"])
+                pin_to_be_modified.x_coordinate = pin["movement"]["x"]
+                pin_to_be_modified.y_coordinate = pin["movement"]["y"]
+                pin_to_be_modified.save()
+
+        return Response(status=status.HTTP_200_OK)
