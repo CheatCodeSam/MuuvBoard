@@ -8,7 +8,7 @@ class BoardSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Board
-        fields = ["title", "num_of_pins"]
+        fields = ["id", "title", "num_of_pins"]
 
     def get_num_of_pins(self, obj):
         return obj.pins.count()
