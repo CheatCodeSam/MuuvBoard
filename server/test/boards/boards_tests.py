@@ -1,25 +1,20 @@
 import pytest
 
-from boards.models import Board, Pin
+from boards.models import Board
 from boards.serializers import BoardSerializer
 
-
-def generate_board_with_pins(title, num_of_pins=3):
-    board = Board.objects.create(title=title)
-    for i in range(num_of_pins):
-        pin = Pin.objects.create(board=board)
-    return board
+from .conftest import generate_board_with_pins
 
 
 @pytest.mark.django_db
-def test_get_number_of_pins(client):
+def test_get_number_of_pins(client, generate_board_with_pins):
     board = generate_board_with_pins("Fresh Board", 3)
     serializer = BoardSerializer(board)
     assert serializer.data["num_of_pins"] == 3
 
 
 @pytest.mark.django_db
-def test_get_list_of_boards(client):
+def test_get_list_of_boards(client, generate_board_with_pins):
     board_one = generate_board_with_pins("Board One")
     board_two = generate_board_with_pins("Board Two")
     resp = client.get(f"/api/boards/")
@@ -46,7 +41,7 @@ def test_create_board(client):
 
 
 @pytest.mark.django_db
-def test_get_single_board(client):
+def test_get_single_board(client, generate_board_with_pins):
     board = generate_board_with_pins("Fresh Board")
     resp = client.get(f"/api/boards/{board.id}/")
     assert resp.status_code == 200
@@ -59,7 +54,7 @@ def test_get_incorrect_board(client):
 
 
 @pytest.mark.django_db
-def test_update_board_title(client):
+def test_update_board_title(client, generate_board_with_pins):
     board = generate_board_with_pins("Fresh Board")
     resp = client.put(
         f"/api/boards/{board.id}/",
@@ -76,7 +71,7 @@ def test_update_board_title(client):
 
 
 @pytest.mark.django_db
-def test_update_board_invalid_json(client):
+def test_update_board_invalid_json(client, generate_board_with_pins):
     board = generate_board_with_pins("Fresh Board")
     resp = client.put(
         f"/api/boards/{board.id}/",
