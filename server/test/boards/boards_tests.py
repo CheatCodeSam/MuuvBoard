@@ -43,3 +43,16 @@ def test_create_board(client):
 
     boards = Board.objects.all()
     assert len(boards) == 1
+
+
+@pytest.mark.django_db
+def test_get_single_board(client):
+    board = generate_board_with_pins("Fresh Board", 0)
+    resp = client.get(f"/api/boards/{board.id}/")
+    assert resp.status_code == 200
+    assert resp.data["title"] == "Fresh Board"
+
+
+def test_get_incorrect_board(client):
+    resp = client.get(f"/api/movies/-1/")
+    assert resp.status_code == 404
