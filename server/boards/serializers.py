@@ -12,3 +12,10 @@ class BoardSerializer(serializers.ModelSerializer):
 
     def get_num_of_pins(self, obj):
         return obj.pins.count()
+
+
+class BoardWithPinsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Board
+        depth = 2
+        fields = ["pins", "title", "id"]

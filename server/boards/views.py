@@ -3,11 +3,10 @@ from os import stat
 from django.http import Http404
 from rest_framework import status
 from rest_framework.response import Response
-from rest_framework.serializers import Serializer
 from rest_framework.views import APIView
 
 from .models import Board, Pin
-from .serializers import BoardSerializer
+from .serializers import BoardSerializer, BoardWithPinsSerializer
 
 
 class BoardList(APIView):
@@ -43,3 +42,16 @@ class BoardDetail(APIView):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class BoardWithPinsDetail(APIView):
+    def get_object(self, pk):
+        try:
+            return Board.objects.get(pk=pk)
+        except Board.DoesNotExist:
+            return Http404
+
+    def get(self, request, pk, format=None):
+        board = self.get_object(pk)
+        serializer = BoardWithPinsSerializer(board)
+        return Response(serializer.data)
