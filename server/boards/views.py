@@ -60,12 +60,16 @@ class BoardWithPinsDetail(APIView):
     def patch(self, request, pk, format=None):
         board = self.get_object(pk)
         modified_pins = request.data["pins"]
-        print(modified_pins)
         for pin in modified_pins:
             if pin["action"] == "move":
                 pin_to_be_modified = Pin.objects.get(pk=pin["id"])
                 pin_to_be_modified.x_coordinate = pin["movement"]["x"]
                 pin_to_be_modified.y_coordinate = pin["movement"]["y"]
                 pin_to_be_modified.save()
+            elif pin["action"] == "delete":
+                pin_to_be_deleted = Pin.objects.get(pk=pin["id"])
+                pin_to_be_deleted.delete()
+            else:
+                return Response(status=status.HTTP_400_BAD_REQUEST)
 
         return Response(status=status.HTTP_200_OK)
