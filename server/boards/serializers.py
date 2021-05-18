@@ -24,5 +24,5 @@ class BoardWithPinsSerializer(serializers.ModelSerializer):
 class PinSerializer(serializers.ModelSerializer):
     class Meta:
         model = Pin
-        fields = ["title", "x_coordinate", "x_coordinate", "tags"]
+        fields = ["title", "images", "x_coordinate", "x_coordinate", "tags"]
         read_only_fields = ["id", "board", "created", "updated"]
