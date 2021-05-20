@@ -7,20 +7,16 @@ const LionImage = () => {
     return <Image width={215} height={215} x={17.5} y={17.5} image={image} />;
 };
 
-// background-color: #e5e5f7;
-// opacity: 0.8;
-// background-image:  radial-gradient(#444cf7 0.5px, transparent 0.5px), radial-gradient(#444cf7 0.5px, #e5e5f7 0.5px);
-// background-size: 20px 20px;
-// background-position: 0 0,10px 10px;
+
 function Board() {
 
     const stageStyles = {
-        backgroundImage: "radial-gradient(#444cf7 0.5px, transparent 0.5px), radial-gradient(#444cf7 0.5px, #e5e5f7 0.5px)",
-        backgroundPosition: "0, 0, 10px, 10px",
-        backgroundSize: '20px',
+        backgroundImage: "radial-gradient(#444cf7 0.5px, #e5e5f7 0.5px)",
+        backgroundSize: "10px 10px",
         backgroundColor: "#e5e5f7",
         opacity: "0.8"
-    }
+    };
+
     return (
         <Stage width={1000} height={1000} style={stageStyles}  >
             <Layer>
