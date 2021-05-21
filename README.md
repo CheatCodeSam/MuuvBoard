@@ -1,4 +1,7 @@
 Muuvboard
+(/mo͞ovbôrd/)
+
+A personal moodboard app written in Django, React, and Konva. Consider it a mixture of Pinterest, a Booru, and PureRef. No where near a presentable state, but being worked on at the moment.
 
 Objective
 Use libraries first, than refactor out as needed.

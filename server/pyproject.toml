@@ -3,7 +3,7 @@ name = "muuvboard-server"
 version = "0.1.0"
 description = "Backend of Muuvboard."
 authors = ["Carson Weeks <mail@carsonweeks.com>"]
-license = "MIT"
+license = "GNU GPLv3"
 
 [tool.poetry.dependencies]
 python = "^3.9"
