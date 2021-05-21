@@ -15,9 +15,10 @@ function ImagePin(props) {
         <Group
             x={props.x}
             y={props.y}
+            id={props.id}
             draggable
             onDragStart={() => console.log("Start Drag")}
-            onDragEnd={() => console.log("End Drag")}
+            onDragEnd={props.onDragEnd}
         >
             <Rect
                 x={0}

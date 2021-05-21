@@ -16,11 +16,24 @@ function Board(props) {
         opacity: "0.8"
     };
 
+    const onDragEnd = (e) => {
+        const modifiedPins = {
+            pins: [
+                {
+                    id: e.target.id(),
+                    action: "move",
+                    movement: { x: e.target.x(), y: e.target.y() },
+                },
+            ]
+        };
+        console.log(modifiedPins)
+    }
+
     return (
         <Stage width={1000} height={1000} style={stageStyles}  >
             <Layer>
                 {pins.map((pin) => (
-                    <ImagePin x={pin.x_coordinate} y={pin.y_coordinate} title={pin.title} imageUrl={pin.image} />
+                    <ImagePin id={pin.id} x={pin.x_coordinate} y={pin.y_coordinate} title={pin.title} imageUrl={pin.image} onDragEnd={onDragEnd} />
                 ))}
             </Layer>
         </ Stage >
