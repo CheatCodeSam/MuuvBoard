@@ -1,3 +1,4 @@
+import axios from 'axios';
 import React from 'react';
 import { Stage, Layer, Rect, Text, Image, Line, Group } from 'react-konva';
 import ImagePin from './ImagePin'
@@ -16,7 +17,8 @@ function Board(props) {
         opacity: "0.8"
     };
 
-    const onDragEnd = (e) => {
+    const onDragEnd = async (e) => {
+        const url = process.env.REACT_APP_BASE_URL + "/api/boards/1/pins/"
         const modifiedPins = {
             pins: [
                 {
@@ -26,7 +28,7 @@ function Board(props) {
                 },
             ]
         };
-        console.log(modifiedPins)
+        await axios.patch(url, modifiedPins);
     }
 
     return (

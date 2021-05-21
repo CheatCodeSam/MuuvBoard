@@ -17,7 +17,6 @@ function ImagePin(props) {
             y={props.y}
             id={props.id}
             draggable
-            onDragStart={() => console.log("Start Drag")}
             onDragEnd={props.onDragEnd}
         >
             <Rect
