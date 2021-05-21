@@ -1,6 +1,7 @@
 version: '3.8'
 
 services:
+
     muuvboard-server:
         build:
             context: ./server
@@ -29,8 +30,21 @@ services:
             - 5432
         volumes:
             - muuvboard-database:/var/lib/postgresql/data
-
-
+    
+    muuvboard-client:
+        build:
+            context: ./client
+        command: npm start
+        container_name: muuvboard-client
+        depends_on:
+            - muuvboard-server
+        ports:
+            - 3001:3000
+        stdin_open: true
+        volumes:
+            - ./client:/usr/src/app
+        environment:
+            - CHOKIDAR_USEPOLLING=true
 
 volumes:
     muuvboard-database:
