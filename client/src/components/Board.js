@@ -33,7 +33,7 @@ function Board(props) {
         <Stage width={1000} height={1000} style={stageStyles}  >
             <Layer>
                 {pins.map((pin) => (
-                    <ImagePin id={pin.id} x={pin.x_coordinate} y={pin.y_coordinate} title={pin.title} imageUrl={pin.image} onDragEnd={onDragEnd} />
+                    <ImagePin key={pin.id} id={pin.id} x={pin.x_coordinate} y={pin.y_coordinate} title={pin.title} imageUrl={`${process.env.REACT_APP_BASE_URL}${pin.image}`} onDragEnd={onDragEnd} />
                 ))}
             </Layer>
         </ Stage >
