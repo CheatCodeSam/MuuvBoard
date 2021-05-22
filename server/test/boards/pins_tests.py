@@ -122,10 +122,12 @@ def test_create_pin(client, generate_board_with_pins, generate_image):
     resp = client.post(
         f"/api/boards/{board.id}/pins/",
         {"title": "Fresh Pin", "image": tmp_file, "board": board.id},
-        format="multipart"
-        # format="multipart",
+        format="multipart",
     )
 
-    print(resp.data)
-    # assert resp.data["errors"] == "Fresh Pin"
     assert resp.status_code == 201
+    assert resp.data["title"] == "Fresh Pin"
+    assert resp.data["x_coordinate"] == 0
+    assert resp.data["y_coordinate"] == 0
+    assert resp.data["board"] == board.id
+    assert resp.data["image"][-4:] == ".png"
