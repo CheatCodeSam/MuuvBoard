@@ -1,9 +1,11 @@
 import pytest
+from django.core.files.uploadedfile import SimpleUploadedFile
+from PIL import Image
 
 from boards.models import Board, Pin
 from boards.serializers import BoardWithPinsSerializer
 
-from .conftest import generate_board_with_pins
+from .conftest import generate_board_with_pins, generate_image
 
 
 @pytest.mark.django_db
@@ -108,3 +110,22 @@ def test_delete_pin(client, generate_board_with_pins):
     assert modified_board.pins.count() == 2
     with pytest.raises(Pin.DoesNotExist):
         modified_board.pins.get(pk=pin_to_delete_id)
+
+
+@pytest.mark.django_db
+def test_create_pin(client, generate_board_with_pins, generate_image):
+    board = generate_board_with_pins("Fresh Board", 0)
+    assert board.pins.count() == 0
+
+    tmp_file = generate_image("test.png")
+
+    resp = client.post(
+        f"/api/boards/{board.id}/pins/",
+        {"title": "Fresh Pin", "image": tmp_file, "board": board.id},
+        format="multipart"
+        # format="multipart",
+    )
+
+    print(resp.data)
+    # assert resp.data["errors"] == "Fresh Pin"
+    assert resp.status_code == 201

@@ -59,7 +59,6 @@ class BoardWithPinsDetail(APIView):
         serializer = BoardWithPinsSerializer(board)
         return Response(serializer.data)
 
-    # # TODO: TEST ME
     @parser_classes([FileUploadParser])
     def post(self, request, pk, format=None):
         board = self.get_object(pk)
