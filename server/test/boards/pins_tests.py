@@ -131,3 +131,6 @@ def test_create_pin(client, generate_board_with_pins, generate_image):
     assert resp.data["y_coordinate"] == 0
     assert resp.data["board"] == board.id
     assert resp.data["image"][-4:] == ".png"
+
+    modified_board = Board.objects.get(pk=board.id)
+    assert modified_board.pins.count() == 1
