@@ -1,14 +1,16 @@
 import axios from 'axios';
-import React from 'react';
-import { Stage, Layer, Rect, Text, Image, Line, Group } from 'react-konva';
+import React, { useState } from 'react';
+import { Stage, Layer } from 'react-konva';
 import ImagePin from './ImagePin'
 import CreatePin from './CreatePin'
+
 
 
 function Board(props) {
 
 
-    const pins = props.data.pins
+    const [pins, setPins] = useState(props.data.pins)
+
 
     const stageStyles = {
         backgroundImage: "radial-gradient(#444cf7 0.5px, #e5e5f7 0.5px)",
@@ -30,6 +32,7 @@ function Board(props) {
         };
         await axios.patch(url, modifiedPins);
     }
+    console.log(pins)
 
     return (
         <>
@@ -40,7 +43,10 @@ function Board(props) {
                     ))}
                 </Layer>
             </ Stage >
-            < CreatePin />
+            < CreatePin onSubmit={(pin) => {
+                const newList = pins.concat(pin);
+                setPins(newList)
+            }} />
         </>
     )
 }

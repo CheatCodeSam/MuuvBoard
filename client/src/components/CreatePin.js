@@ -10,7 +10,14 @@ function CreatePin(props) {
         formData.append('title', values.title);
         formData.append('image', values.file);
         formData.append('board', 1);
-        await axios.post(url, formData);
+        try {
+            axios.post(url, formData).then((data) => {
+                props.onSubmit(data.data)
+            });
+        } catch (response) {
+            const data = response.response.data;
+            console.log(data)
+        }
     }
 
     return (
@@ -29,7 +36,6 @@ function CreatePin(props) {
                                 type="text"
                                 onChange={handleChange}
                                 value={values.title}
-
                             />
                         </div>
                         <div className="form-group">
