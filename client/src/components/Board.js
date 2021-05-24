@@ -2,7 +2,7 @@ import axios from 'axios';
 import React from 'react';
 import { Stage, Layer, Rect, Text, Image, Line, Group } from 'react-konva';
 import ImagePin from './ImagePin'
-
+import CreatePin from './CreatePin'
 
 
 function Board(props) {
@@ -32,13 +32,16 @@ function Board(props) {
     }
 
     return (
-        <Stage width={1000} height={1000} style={stageStyles}  >
-            <Layer>
-                {pins.map((pin) => (
-                    <ImagePin key={pin.id} id={pin.id} x={pin.x_coordinate} y={pin.y_coordinate} title={pin.title} imageUrl={`${process.env.REACT_APP_BASE_URL}${pin.image}`} onDragEnd={onDragEnd} />
-                ))}
-            </Layer>
-        </ Stage >
+        <>
+            <Stage width={1000} height={1000} style={stageStyles}  >
+                <Layer>
+                    {pins.map((pin) => (
+                        <ImagePin key={pin.id} id={pin.id} x={pin.x_coordinate} y={pin.y_coordinate} title={pin.title} imageUrl={`${process.env.REACT_APP_BASE_URL}${pin.image}`} onDragEnd={onDragEnd} />
+                    ))}
+                </Layer>
+            </ Stage >
+            < CreatePin />
+        </>
     )
 }
 
