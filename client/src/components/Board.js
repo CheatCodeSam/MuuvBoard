@@ -32,14 +32,30 @@ function Board(props) {
         };
         await axios.patch(url, modifiedPins);
     }
-    console.log(pins)
+
+    const onDelete = async (id) => {
+        const url = process.env.REACT_APP_BASE_URL + "/api/boards/1/pins/"
+        const modifiedPins = {
+            pins: [
+                {
+                    id: id,
+                    action: "delete",
+                },
+            ]
+        }
+
+        await axios.patch(url, modifiedPins)
+        const filtedList = pins.filter(pin => pin.id !== id);
+        setPins(filtedList)
+    }
 
     return (
         <>
             <Stage width={1000} height={1000} style={stageStyles}  >
                 <Layer>
                     {pins.map((pin) => (
-                        <ImagePin key={pin.id} id={pin.id} x={pin.x_coordinate} y={pin.y_coordinate} title={pin.title} imageUrl={`${process.env.REACT_APP_BASE_URL}${pin.image}`} onDragEnd={onDragEnd} />
+                        <ImagePin key={pin.id} id={pin.id} x={pin.x_coordinate} y={pin.y_coordinate} title={pin.title} imageUrl={`${process.env.REACT_APP_BASE_URL}${pin.image}`} onDragEnd={onDragEnd}
+                            onDelete={onDelete} />
                     ))}
                 </Layer>
             </ Stage >

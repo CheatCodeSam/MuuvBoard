@@ -18,6 +18,7 @@ function ImagePin(props) {
             id={props.id}
             draggable
             onDragEnd={props.onDragEnd}
+            onClick={() => props.onDelete(props.id)}
         >
             <Rect
                 x={0}
