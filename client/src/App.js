@@ -1,5 +1,6 @@
 import './App.css';
 import Board from './components/Board'
+import OpenBoard from './components/OpenBoard'
 import { useState, useEffect, setAppState } from 'react'
 import axios from 'axios'
 
@@ -24,7 +25,7 @@ function App() {
 
     return (
         <div>
-            {appState.pins && <Board data={appState.pins} />}
+            {appState.pins && <OpenBoard data={appState.pins} />}
         </div>
     );
 }
