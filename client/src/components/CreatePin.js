@@ -4,27 +4,12 @@ import axios from 'axios'
 
 function CreatePin(props) {
 
-    const onSubmit = async (values) => {
-        const url = process.env.REACT_APP_BASE_URL + "/api/boards/1/pins/"
-        const formData = new FormData();
-        formData.append('title', values.title);
-        formData.append('image', values.file);
-        formData.append('board', 1);
-        try {
-            axios.post(url, formData).then((data) => {
-                props.onSubmit(data.data)
-            });
-        } catch (response) {
-            const data = response.response.data;
-            console.log(data)
-        }
-    }
 
     return (
         <>
             <Formik
                 initialValues={{ image: null }}
-                onSubmit={onSubmit}
+                onSubmit={props.onSubmit}
             >
                 {({ values, handleSubmit, setFieldValue, handleChange }) => (
                     <form onSubmit={handleSubmit}>

@@ -8,6 +8,8 @@ import CreatePin from './CreatePin'
 
 function CorkBoard(props) {
 
+    const BoardId = props.data.id
+    const url = process.env.REACT_APP_BASE_URL + `/api/boards/${BoardId}/pins/`
 
     const [pins, setPins] = useState(props.data.pins)
 
@@ -20,7 +22,6 @@ function CorkBoard(props) {
     };
 
     const onDragEnd = async (e) => {
-        const url = process.env.REACT_APP_BASE_URL + "/api/boards/1/pins/"
         const modifiedPins = {
             pins: [
                 {
@@ -34,7 +35,6 @@ function CorkBoard(props) {
     }
 
     const onDelete = async (id) => {
-        const url = process.env.REACT_APP_BASE_URL + "/api/boards/1/pins/"
         const modifiedPins = {
             pins: [
                 {
@@ -49,6 +49,25 @@ function CorkBoard(props) {
         setPins(filtedList)
     }
 
+    const handleCreation = (values) => {
+        const formData = new FormData();
+        formData.append('title', values.title);
+        formData.append('image', values.file);
+        formData.append('board', BoardId);
+        try {
+            axios.post(url, formData).then((data) => {
+                const pin = data.data
+                const newList = pins.concat(pin);
+                setPins(newList)
+
+            });
+        } catch (response) {
+            const data = response.response.data;
+            console.log(data)
+        }
+
+    }
+
     return (
         <>
             <Stage width={1000} height={1000} style={stageStyles}  >
@@ -59,10 +78,7 @@ function CorkBoard(props) {
                     ))}
                 </Layer>
             </ Stage >
-            < CreatePin onSubmit={(pin) => {
-                const newList = pins.concat(pin);
-                setPins(newList)
-            }} />
+            < CreatePin onSubmit={handleCreation} />
         </>
     )
 }

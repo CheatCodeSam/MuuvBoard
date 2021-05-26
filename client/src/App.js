@@ -1,7 +1,10 @@
 import './App.css';
-import Board from './components/Board'
-import { useState, useEffect, setAppState } from 'react'
-import axios from 'axios'
+import {
+    Switch,
+    Route,
+} from "react-router-dom";
+
+import BoardLoader from './components/BoardLoader';
 
 
 const url = `${process.env.REACT_APP_BASE_URL}/api/boards/1/pins/`
@@ -9,24 +12,18 @@ const url = `${process.env.REACT_APP_BASE_URL}/api/boards/1/pins/`
 
 function App() {
 
-    const [appState, setAppState] = useState({
-        loading: false,
-        pins: null,
-    });
-
-    useEffect(() => {
-        setAppState({ loading: true });
-        axios.get(url).then((response) => {
-            const collectedPins = response.data;
-            setAppState({ loading: false, pins: collectedPins });
-        });
-    }, [setAppState]);
-
     return (
-        <div>
-            {appState.pins && <Board data={appState.pins} />}
-        </div>
+        <>
+            <Switch>
+                <Route path="/board/:BoardId/" component={BoardLoader}>
+                </Route>
+                <Route path="/">
+                </Route>
+            </Switch>
+        </>
     );
 }
+
+
 
 export default App;
