@@ -35,7 +35,7 @@ function ListOfBoards(props) {
             return (
                 appState.boards.map((board) => {
                     return (<li key={board.id}>
-                        <Link to={`/board/${board.id}/`}>{board.title} - {board.id}</Link>
+                        <Link to={`/board/${board.id}/`}>{board.title} - {board.id}: Number of Pins = {board.num_of_pins}</Link>
                     </li>)
                 })
             )
