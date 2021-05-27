@@ -5,6 +5,7 @@ import {
 } from "react-router-dom";
 
 import axios from 'axios'
+import CreateBoard from "./CreateBoard";
 
 
 function ListOfBoards(props) {
@@ -34,11 +35,30 @@ function ListOfBoards(props) {
             return (
                 appState.boards.map((board) => {
                     return (<li key={board.id}>
-                        <Link to={`/board/${board.id}/`}>Board {board.id}</Link>
+                        <Link to={`/board/${board.id}/`}>{board.title} - {board.id}</Link>
                     </li>)
                 })
             )
         }
+    }
+
+    const handleCreation = (values) => {
+        const formData = new FormData();
+        formData.append('title', values.title);
+        try {
+            axios.post(url, formData).then((data) => {
+                const board = data.data
+                const newList = appState.boards.concat(board);
+                setAppState({
+                    loading: appState.loading,
+                    boards: newList
+                })
+            });
+        } catch (response) {
+            const data = response.response.data;
+            console.log(data)
+        }
+
     }
 
     return (
@@ -48,6 +68,7 @@ function ListOfBoards(props) {
                     {loadBoards()}
                 </ul>
             }
+            < CreateBoard onSubmit={handleCreation} />
         </>
     )
 }
