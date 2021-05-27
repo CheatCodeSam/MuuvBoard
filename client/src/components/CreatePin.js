@@ -24,7 +24,7 @@ function CreatePin(props) {
                             />
                         </div>
                         <div className="form-group">
-                            <label for="file">File upload</label>
+                            <label htmlFor="file">File upload</label>
                             <input id="file" name="file" type="file" onChange={(event) => {
                                 setFieldValue("file", event.currentTarget.files[0]);
                             }} className="form-control" />
