@@ -1,5 +1,5 @@
 import React from 'react'
-import { Stage } from 'react-konva';
+import { Stage, Layer, Rect } from 'react-konva';
 
 
 const stageStyles = {
@@ -14,6 +14,7 @@ class ScrollingStage extends React.Component {
         super(props);
         this.state = { width: 0, height: 0 };
         this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
+
     }
 
     componentDidMount() {
@@ -32,7 +33,17 @@ class ScrollingStage extends React.Component {
     render() {
         return (
             <Stage width={this.state.width} height={this.state.height} style={stageStyles}  >
-                {this.props.children}
+                <Layer offsetX={-window.innerWidth / 2} offsetY={-window.innerHeight / 2}>
+                    <Rect
+                        x={0}
+                        y={0}
+                        height={2}
+                        width={2}
+                        fill={'red'}
+                    />
+                    {this.props.children}
+                </Layer>
+
             </Stage>
         )
     }
