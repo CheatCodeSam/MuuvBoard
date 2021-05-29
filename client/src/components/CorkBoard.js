@@ -82,8 +82,7 @@ class CorkBoard extends React.Component {
             <Stage width={1000} height={1000} style={stageStyles}  >
                 <Layer>
                     {this.state.pins.map((pin) => (
-                        <ImagePin key={pin.id} id={pin.id} x={pin.x_coordinate} y={pin.y_coordinate} title={pin.title} imageUrl={`${process.env.REACT_APP_BASE_URL}${pin.image}`} onDragEnd={this.onDragEnd}
-                            onDelete={this.onDelete} />
+                        <ImagePin key={pin.id} data={pin} onDragEnd={this.onDragEnd} onDelete={this.onDelete} />
                     ))}
                 </Layer>
             </ Stage >

@@ -5,20 +5,23 @@ import useImage from 'use-image'
 
 function ImagePin(props) {
 
-    const LionImage = () => {
-        const [image] = useImage(props.imageUrl);
+    console.log(props.data)
+    const url = `${process.env.REACT_APP_BASE_URL}${props.data.image}`
+
+    const URLImage = () => {
+        const [image] = useImage(url);
         return <Image width={215} height={215} x={17.5} y={17.5} image={image} />;
     };
 
 
     return (
         <Group
-            x={props.x}
-            y={props.y}
-            id={props.id}
+            x={props.data.x_coordinate}
+            y={props.data.y_coordinate}
+            id={props.data.id}
             draggable
             onDragEnd={props.onDragEnd}
-            onClick={() => props.onDelete(props.id)}
+            onClick={() => props.onDelete(props.data.id)}
         >
             <Rect
                 x={0}
@@ -28,8 +31,8 @@ function ImagePin(props) {
                 fill="white"
                 shadowBlur={10}
             />
-            <LionImage />
-            <Text text={props.title} align="center" width={250} y={215 + 17.5 + 25} fontSize={15} />
+            <URLImage />
+            <Text text={props.data.title} align="center" width={250} y={215 + 17.5 + 25} fontSize={15} />
         </Group >
     )
 }
