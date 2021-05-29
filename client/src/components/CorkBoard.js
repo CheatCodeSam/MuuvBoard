@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { Stage, Layer } from 'react-konva';
 import ImagePin from './ImagePin'
 import CreatePin from './CreatePin'
-
+import ScrollingStage from './ScrollingStage'
 
 
 class CorkBoard extends React.Component {
@@ -70,23 +70,15 @@ class CorkBoard extends React.Component {
     }
 
     render() {
-        const stageStyles = {
-            backgroundImage: "radial-gradient(#444cf7 0.5px, #e5e5f7 0.5px)",
-            backgroundSize: "10px 10px",
-            backgroundColor: "#e5e5f7",
-            opacity: "0.8"
-        };
-
-
         return (<>
-            <Stage width={1000} height={1000} style={stageStyles}  >
+            <ScrollingStage >
                 <Layer>
                     {this.state.pins.map((pin) => (
                         <ImagePin key={pin.id} data={pin} onDragEnd={this.onDragEnd} onDelete={this.onDelete} />
                     ))}
                 </Layer>
-            </ Stage >
-            < CreatePin onSubmit={this.handleCreation} />
+            </ ScrollingStage >
+            {/* < CreatePin onSubmit={this.handleCreation} /> */}
         </>)
 
     }
