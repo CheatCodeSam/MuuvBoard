@@ -12,16 +12,12 @@ class CorkBoard extends React.Component {
         super(props)
         this.url = `${process.env.REACT_APP_BASE_URL}/api/boards/${props.data.id}/pins/`
 
-        this.onDragEnd = this.onDragEnd.bind(this);
-        this.onDelete = this.onDelete.bind(this);
-        this.handleCreation = this.handleCreation.bind(this);
-
         this.state = {
             pins: props.data.pins
         };
     }
 
-    onDragEnd(e) {
+    onDragEnd = (e) => {
         const modifiedPins = {
             pins: [
                 {
@@ -34,7 +30,7 @@ class CorkBoard extends React.Component {
         axios.patch(this.url, modifiedPins);
     }
 
-    onDelete(id) {
+    onDelete = (id) => {
         console.log(id)
         const modifiedPins = {
             pins: [
@@ -50,7 +46,7 @@ class CorkBoard extends React.Component {
         this.setState({ pins: filtedList })
     }
 
-    handleCreation(values) {
+    handleCreation = (values) => {
         const formData = new FormData();
         formData.append('title', values.title);
         formData.append('image', values.file);
@@ -76,7 +72,7 @@ class CorkBoard extends React.Component {
                     <ImagePin key={pin.id} data={pin} onDragEnd={this.onDragEnd} onDelete={this.onDelete} />
                 ))}
             </ ScrollingStage >
-            {/* < CreatePin onSubmit={this.handleCreation} /> */}
+            < CreatePin onSubmit={this.handleCreation} />
         </>)
 
     }
