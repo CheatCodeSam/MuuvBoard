@@ -13,11 +13,17 @@ class CorkBoard extends React.Component {
         this.url = `${process.env.REACT_APP_BASE_URL}/api/boards/${props.data.id}/pins/`
 
         this.state = {
-            pins: props.data.pins
-        };
+            pins: props.data.pins.map(pin => {
+                return {
+                    ...pin,
+                    isFocused: false
+                }
+            })
+        }
     }
 
     onDragEnd = (e) => {
+
         const modifiedPins = {
             pins: [
                 {
@@ -70,11 +76,21 @@ class CorkBoard extends React.Component {
 
     }
 
+    onDragStart = (e) => {
+        const id = e.target.id();
+        this.setState(state => {
+            const pins = state.pins.map(pin => {
+                return { ...pin, isFocused: pin.id === id }
+            })
+            return { pins }
+        });
+    }
+
     render() {
         return (<>
             <ScrollingStage >
                 {this.state.pins.map((pin) => (
-                    <ImagePin key={pin.id} data={pin} onDragEnd={this.onDragEnd} onDelete={this.onDelete} />
+                    <ImagePin key={pin.id} data={pin} onDragStart={this.onDragStart} onDragEnd={this.onDragEnd} onDelete={this.onDelete} />
                 ))}
             </ ScrollingStage >
             < CreatePin onSubmit={this.handleCreation} />

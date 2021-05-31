@@ -5,7 +5,6 @@ import useImage from 'use-image'
 
 function ImagePin(props) {
 
-    console.log(props.data)
     const url = `${process.env.REACT_APP_BASE_URL}${props.data.image}`
 
     const URLImage = () => {
@@ -21,6 +20,7 @@ function ImagePin(props) {
             id={props.data.id}
             draggable
             onDragEnd={props.onDragEnd}
+            onDragStart={props.onDragStart}
             onClick={() => props.onDelete(props.data.id)}
         >
             <Rect
@@ -29,6 +29,7 @@ function ImagePin(props) {
                 width={250}
                 height={300}
                 fill="white"
+                shadowColor={props.data.isFocused ? "blue" : "black"}
                 shadowBlur={10}
             />
             <URLImage />
