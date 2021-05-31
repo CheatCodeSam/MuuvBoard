@@ -42,8 +42,12 @@ class CorkBoard extends React.Component {
         }
 
         axios.patch(this.url, modifiedPins)
-        const filtedList = this.state.pins.filter(pin => pin.id !== id);
-        this.setState({ pins: filtedList })
+
+        this.setState(state => {
+            const pins = state.pins.filter(pin => pin.id !== id);
+            return { pins }
+        })
+
     }
 
     handleCreation = (values) => {
@@ -54,9 +58,10 @@ class CorkBoard extends React.Component {
         try {
             axios.post(this.url, formData).then((data) => {
                 const pin = data.data
-                const newList = this.state.pins.concat(pin);
-                this.setState({ pins: newList })
-
+                this.setState(state => {
+                    const pins = state.pins.concat(pin);
+                    return { pins }
+                })
             });
         } catch (response) {
             const data = response.response.data;

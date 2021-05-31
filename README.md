@@ -13,6 +13,7 @@ Refactor out Image Pin from Pins
 Thumbnails for Images
 Boards show last updated as last updated pin
 Refactor Boards into viewset
+Cartesian Graph - Before 1.0.0
 
 
 Interesting Links:
@@ -21,3 +22,5 @@ https://longviewcoder.com/2021/01/18/html5-canvas-bottoms-up-with-konva/
 
 testuser123
 testpass123
+
+
