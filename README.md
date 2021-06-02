@@ -19,6 +19,7 @@ Cartesian Graph - Before 1.0.0
 Interesting Links:
 https://codesandbox.io/s/react-konva-infinite-grid-kkndq
 https://longviewcoder.com/2021/01/18/html5-canvas-bottoms-up-with-konva/
+https://codesandbox.io/s/react-konva-select-and-drag-7fct5
 
 testuser123
 testpass123
