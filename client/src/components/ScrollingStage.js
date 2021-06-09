@@ -1,6 +1,7 @@
 import React from 'react'
 import { Stage, Layer, Rect, Group, Text } from 'react-konva';
 import Konva from "konva";
+import ContextMenu from './ContextMenu';
 
 
 
@@ -73,6 +74,13 @@ class ScrollingStage extends React.Component {
         };
     }
 
+    hideContextMenu = () => {
+        this.setState((state) => {
+            return { contextMenu: { ...state.contextMenu, visible: false } };
+        });
+    };
+
+
     createBox = () => { }
 
     deleteSelectedBoxes = () => { }
@@ -83,9 +91,11 @@ class ScrollingStage extends React.Component {
 
     // ===== INPUT =====
 
-    onMouseDown = (e) => {
+    onMouseDownOnStage = (e) => {
         const stage = this.stage.current;
         const { target } = e;
+
+        this.hideContextMenu()
 
         if (e.evt.button === MOUSEONE) {
             if (target === stage) {
@@ -114,7 +124,6 @@ class ScrollingStage extends React.Component {
     }
 
     onMouseUp = (e) => {
-
         if (this.state.selection.visible) {
             this.hideSelectionBox()
         }
@@ -162,9 +171,27 @@ class ScrollingStage extends React.Component {
 
     // ===== CONTEXT MENU =====
 
-    onContextMenu = (e) => { }
+    onContextMenu = (e) => {
+        const stage = this.stage.current;
+        const { target } = e;
 
-    generateContextMenuOptions = () => { }
+        e.evt.preventDefault()
+        const { x, y } = this.calculateStageOffset(stage.getPointerPosition())
+        this.setState(
+            {
+                contextMenu: {
+                    ...this.state.contextMenu,
+                    x: x,
+                    y: y,
+                    visible: true
+                }
+            }
+        )
+    }
+
+    generateContextMenuOptions = () => {
+        return [{ name: 'log Hello', func: () => console.log('hello') }]
+    }
 
 
 
@@ -188,7 +215,8 @@ class ScrollingStage extends React.Component {
                     width={window.innerWidth}
                     style={offsetStyle}
                     ref={this.stage}
-                    onMouseDown={this.onMouseDown}
+                    onContextMenu={this.onContextMenu}
+                    onMouseDown={this.onMouseDownOnStage}
                     onMouseMove={this.onMouseMove}
                     onMouseUp={this.onMouseUp}
                     draggable={this.state.grab}
@@ -208,7 +236,13 @@ class ScrollingStage extends React.Component {
                                 stroke="blue"
                             />
                         )}
-
+                        {this.state.contextMenu.visible && (
+                            <ContextMenu
+                                x={this.state.contextMenu.x}
+                                y={this.state.contextMenu.y}
+                                options={this.generateContextMenuOptions()}
+                            />
+                        )}
                     </Layer>
                 </Stage>
 
