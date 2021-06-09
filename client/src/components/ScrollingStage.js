@@ -19,11 +19,7 @@ const contextMenuState = {
     }
 }
 const panningState = {
-    pan: {
-        grabDown: false,
-        grab: false,
-        quickPan: false,
-    }
+    grab: false,
 }
 
 const stageStyles = {
@@ -33,6 +29,10 @@ const stageStyles = {
     backgroundSize: "22px 22px",
 
 }
+
+const MOUSEONE = 0;
+const MOUSETWO = 2;
+const MOUSETHREE = 1;
 
 class ScrollingStage extends React.Component {
     constructor(props) {
@@ -62,27 +62,41 @@ class ScrollingStage extends React.Component {
 
     generateSelectionBox = () => { }
 
-    selectCursor = () => { }
-
     createBox = () => { }
 
     deleteSelectedBoxes = () => { }
 
     // ===== INPUT =====
 
-    onMouseDown = (e) => { }
+    onMouseDown = (e) => {
+        const stage = this.stage.current;
+        const { target } = e;
 
-    onMouseUp = (e) => { }
+        if (e.evt.button === MOUSETHREE) {
+            e.evt.preventDefault();
+            this.setState({ grab: true });
+        }
+    }
+
+    onMouseUp = (e) => {
+        if (this.state.grab) {
+            this.setState({ grab: false });
+        }
+    }
 
     onMouseMove = (e) => { }
 
-    handleKeyPress = (e) => { }
-
     // ===== STAGE EVENTS =====
 
-    onStageDrag = (e) => { }
-
-    onStageDragEnd = (e) => { }
+    onStageDrag = (e) => {
+        const { target } = e
+        this.setState({
+            stageOffset: {
+                x: target.x(),
+                y: target.y()
+            }
+        })
+    }
 
     // ===== PIN EVENTS =====
 
@@ -112,12 +126,17 @@ class ScrollingStage extends React.Component {
         return (
             <div
                 tabIndex='0'
+                className={this.state.grab ? "grabbing" : ""}
             >
                 <Stage
-                    height={window.innerWidth}
-                    width={window.innerHeight}
+                    height={window.innerHeight}
+                    width={window.innerWidth}
                     style={offsetStyle}
-
+                    ref={this.stage}
+                    onMouseDown={this.onMouseDown}
+                    onMouseUp={this.onMouseUp}
+                    draggable={this.state.grab}
+                    onDragMove={this.onStageDrag}
                 >
                     <Layer>
 
