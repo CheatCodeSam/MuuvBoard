@@ -77,6 +77,10 @@ class ScrollingStage extends React.Component {
 
     deleteSelectedBoxes = () => { }
 
+    hideSelectionBox = () => {
+        this.setState({ selection: { ...this.state.selection, visible: false } })
+    }
+
     // ===== INPUT =====
 
     onMouseDown = (e) => {
@@ -85,7 +89,6 @@ class ScrollingStage extends React.Component {
 
         if (e.evt.button === MOUSEONE) {
             if (target === stage) {
-                console.log(target)
                 const { x, y } = this.calculateStageOffset(stage.getPointerPosition())
                 this.setState(state => {
                     return {
@@ -105,6 +108,7 @@ class ScrollingStage extends React.Component {
 
         if (e.evt.button === MOUSETHREE) {
             e.evt.preventDefault();
+            this.hideSelectionBox()
             this.setState({ grab: true });
         }
     }
@@ -112,14 +116,8 @@ class ScrollingStage extends React.Component {
     onMouseUp = (e) => {
 
         if (this.state.selection.visible) {
-            this.setState({
-                selection: {
-                    ...this.state.selection,
-                    visible: false
-                }
-            });
+            this.hideSelectionBox()
         }
-
 
         if (this.state.grab) {
             this.setState({ grab: false });
