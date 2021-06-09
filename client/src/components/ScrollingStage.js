@@ -1,5 +1,7 @@
 import React from 'react'
 import { Stage, Layer, Rect, Group, Text } from 'react-konva';
+import Konva from "konva";
+
 
 
 const selectionState = {
@@ -52,7 +54,9 @@ class ScrollingStage extends React.Component {
 
     // ===== UTIL =====
 
-    calculateStageOffset = (coords) => { }
+    calculateStageOffset = (coords) => {
+        return { x: coords.x - this.state.stageOffset.x, y: coords.y - this.state.stageOffset.y };
+    }
 
     deselectAllBoxes = () => { }
 
@@ -60,7 +64,14 @@ class ScrollingStage extends React.Component {
 
     selectBoxes = (id) => { }
 
-    generateSelectionBox = () => { }
+    calculateSelectionBox = () => {
+        return {
+            x: Math.min(this.state.selection.x1, this.state.selection.x2),
+            y: Math.min(this.state.selection.y1, this.state.selection.y2),
+            height: Math.abs(this.state.selection.y2 - this.state.selection.y1),
+            width: Math.abs(this.state.selection.x2 - this.state.selection.x1)
+        };
+    }
 
     createBox = () => { }
 
@@ -72,6 +83,26 @@ class ScrollingStage extends React.Component {
         const stage = this.stage.current;
         const { target } = e;
 
+        if (e.evt.button === MOUSEONE) {
+            if (target === stage) {
+                console.log(target)
+                const { x, y } = this.calculateStageOffset(stage.getPointerPosition())
+                this.setState(state => {
+                    return {
+                        selection: {
+                            ...state.selection,
+                            visible: true,
+                            x1: x,
+                            y1: y,
+                            x2: x,
+                            y2: y
+                        }
+                    }
+                })
+            }
+
+        }
+
         if (e.evt.button === MOUSETHREE) {
             e.evt.preventDefault();
             this.setState({ grab: true });
@@ -79,12 +110,37 @@ class ScrollingStage extends React.Component {
     }
 
     onMouseUp = (e) => {
+
+        if (this.state.selection.visible) {
+            this.setState({
+                selection: {
+                    ...this.state.selection,
+                    visible: false
+                }
+            });
+        }
+
+
         if (this.state.grab) {
             this.setState({ grab: false });
         }
     }
 
-    onMouseMove = (e) => { }
+    onMouseMove = (e) => {
+        const stage = this.stage.current;
+        if (this.state.selection.visible) {
+            const { x, y } = this.calculateStageOffset(stage.getPointerPosition())
+            this.setState(
+                {
+                    selection: {
+                        ...this.state.selection,
+                        x2: x,
+                        y2: y
+                    }
+                }
+            )
+        }
+    }
 
     // ===== STAGE EVENTS =====
 
@@ -122,6 +178,7 @@ class ScrollingStage extends React.Component {
             backgroundPosition:
                 this.state.stageOffset.x + "px " + this.state.stageOffset.y + "px"
         }
+        const selc = this.calculateSelectionBox()
 
         return (
             <div
@@ -134,11 +191,25 @@ class ScrollingStage extends React.Component {
                     style={offsetStyle}
                     ref={this.stage}
                     onMouseDown={this.onMouseDown}
+                    onMouseMove={this.onMouseMove}
                     onMouseUp={this.onMouseUp}
                     draggable={this.state.grab}
                     onDragMove={this.onStageDrag}
                 >
                     <Layer>
+                        {this.state.selection.visible && (
+                            <Rect
+                                name="selection"
+                                x={selc.x}
+                                y={selc.y}
+                                height={selc.height}
+                                width={selc.width}
+                                fill="teal"
+                                opacity={0.8}
+                                strokeWidth={1}
+                                stroke="blue"
+                            />
+                        )}
 
                     </Layer>
                 </Stage>
