@@ -89,11 +89,11 @@ class CorkBoard extends React.Component {
     render() {
         return (<>
             <ScrollingStage >
-                {this.state.pins.map((pin) => (
+                {/* {this.state.pins.map((pin) => (
                     <ImagePin key={pin.id} data={pin} onDragStart={this.onDragStart} onDragEnd={this.onDragEnd} onDelete={this.onDelete} />
-                ))}
+                ))} */}
             </ ScrollingStage >
-            < CreatePin onSubmit={this.handleCreation} />
+            {/* < CreatePin onSubmit={this.handleCreation} /> */}
         </>)
 
     }

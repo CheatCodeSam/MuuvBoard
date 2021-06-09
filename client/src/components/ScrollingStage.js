@@ -2,64 +2,134 @@ import React from 'react'
 import { Stage, Layer, Rect, Group, Text } from 'react-konva';
 
 
+const selectionState = {
+    selection: {
+        visible: false,
+        x1: null,
+        y1: null,
+        x2: null,
+        y2: null
+    }
+}
+const contextMenuState = {
+    contextMenu: {
+        visible: false,
+        x: null,
+        y: null
+    }
+}
+const panningState = {
+    pan: {
+        grabDown: false,
+        grab: false,
+        quickPan: false,
+    }
+}
+
 const stageStyles = {
     backgroundColor: "#e5e5f7",
-};
+    opacity: 0.8,
+    backgroundImage: "radial-gradient(#444cf7 1.1px, #e5e5f7 1.1px)",
+    backgroundSize: "22px 22px",
+
+}
 
 class ScrollingStage extends React.Component {
     constructor(props) {
         super(props);
-        this.state = { width: 0, height: 0, mousePos: { x: 0, y: 0 } };
-        this.layerRef = React.createRef();
+        this.stage = React.createRef()
+        this.state = {
+            pins: props.pins,
+            stageOffset: {
+                x: 0,
+                y: 0
+            },
+            ...selectionState,
+            ...contextMenuState,
+            ...panningState
+        }
     }
 
-    componentDidMount() {
-        this.updateWindowDimensions();
-        window.addEventListener('resize', this.updateWindowDimensions);
-    }
+    // ===== UTIL =====
 
-    componentWillUnmount() {
-        window.removeEventListener('resize', this.updateWindowDimensions);
-    }
+    calculateStageOffset = (coords) => { }
 
-    updateWindowDimensions = () => {
-        this.setState({ width: window.innerWidth, height: window.innerHeight });
-    }
+    deselectAllBoxes = () => { }
+
+    getSelectedBoxes = () => { }
+
+    selectBoxes = (id) => { }
+
+    generateSelectionBox = () => { }
+
+    selectCursor = () => { }
+
+    createBox = () => { }
+
+    deleteSelectedBoxes = () => { }
+
+    // ===== INPUT =====
+
+    onMouseDown = (e) => { }
+
+    onMouseUp = (e) => { }
+
+    onMouseMove = (e) => { }
+
+    handleKeyPress = (e) => { }
+
+    // ===== STAGE EVENTS =====
+
+    onStageDrag = (e) => { }
+
+    onStageDragEnd = (e) => { }
+
+    // ===== PIN EVENTS =====
+
+    onPinDragStart = (e) => { }
+
+    onPinDrag = (e) => { }
+
+    onPinDragEnd = (e) => { }
+
+    // ===== CONTEXT MENU =====
+
+    onContextMenu = (e) => { }
+
+    generateContextMenuOptions = () => { }
+
+
+
+
 
     render() {
-        return (
-            <Stage width={this.state.width} height={this.state.height} style={stageStyles} onMouseMove={e => {
-                var transform = this.layerRef.current.getAbsoluteTransform().copy();
-                transform.invert();
-                const pos = e.target.getStage().getPointerPosition();
-                var circlePos = transform.point(pos);
-                this.setState({ mousePos: circlePos });
-            }}
-            >
-                <Layer>
-                    <Group x={0} y={0}>
-                        <Rect
-                            width={100}
-                            height={20}
-                            fill="black"
-                            opacity={0.3} />
-                        <Text text={`${this.state.mousePos.x.toFixed()}, ${this.state.mousePos.y.toFixed()}`} fill="white" align="center" verticalAlign="middle" width={100} height={20} fontSize={15} />
-                    </Group>
-                </Layer>
-                <Layer offsetX={-window.innerWidth / 2} offsetY={-window.innerHeight / 2} ref={this.layerRef}>
-                    <Rect
-                        x={0}
-                        y={0}
-                        height={2}
-                        width={2}
-                        fill={'red'}
-                    />
-                    {this.props.children}
-                </Layer>
+        const offsetStyle = {
+            ...stageStyles,
+            backgroundPosition:
+                this.state.stageOffset.x + "px " + this.state.stageOffset.y + "px"
+        }
 
-            </Stage>
+        return (
+            <div
+                tabIndex='0'
+            >
+                <Stage
+                    height={window.innerWidth}
+                    width={window.innerHeight}
+                    style={offsetStyle}
+
+                >
+                    <Layer>
+
+                    </Layer>
+                </Stage>
+
+            </div>
         )
+
+
     }
+
 }
 
 export default ScrollingStage;
