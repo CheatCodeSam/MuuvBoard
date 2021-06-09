@@ -89,7 +89,7 @@ class ScrollingStage extends React.Component {
         this.setState({ selection: { ...this.state.selection, visible: false } })
     }
 
-    // ===== INPUT =====
+    // ===== STAGE EVENTS =====
 
     onMouseDownOnStage = (e) => {
         const stage = this.stage.current;
@@ -148,8 +148,6 @@ class ScrollingStage extends React.Component {
             )
         }
     }
-
-    // ===== STAGE EVENTS =====
 
     onStageDrag = (e) => {
         const { target } = e
