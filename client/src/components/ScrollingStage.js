@@ -2,6 +2,7 @@ import React from 'react'
 import { Stage, Layer, Rect, Group, Text } from 'react-konva';
 import Konva from "konva";
 import ContextMenu from './ContextMenu';
+import ImagePin from './ImagePin'
 
 
 
@@ -80,7 +81,6 @@ class ScrollingStage extends React.Component {
         });
     };
 
-
     createBox = () => { }
 
     deleteSelectedBoxes = () => { }
@@ -150,13 +150,15 @@ class ScrollingStage extends React.Component {
     }
 
     onStageDrag = (e) => {
-        const { target } = e
-        this.setState({
-            stageOffset: {
-                x: target.x(),
-                y: target.y()
-            }
-        })
+        if (this.state.grab) {
+            const { target } = e
+            this.setState({
+                stageOffset: {
+                    x: target.x(),
+                    y: target.y()
+                }
+            })
+        }
     }
 
     // ===== PIN EVENTS =====
@@ -192,9 +194,6 @@ class ScrollingStage extends React.Component {
     }
 
 
-
-
-
     render() {
         const offsetStyle = {
             ...stageStyles,
@@ -202,6 +201,7 @@ class ScrollingStage extends React.Component {
                 this.state.stageOffset.x + "px " + this.state.stageOffset.y + "px"
         }
         const selc = this.calculateSelectionBox()
+
 
         return (
             <div
@@ -221,6 +221,20 @@ class ScrollingStage extends React.Component {
                     onDragMove={this.onStageDrag}
                 >
                     <Layer>
+                        {
+                            this.props.pins.map((pin) => {
+                                return <ImagePin
+                                    key={pin.id}
+                                    id={pin.id}
+                                    x={pin.x}
+                                    y={pin.y}
+                                    title={pin.title}
+                                    thumbnail={pin.image}
+                                    draggable={!this.state.grab}
+                                />
+                            })
+                        }
+
                         {this.state.selection.visible && (
                             <Rect
                                 name="selection"

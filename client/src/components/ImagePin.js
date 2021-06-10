@@ -5,7 +5,7 @@ import useImage from 'use-image'
 
 function ImagePin(props) {
 
-    const url = `${process.env.REACT_APP_BASE_URL}${props.data.image}`
+    const url = `${process.env.REACT_APP_BASE_URL}${props.thumbnail}`
 
     const URLImage = () => {
         const [image] = useImage(url);
@@ -15,25 +15,22 @@ function ImagePin(props) {
 
     return (
         <Group
-            x={props.data.x_coordinate}
-            y={props.data.y_coordinate}
-            id={props.data.id}
-            draggable
-            onDragEnd={props.onDragEnd}
-            onDragStart={props.onDragStart}
-            onClick={() => props.onDelete(props.data.id)}
+            x={props.x}
+            y={props.y}
+            id={props.id}
+            draggable={props.draggable}
         >
             <Rect
+
                 x={0}
                 y={0}
                 width={250}
                 height={300}
-                fill="white"
-                shadowColor={props.data.isFocused ? "blue" : "black"}
+                fill={props.selected ? "blue" : "white"}
                 shadowBlur={10}
             />
             <URLImage />
-            <Text text={props.data.title} align="center" width={250} y={215 + 17.5 + 25} fontSize={15} />
+            <Text text={props.title} align="center" width={250} y={215 + 17.5 + 25} fontSize={15} />
         </Group >
     )
 }
