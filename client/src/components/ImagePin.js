@@ -9,7 +9,7 @@ function ImagePin(props) {
 
     const URLImage = () => {
         const [image] = useImage(url);
-        return <Image width={215} height={215} x={17.5} y={17.5} image={image} />;
+        return <Image width={120} height={120} x={7} y={7} image={image} />;
     };
 
 
@@ -24,13 +24,15 @@ function ImagePin(props) {
 
                 x={0}
                 y={0}
-                width={250}
-                height={300}
+                width={135}
+                height={160}
                 fill={props.selected ? "blue" : "white"}
-                shadowBlur={10}
+                shadowBlur={4}
+                shadowOffsetY={4}
+                shadowOpacity={0.25}
             />
             <URLImage />
-            <Text text={props.title} align="center" width={250} y={215 + 17.5 + 25} fontSize={15} />
+            <Text text={props.title} align="center" width={135} height={32} y={128} fontSize={12} />
         </Group >
     )
 }

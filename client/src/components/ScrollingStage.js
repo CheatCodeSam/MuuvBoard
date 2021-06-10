@@ -222,7 +222,7 @@ class ScrollingStage extends React.Component {
                 >
                     <Layer>
                         {
-                            this.props.pins.map((pin) => {
+                            this.state.pins.map((pin) => {
                                 return <ImagePin
                                     key={pin.id}
                                     id={pin.id}
