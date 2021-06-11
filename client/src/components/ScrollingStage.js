@@ -113,6 +113,7 @@ class ScrollingStage extends React.Component {
         const stage = this.stage.current;
         const { target } = e;
 
+
         this.hideContextMenu()
 
         if (e.evt.button === MOUSEONE) {
@@ -144,8 +145,16 @@ class ScrollingStage extends React.Component {
     }
 
     onMouseUp = (e) => {
+        const stage = this.stage.current;
+
         if (this.state.selection.visible) {
             this.hideSelectionBox()
+            this.deleteSelectedBoxes()
+            const selectionBox = this.calculateSelectionBox()
+            const pinShapes = stage.find('.pin')
+            // TODO fix this ugly line
+            const selected = pinShapes.filter(pin => Konva.Util.haveIntersection(selectionBox, { x: pin.x(), y: pin.y(), width: pin.width(), height: pin.height() }))
+            this.selectPinsById(selected.map((a) => a.id()))
         }
 
         if (this.state.grab) {

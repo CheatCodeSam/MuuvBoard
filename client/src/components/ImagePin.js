@@ -21,9 +21,10 @@ function ImagePin(props) {
             id={props.id}
             draggable={props.draggable}
             name={props.name}
+            width={135}
+            height={160}
         >
             <Rect
-
                 x={0}
                 y={0}
                 width={135}
