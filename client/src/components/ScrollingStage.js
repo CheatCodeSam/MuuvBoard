@@ -68,6 +68,11 @@ class ScrollingStage extends React.Component {
 
     getSelectedBoxes = () => { }
 
+    getPinById = (id) => {
+        return this.state.pins.find(pin => pin.id === id);
+    };
+
+
     selectPinsById = (ids) => {
         const _selectPinsById = (state) => {
             return state.pins.map(pin => {
@@ -117,8 +122,8 @@ class ScrollingStage extends React.Component {
         this.hideContextMenu()
 
         if (e.evt.button === MOUSEONE) {
-            this.deselectAllPins()
             if (target === stage) {
+                this.deselectAllPins()
                 const { x, y } = this.calculateStageOffset(stage.getPointerPosition())
                 this.setState(state => {
                     return {
@@ -133,7 +138,11 @@ class ScrollingStage extends React.Component {
                     }
                 })
             } else if (target.parent.name() === "pin") {
-                this.selectPinsById([target.parent.id()])
+                const pin = this.getPinById(target.parent.id())
+                if (!!!pin.selected) {
+                    this.deselectAllPins()
+                    this.selectPinsById([pin.id])
+                }
             }
         }
 
