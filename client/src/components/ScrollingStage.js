@@ -88,7 +88,7 @@ class ScrollingStage extends React.Component {
                 }
             })
         }
-
+        this.pushPinsToTop(ids)
         this.setState(state => {
             return { pins: _selectPinsById(state) }
         })
@@ -125,6 +125,12 @@ class ScrollingStage extends React.Component {
         const selectedPins = this.getSelectedPins()
         const movedPins = selectedPins.map(pin => { return { ...pin, x_coordinate: pin.x_coordinate + coords.x, y_coordinate: pin.y_coordinate + coords.y } })
         this.setState({ pins: this.mergePinsbyId(this.state.pins, movedPins) })
+    }
+
+    pushPinsToTop = (ids) => {
+        const pinsToPush = this.state.pins.filter(pin => ids.includes(pin.id))
+        const otherPins = this.state.pins.filter(pin => !ids.includes(pin.id))
+        this.setState({ pins: [...otherPins, ...pinsToPush] })
     }
 
     // ===== STAGE EVENTS =====
