@@ -20,6 +20,9 @@ function ImagePin(props) {
             y={props.y}
             id={props.id}
             draggable={props.draggable}
+            onDragStart={props.onDragStart}
+            onDragMove={props.onDragMove}
+            onDragEnd={props.onDragEnd}
             name={props.name}
             width={135}
             height={160}

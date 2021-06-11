@@ -1,5 +1,5 @@
 import React from 'react'
-import { Stage, Layer, Rect, Group, Text } from 'react-konva';
+import { Stage, Layer, Rect } from 'react-konva';
 import Konva from "konva";
 import ContextMenu from './ContextMenu';
 import ImagePin from './ImagePin'
@@ -66,12 +66,17 @@ class ScrollingStage extends React.Component {
         })
     }
 
-    getSelectedBoxes = () => { }
+    getSelectedPins = () => {
+        return this.state.pins.filter(pin => pin.selected);
+    }
+
+    mergePinsbyId = (entry, modified) => {
+        return entry.map((obj) => modified.find((o) => o.id === obj.id) || obj);
+    }
 
     getPinById = (id) => {
         return this.state.pins.find(pin => pin.id === id);
     };
-
 
     selectPinsById = (ids) => {
         const _selectPinsById = (state) => {
@@ -110,6 +115,12 @@ class ScrollingStage extends React.Component {
 
     hideSelectionBox = () => {
         this.setState({ selection: { ...this.state.selection, visible: false } })
+    }
+
+    moveSelectedPins = (coords) => {
+        const selectedPins = this.getSelectedPins()
+        const movedPins = selectedPins.map(pin => { return { ...pin, x_coordinate: pin.x_coordinate + coords.x, y_coordinate: pin.y_coordinate + coords.y } })
+        this.setState({ pins: this.mergePinsbyId(this.state.pins, movedPins) })
     }
 
     // ===== STAGE EVENTS =====
@@ -201,9 +212,28 @@ class ScrollingStage extends React.Component {
 
     // ===== PIN EVENTS =====
 
-    onPinDragStart = (e) => { }
+    onPinDragStart = (e) => {
+        const { target } = e;
+        const pin = this.getPinById(target.id());
 
-    onPinDrag = (e) => { }
+        if (!!!pin.selected) {
+            this.deselectAllPins()
+            this.selectPinsById([pin.id])
+        }
+    }
+
+    onPinDrag = (e) => {
+        const { target } = e;
+        const pin = this.getPinById(target.id())
+        const movement = {
+            x: target.x() - pin.x_coordinate,
+            y: target.y() - pin.y_coordinate
+        };
+
+        this.moveSelectedPins(movement)
+
+    }
+
 
     onPinDragEnd = (e) => { }
 
@@ -241,7 +271,6 @@ class ScrollingStage extends React.Component {
         }
         const selc = this.calculateSelectionBox()
 
-
         return (
             <div
                 tabIndex='0'
@@ -266,12 +295,15 @@ class ScrollingStage extends React.Component {
                                     key={pin.id}
                                     id={pin.id}
                                     name="pin"
-                                    x={pin.x}
-                                    y={pin.y}
+                                    x={pin.x_coordinate}
+                                    y={pin.y_coordinate}
                                     title={pin.title}
                                     thumbnail={pin.image}
                                     draggable={!this.state.grab}
                                     selected={pin.selected}
+                                    onDragStart={this.onPinDragStart}
+                                    onDragMove={this.onPinDrag}
+                                    onDragEnd={this.onPinDragEnd}
                                 />
                             })
                         }
