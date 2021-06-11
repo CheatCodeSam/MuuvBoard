@@ -109,9 +109,13 @@ class ScrollingStage extends React.Component {
         });
     };
 
-    createBox = () => { }
+    createPin = () => { }
 
-    deleteSelectedBoxes = () => { }
+    deleteSelectedPins = () => {
+        this.hideContextMenu();
+        this.setState({ pins: this.state.pins.filter(pin => !!!pin.selected) })
+        //this.props.onPinDelete()
+    }
 
     hideSelectionBox = () => {
         this.setState({ selection: { ...this.state.selection, visible: false } })
@@ -169,7 +173,7 @@ class ScrollingStage extends React.Component {
 
         if (this.state.selection.visible) {
             this.hideSelectionBox()
-            this.deleteSelectedBoxes()
+            this.deselectAllPins()
             const selectionBox = this.calculateSelectionBox()
             const pinShapes = stage.find('.pin')
             // TODO fix this ugly line
@@ -234,8 +238,9 @@ class ScrollingStage extends React.Component {
 
     }
 
-
-    onPinDragEnd = (e) => { }
+    onPinDragEnd = (e) => {
+        // this.props.onPinMove()
+    }
 
     // ===== CONTEXT MENU =====
 
@@ -256,10 +261,23 @@ class ScrollingStage extends React.Component {
                 }
             }
         )
+        if (target === stage) {
+            this.deselectAllPins()
+        } else if (target.parent.name() === "pin") {
+            const pin = this.getPinById(target.parent.id())
+            if (!!!pin.selected) {
+                this.deselectAllPins()
+                this.selectPinsById([pin.id])
+            }
+        }
     }
 
     generateContextMenuOptions = () => {
-        return [{ name: 'log Hello', func: () => console.log('hello') }]
+        let returnValue = [{ name: 'log Hello', func: () => console.log('hello') }]
+        if (!!this.getSelectedPins().length) {
+            returnValue.push({ name: "Delete Pin", func: this.deleteSelectedPins })
+        }
+        return returnValue
     }
 
 
