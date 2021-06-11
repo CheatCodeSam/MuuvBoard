@@ -43,7 +43,7 @@ class ScrollingStage extends React.Component {
         super(props);
         this.stage = React.createRef()
         this.state = {
-            pins: props.pins,
+            pins: props.pins.map(pin => { return { ...pin, selected: false } }),
             stageOffset: {
                 x: 0,
                 y: 0
@@ -60,11 +60,29 @@ class ScrollingStage extends React.Component {
         return { x: coords.x - this.state.stageOffset.x, y: coords.y - this.state.stageOffset.y };
     }
 
-    deselectAllBoxes = () => { }
+    deselectAllPins = () => {
+        this.setState({
+            pins: this.state.pins.map(pin => { return { ...pin, selected: false } })
+        })
+    }
 
     getSelectedBoxes = () => { }
 
-    selectBoxes = (id) => { }
+    selectPinsById = (ids) => {
+        const _selectPinsById = (state) => {
+            return state.pins.map(pin => {
+                if (ids.includes(pin.id)) {
+                    return { ...pin, selected: true }
+                } else {
+                    return pin;
+                }
+            })
+        }
+
+        this.setState(state => {
+            return { pins: _selectPinsById(state) }
+        })
+    }
 
     calculateSelectionBox = () => {
         return {
@@ -98,6 +116,7 @@ class ScrollingStage extends React.Component {
         this.hideContextMenu()
 
         if (e.evt.button === MOUSEONE) {
+            this.deselectAllPins()
             if (target === stage) {
                 const { x, y } = this.calculateStageOffset(stage.getPointerPosition())
                 this.setState(state => {
@@ -112,8 +131,9 @@ class ScrollingStage extends React.Component {
                         }
                     }
                 })
+            } else if (target.parent.name() === "pin") {
+                this.selectPinsById([target.parent.id()])
             }
-
         }
 
         if (e.evt.button === MOUSETHREE) {
@@ -176,6 +196,7 @@ class ScrollingStage extends React.Component {
         const { target } = e;
 
         e.evt.preventDefault()
+        this.hideSelectionBox()
         const { x, y } = this.calculateStageOffset(stage.getPointerPosition())
         this.setState(
             {
@@ -226,11 +247,13 @@ class ScrollingStage extends React.Component {
                                 return <ImagePin
                                     key={pin.id}
                                     id={pin.id}
+                                    name="pin"
                                     x={pin.x}
                                     y={pin.y}
                                     title={pin.title}
                                     thumbnail={pin.image}
                                     draggable={!this.state.grab}
+                                    selected={pin.selected}
                                 />
                             })
                         }
