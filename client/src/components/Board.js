@@ -21,7 +21,7 @@ class Board extends React.Component {
         } else {
             return (
                 <>
-                    <Toolbar />
+                    <Toolbar title={this.state.board.title} />
                     <CorkBoard data={this.state.board} />
                 </>
             )

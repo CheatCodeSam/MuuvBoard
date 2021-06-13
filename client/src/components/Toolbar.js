@@ -7,7 +7,11 @@ class Toolbar extends React.Component {
     render() {
         return (
             <div className='toolbar'>
-                <div>Hello</div>
+                <div className="filename-view">
+                    <span className='filename-title'>
+                        {this.props.title}
+                    </span>
+                </div>
             </div>
         )
     }
