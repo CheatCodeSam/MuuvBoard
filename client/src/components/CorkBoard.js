@@ -12,7 +12,6 @@ class CorkBoard extends React.Component {
     }
 
     onPinMove = (pins) => {
-
         const modifiedPins = {
             pins: pins.map(pin => {
                 return {
@@ -22,16 +21,6 @@ class CorkBoard extends React.Component {
                 }
             })
         }
-
-        // const modifiedPins = {
-        //     pins: [
-        //         {
-        //             id: e.target.id(),
-        //             action: "move",
-        //             movement: { x: e.target.x(), y: e.target.y() },
-        //         },
-        //     ]
-        // };
         axios.patch(this.url, modifiedPins);
     }
 
