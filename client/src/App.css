@@ -35,7 +35,7 @@
     cursor: default;
     position: absolute;
     display: flex;
-    justify-content: center;
+    justify-content: left;
     height: var(--toolbar-height);
     width: 100%;
     background-color: #525252;
@@ -45,11 +45,7 @@
     z-index: 1;
 }
 
-/* .filename-view {
-
-} */
-
-.filename-title {
+.filename-view {
     display: flex;
     flex: 0 1 auto;
     height: var(--toolbar-height);
@@ -57,4 +53,31 @@
     justify-content: center;
     box-sizing: border-box;
     align-items: center;
+    font-size: 14px;
+
+}
+
+.filename-title {
+display: inline-block;
+margin-right: 2px;
+}
+
+.chevron-container {
+    width: 18px;
+    display: flex;
+    flex: 0 0 auto;
+}
+
+.home-container {
+    height: var(--toolbar-height);
+    width: var(--toolbar-height);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    margin-right: 7px;
+}
+
+.home-container:hover {
+    background-color: #969696;
 }
