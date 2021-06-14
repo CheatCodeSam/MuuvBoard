@@ -39,6 +39,7 @@ const MOUSETWO = 2;
 const MOUSETHREE = 1;
 
 class ScrollingStage extends React.Component {
+
     constructor(props) {
         super(props);
         this.stage = React.createRef()
