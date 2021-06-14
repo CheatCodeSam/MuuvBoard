@@ -1,8 +1,5 @@
 import axios from 'axios';
-import React, { useState } from 'react';
-import { Stage, Layer } from 'react-konva';
-import ImagePin from './ImagePin'
-import CreatePin from './CreatePin'
+import React from 'react';
 import ScrollingStage from './ScrollingStage'
 
 
@@ -16,6 +13,16 @@ class CorkBoard extends React.Component {
 
     onPinMove = (pins) => {
 
+        const modifiedPins = {
+            pins: pins.map(pin => {
+                return {
+                    id: pin.id,
+                    action: "move",
+                    movement: { x: pin.x_coordinate, y: pin.y_coordinate }
+                }
+            })
+        }
+
         // const modifiedPins = {
         //     pins: [
         //         {
@@ -25,7 +32,7 @@ class CorkBoard extends React.Component {
         //         },
         //     ]
         // };
-        // axios.patch(this.url, modifiedPins);
+        axios.patch(this.url, modifiedPins);
     }
 
     onPinDelete = (pins) => {
