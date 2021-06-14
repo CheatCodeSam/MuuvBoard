@@ -113,8 +113,9 @@ class ScrollingStage extends React.Component {
 
     deleteSelectedPins = () => {
         this.hideContextMenu();
+        const pinsToDelete = this.getSelectedPins()
         this.setState({ pins: this.state.pins.filter(pin => !!!pin.selected) })
-        //this.props.onPinDelete()
+        this.props.onPinDelete(pinsToDelete)
     }
 
     hideSelectionBox = () => {
@@ -245,7 +246,7 @@ class ScrollingStage extends React.Component {
     }
 
     onPinDragEnd = (e) => {
-        // this.props.onPinMove()
+        this.props.onPinMove(this.getSelectedPins())
     }
 
     // ===== CONTEXT MENU =====
@@ -362,5 +363,6 @@ class ScrollingStage extends React.Component {
     }
 
 }
+
 
 export default ScrollingStage;
