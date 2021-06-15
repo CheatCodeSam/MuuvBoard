@@ -130,8 +130,6 @@ class ScrollingStage extends React.Component {
         });
     };
 
-    createPin = () => { }
-
     deleteSelectedPins = () => {
         this.hideContextMenu();
         const pinsToDelete = this.getSelectedPins()
@@ -301,7 +299,7 @@ class ScrollingStage extends React.Component {
     }
 
     generateContextMenuOptions = () => {
-        let returnValue = [{ name: 'log Hello', func: () => console.log('hello') }]
+        let returnValue = [{ name: 'Create Pin', func: () => { this.props.onPinCreate(); this.hideContextMenu(); } }]
         if (!!this.getSelectedPins().length) {
             returnValue.push({ name: "Delete Pin", func: this.deleteSelectedPins })
         }
