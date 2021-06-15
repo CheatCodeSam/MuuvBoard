@@ -25,6 +25,9 @@ const contextMenuState = {
 const panningState = {
     grab: false,
 }
+const windowSizeState = {
+    width: 0, height: 0
+}
 
 const stageStyles = {
     backgroundColor: "#e5e5f7",
@@ -33,6 +36,8 @@ const stageStyles = {
     backgroundSize: "22px 22px",
 
 }
+
+
 
 const MOUSEONE = 0;
 const MOUSETWO = 2;
@@ -51,11 +56,26 @@ class ScrollingStage extends React.Component {
             },
             ...selectionState,
             ...contextMenuState,
-            ...panningState
+            ...panningState,
+            ...windowSizeState
         }
+    }
+    // ===== LIFE CYCLE =====
+
+    componentDidMount() {
+        this.updateWindowDimensions();
+        window.addEventListener('resize', this.updateWindowDimensions);
+    }
+
+    componentWillUnmount() {
+        window.removeEventListener('resize', this.updateWindowDimensions);
     }
 
     // ===== UTIL =====
+
+    updateWindowDimensions = () => {
+        this.setState({ width: window.innerWidth, height: window.innerHeight });
+    }
 
     calculateStageOffset = (coords) => {
         return { x: coords.x - this.state.stageOffset.x, y: coords.y - this.state.stageOffset.y };
@@ -303,8 +323,8 @@ class ScrollingStage extends React.Component {
                 className={this.state.grab ? "grabbing" : ""}
             >
                 <Stage
-                    height={window.innerHeight}
-                    width={window.innerWidth}
+                    height={this.state.height}
+                    width={this.state.width}
                     style={offsetStyle}
                     ref={this.stage}
                     onContextMenu={this.onContextMenu}
