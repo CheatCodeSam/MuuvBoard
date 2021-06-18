@@ -3,6 +3,8 @@ import { Stage, Layer, Rect } from 'react-konva';
 import Konva from "konva";
 import ContextMenu from './ContextMenu';
 import ImagePin from './ImagePin'
+import PinEditor from './PinEditor';
+
 
 
 
@@ -54,6 +56,7 @@ class ScrollingStage extends React.Component {
                 x: 0,
                 y: 0
             },
+            showPinEditor: false,
             ...selectionState,
             ...contextMenuState,
             ...panningState,
@@ -299,11 +302,22 @@ class ScrollingStage extends React.Component {
     }
 
     generateContextMenuOptions = () => {
-        let returnValue = [{ name: 'Create Pin', func: () => { this.props.onPinCreate(); this.hideContextMenu(); } }]
+        let returnValue = [{ name: 'Create Pin', func: () => { this.showPinEditor(); this.hideContextMenu(); } }]
         if (!!this.getSelectedPins().length) {
             returnValue.push({ name: "Delete Pin", func: this.deleteSelectedPins })
         }
         return returnValue
+    }
+
+    // ===== PIN EDITOR =====
+
+    showPinEditor = () => {
+        this.setState({ showPinEditor: true })
+
+    }
+
+    onPinEditorEscape = (e) => {
+        this.setState({ showPinEditor: false })
     }
 
 
@@ -320,6 +334,13 @@ class ScrollingStage extends React.Component {
                 tabIndex='0'
                 className={this.state.grab ? "grabbing" : ""}
             >
+                {this.state.showPinEditor &&
+                    <PinEditor
+                        onEscape={() => this.setState({ showPinEditor: false })}
+                    />
+                }
+
+
                 <Stage
                     height={this.state.height}
                     width={this.state.width}
@@ -374,6 +395,8 @@ class ScrollingStage extends React.Component {
                         )}
                     </Layer>
                 </Stage>
+
+
 
             </div>
         )

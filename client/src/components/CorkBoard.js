@@ -9,7 +9,6 @@ class CorkBoard extends React.Component {
     constructor(props) {
         super(props)
         this.url = `${process.env.REACT_APP_BASE_URL}/api/boards/${props.data.id}/pins/`
-        this.state = { showPinEditor: false }
     }
 
     onPinMove = (pins) => {
@@ -37,20 +36,14 @@ class CorkBoard extends React.Component {
         axios.patch(this.url, modifiedPins)
     }
 
-    onEscape = (e) => {
-        this.setState({ showPinEditor: false })
-    }
+
 
 
     render() {
         return (
             <>
 
-                {this.state.showPinEditor &&
-                    <PinEditor
-                        onEscape={() => this.setState({ showPinEditor: false })}
-                    />
-                }
+
 
                 <ScrollingStage
                     pins={this.props.data.pins}
