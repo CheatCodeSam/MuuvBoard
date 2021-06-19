@@ -16,6 +16,7 @@ class PinEditor extends React.Component {
             image: values.file
         }
         this.props.onPinCreate(pin)
+        this.props.onEscape()
     }
 
 
