@@ -183,6 +183,7 @@ class ScrollingStage extends React.Component {
                 })
             } else if (target.parent.name() === "pin") {
                 const pin = this.getPinById(target.parent.id())
+                console.log(pin)
                 if (!!!pin.selected) {
                     this.deselectAllPins()
                     this.selectPinsById([pin.id])
@@ -320,6 +321,10 @@ class ScrollingStage extends React.Component {
         this.setState({ showPinEditor: false })
     }
 
+    onPinCreate = (pin) => {
+        this.props.onPinCreate(pin)
+    }
+
 
     render() {
         const offsetStyle = {
@@ -336,7 +341,10 @@ class ScrollingStage extends React.Component {
             >
                 {this.state.showPinEditor &&
                     <PinEditor
+                        x={this.state.contextMenu.x}
+                        y={this.state.contextMenu.y}
                         onEscape={() => this.setState({ showPinEditor: false })}
+                        onPinCreate={this.onPinCreate}
                     />
                 }
 

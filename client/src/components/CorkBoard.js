@@ -36,6 +36,20 @@ class CorkBoard extends React.Component {
         axios.patch(this.url, modifiedPins)
     }
 
+    onPinCreate = (pin) => {
+        const formData = new FormData();
+        formData.append('title', pin.title);
+        formData.append('image', pin.image);
+        formData.append('x_coordinate', pin.x_coordinate);
+        formData.append('y_coordinate', pin.y_coordinate);
+        formData.append('board', this.props.data.id);
+        try {
+            axios.post(this.url, formData)
+        } catch (response) {
+            const data = response.response.data;
+            console.log(data)
+        }
+    }
 
 
 
@@ -48,7 +62,7 @@ class CorkBoard extends React.Component {
                 <ScrollingStage
                     pins={this.props.data.pins}
                     onPinMove={this.onPinMove}
-                    onPinCreate={() => this.setState({ showPinEditor: true })}
+                    onPinCreate={this.onPinCreate}
                     onPinDelete={this.onPinDelete}
                 />
 

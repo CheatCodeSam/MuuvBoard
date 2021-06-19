@@ -8,6 +8,16 @@ class PinEditor extends React.Component {
         super(props)
     }
 
+    onSubmit = (values) => {
+        const pin = {
+            x_coordinate: this.props.x,
+            y_coordinate: this.props.y,
+            title: values.title,
+            image: values.file
+        }
+        this.props.onPinCreate(pin)
+    }
+
 
     render() {
         return (
@@ -16,7 +26,8 @@ class PinEditor extends React.Component {
 
 
                     <Formik
-                        initialValues={{ image: null }}
+                        initialValues={{ file: null }}
+                        onSubmit={this.onSubmit}
                     >
                         {({ values, handleSubmit, setFieldValue, handleChange }) => (
                             <form onSubmit={handleSubmit}>
