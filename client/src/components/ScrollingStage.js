@@ -1,5 +1,6 @@
 import React from 'react'
 import { Stage, Layer, Rect } from 'react-konva';
+import { v4 as uuidv4 } from 'uuid'
 import Konva from "konva";
 import ContextMenu from './ContextMenu';
 import ImagePin from './ImagePin'
@@ -322,6 +323,22 @@ class ScrollingStage extends React.Component {
     }
 
     onPinCreate = (pin) => {
+
+        const newPin =
+        {
+            id: uuidv4(),
+            title: pin.title,
+            image: URL.createObjectURL(pin.image),
+            x_coordinate: pin.x_coordinate,
+            y_coordinate: pin.y_coordinate,
+            selected: false
+        }
+        this.setState({
+            pins: [...this.state.pins, newPin],
+        })
+
+
+
         this.props.onPinCreate(pin)
     }
 

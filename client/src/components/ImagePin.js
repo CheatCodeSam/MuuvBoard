@@ -5,14 +5,19 @@ import useImage from 'use-image'
 
 function ImagePin(props) {
 
-    const url = `${process.env.REACT_APP_BASE_URL}${props.thumbnail}`
+    let url
+    if (props.thumbnail.includes('blob')) {
+        url = props.thumbnail
+    } else {
+        url = `${process.env.REACT_APP_BASE_URL}${props.thumbnail}`
+    }
+
 
     // const URLImage = () => {
     //     const [image] = useImage(url);
     //     return <Image width={120} height={120} x={7} y={7} image={image} />;
     // };
     const [image] = useImage(url);
-
 
     return (
         <Group
