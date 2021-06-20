@@ -82,7 +82,7 @@ margin-right: 2px;
     background-color: #969696;
 }
 
-.pin-editor {
+.overlay {
     position: absolute;
     justify-content: center;
     align-items: center;

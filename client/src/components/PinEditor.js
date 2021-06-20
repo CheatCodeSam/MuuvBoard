@@ -22,7 +22,7 @@ class PinEditor extends React.Component {
 
     render() {
         return (
-            <div className="pin-editor" onClick={this.props.onEscape}>
+            <div className="overlay" onClick={this.props.onEscape}>
                 <div className="pin-editor-form" onClick={e => e.stopPropagation()} >
 
 

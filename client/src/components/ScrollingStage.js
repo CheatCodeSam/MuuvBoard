@@ -5,6 +5,7 @@ import Konva from "konva";
 import ContextMenu from './ContextMenu';
 import ImagePin from './ImagePin'
 import PinEditor from './PinEditor';
+import PinView from './PinView';
 
 
 
@@ -58,6 +59,8 @@ class ScrollingStage extends React.Component {
                 y: 0
             },
             showPinEditor: false,
+            showPinView: false,
+            pinToView: 0,
             ...selectionState,
             ...contextMenuState,
             ...panningState,
@@ -184,7 +187,6 @@ class ScrollingStage extends React.Component {
                 })
             } else if (target.parent.name() === "pin") {
                 const pin = this.getPinById(target.parent.id())
-                console.log(pin)
                 if (!!!pin.selected) {
                     this.deselectAllPins()
                     this.selectPinsById([pin.id])
@@ -271,6 +273,11 @@ class ScrollingStage extends React.Component {
 
     onPinDragEnd = (e) => {
         this.props.onPinMove(this.getSelectedPins())
+    }
+
+    onPinDoubleClick = (e) => {
+        const { target } = e;
+        this.setState({ showPinView: true, pinToView: target.parent.id() })
     }
 
     // ===== CONTEXT MENU =====
@@ -365,6 +372,13 @@ class ScrollingStage extends React.Component {
                     />
                 }
 
+                {this.state.showPinView &&
+                    <PinView
+                        pinId={this.state.pinToView}
+                        onEscape={() => this.setState({ showPinView: false })}
+                    />
+                }
+
 
                 <Stage
                     height={this.state.height}
@@ -394,6 +408,7 @@ class ScrollingStage extends React.Component {
                                     onDragStart={this.onPinDragStart}
                                     onDragMove={this.onPinDrag}
                                     onDragEnd={this.onPinDragEnd}
+                                    onDblClick={this.onPinDoubleClick}
                                 />
                             })
                         }

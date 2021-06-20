@@ -12,11 +12,6 @@ function ImagePin(props) {
         url = `${process.env.REACT_APP_BASE_URL}${props.thumbnail}`
     }
 
-
-    // const URLImage = () => {
-    //     const [image] = useImage(url);
-    //     return <Image width={120} height={120} x={7} y={7} image={image} />;
-    // };
     const [image] = useImage(url);
 
     return (
@@ -28,6 +23,7 @@ function ImagePin(props) {
             onDragStart={props.onDragStart}
             onDragMove={props.onDragMove}
             onDragEnd={props.onDragEnd}
+            onDblClick={props.onDblClick}
             name={props.name}
             width={135}
             height={160}
@@ -43,7 +39,6 @@ function ImagePin(props) {
                 shadowOpacity={0.25}
 
             />
-            {/* <URLImage /> */}
             <Image width={120} height={120} x={7} y={7} image={image} />
             <Text text={props.title} align="center" width={135} height={32} y={128} fontSize={12} />
         </Group >
