@@ -20,6 +20,7 @@ Interesting Links:
 https://codesandbox.io/s/react-konva-infinite-grid-kkndq
 https://longviewcoder.com/2021/01/18/html5-canvas-bottoms-up-with-konva/
 https://codesandbox.io/s/react-konva-select-and-drag-7fct5
+https://facebook.github.io/flux/docs/in-depth-overview/
 
 testuser123
 testpass123
