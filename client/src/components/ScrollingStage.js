@@ -72,10 +72,14 @@ class ScrollingStage extends React.Component {
     componentDidMount() {
         this.updateWindowDimensions();
         window.addEventListener('resize', this.updateWindowDimensions);
+        window.addEventListener('mouseup', this.onMouseUpWindow)
+        window.addEventListener('mousemove', this.onMouseMoveWindow)
     }
 
     componentWillUnmount() {
         window.removeEventListener('resize', this.updateWindowDimensions);
+        window.removeEventListener('mouseup', this.onMouseUpWindow);
+        window.removeEventListener('mousemove', this.onMouseMoveWindow)
     }
 
     // ===== UTIL =====
@@ -160,7 +164,7 @@ class ScrollingStage extends React.Component {
         this.setState({ pins: [...otherPins, ...pinsToPush] })
     }
 
-    // ===== STAGE EVENTS =====
+    // ===== STAGE/WINDOW EVENTS =====
 
     onMouseDownOnStage = (e) => {
         const stage = this.stage.current;
@@ -201,7 +205,7 @@ class ScrollingStage extends React.Component {
         }
     }
 
-    onMouseUp = (e) => {
+    onMouseUpWindow = (e) => {
         const stage = this.stage.current;
 
         if (this.state.selection.visible) {
@@ -219,10 +223,10 @@ class ScrollingStage extends React.Component {
         }
     }
 
-    onMouseMove = (e) => {
+    onMouseMoveWindow = (e) => {
         const stage = this.stage.current;
         if (this.state.selection.visible) {
-            const { x, y } = this.calculateStageOffset(stage.getPointerPosition())
+            const { x, y } = this.calculateStageOffset({ x: e.clientX, y: e.clientY })
             this.setState(
                 {
                     selection: {
@@ -387,8 +391,6 @@ class ScrollingStage extends React.Component {
                     ref={this.stage}
                     onContextMenu={this.onContextMenu}
                     onMouseDown={this.onMouseDownOnStage}
-                    onMouseMove={this.onMouseMove}
-                    onMouseUp={this.onMouseUp}
                     draggable={this.state.grab}
                     onDragMove={this.onStageDrag}
                 >

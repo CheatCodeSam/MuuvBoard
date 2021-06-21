@@ -5,10 +5,8 @@ class PinView extends React.Component {
 
     constructor(props) {
         super(props)
-        this.image
     }
 
-    loadImage
 
 
 
