@@ -374,7 +374,7 @@ class ScrollingStage extends React.Component {
 
                 {this.state.showPinView &&
                     <PinView
-                        pinId={this.state.pinToView}
+                        data={this.getPinById(this.state.pinToView)}
                         onEscape={() => this.setState({ showPinView: false })}
                     />
                 }
