@@ -173,11 +173,10 @@ class ScrollingStage extends React.Component {
     }
 
     onPinCreate = (pin) => {
-        // console.log(pin)
-
+        const newPinId = uuidv4()
         const newPin =
         {
-            id: uuidv4(),
+            id: newPinId,
             title: pin.title,
             image: URL.createObjectURL(pin.image),
             x_coordinate: pin.x_coordinate,
@@ -187,6 +186,8 @@ class ScrollingStage extends React.Component {
         this.setState({
             pins: [...this.state.pins, newPin],
         })
+        this.selectPins([newPinId])
+
         this.props.onPinCreate(pin)
     }
 
