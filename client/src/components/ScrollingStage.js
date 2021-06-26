@@ -172,9 +172,22 @@ class ScrollingStage extends React.Component {
         return entry.map((obj) => modified.find((o) => o.id === obj.id) || obj);
     }
 
+    onPinCreate = (pin) => {
 
-
-
+        const newPin =
+        {
+            id: uuidv4(),
+            title: pin.title,
+            image: URL.createObjectURL(pin.image),
+            x_coordinate: pin.x_coordinate,
+            y_coordinate: pin.y_coordinate,
+            selected: false
+        }
+        this.setState({
+            pins: [...this.state.pins, newPin],
+        })
+        this.props.onPinCreate(pin)
+    }
 
     // ===== STAGE/WINDOW EVENTS =====
 
@@ -341,27 +354,6 @@ class ScrollingStage extends React.Component {
     onPinEditorEscape = (e) => {
         this.setState({ showPinEditor: false })
     }
-
-    onPinCreate = (pin) => {
-
-        const newPin =
-        {
-            id: uuidv4(),
-            title: pin.title,
-            image: URL.createObjectURL(pin.image),
-            x_coordinate: pin.x_coordinate,
-            y_coordinate: pin.y_coordinate,
-            selected: false
-        }
-        this.setState({
-            pins: [...this.state.pins, newPin],
-        })
-
-
-
-        this.props.onPinCreate(pin)
-    }
-
 
     render() {
         const offsetStyle = {
