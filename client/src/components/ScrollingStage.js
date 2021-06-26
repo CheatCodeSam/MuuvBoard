@@ -173,6 +173,7 @@ class ScrollingStage extends React.Component {
     }
 
     onPinCreate = (pin) => {
+        // console.log(pin)
 
         const newPin =
         {

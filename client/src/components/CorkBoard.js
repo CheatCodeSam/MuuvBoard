@@ -2,6 +2,7 @@ import axios from 'axios';
 import React from 'react';
 import ScrollingStage from './ScrollingStage'
 import PinEditor from './PinEditor';
+import PinRequest from './PinRequest'
 
 
 class CorkBoard extends React.Component {
@@ -9,6 +10,11 @@ class CorkBoard extends React.Component {
     constructor(props) {
         super(props)
         this.url = `${process.env.REACT_APP_BASE_URL}/api/boards/${props.data.id}/pins/`
+        this.request = new PinRequest(props.data.id);
+    }
+
+    getIds = (pins) => {
+        return pins.map(pin => { return pin.id })
     }
 
     onPinMove = (pins) => {
@@ -25,30 +31,11 @@ class CorkBoard extends React.Component {
     }
 
     onPinDelete = (pins) => {
-        const modifiedPins = {
-            pins: pins.map(pin => {
-                return {
-                    id: pin.id,
-                    action: "delete",
-                }
-            })
-        }
-        axios.patch(this.url, modifiedPins)
+        this.request.onPinsDelete(this.getIds(pins))
     }
 
     onPinCreate = (pin) => {
-        const formData = new FormData();
-        formData.append('title', pin.title);
-        formData.append('image', pin.image);
-        formData.append('x_coordinate', pin.x_coordinate);
-        formData.append('y_coordinate', pin.y_coordinate);
-        formData.append('board', this.props.data.id);
-        try {
-            axios.post(this.url, formData)
-        } catch (response) {
-            const data = response.response.data;
-            console.log(data)
-        }
+        this.request.onPinCreate(pin)
     }
 
 
