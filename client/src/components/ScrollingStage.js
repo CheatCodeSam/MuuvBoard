@@ -191,6 +191,10 @@ class ScrollingStage extends React.Component {
         this.props.onPinCreate(pin)
     }
 
+    onPinMoveEnd = () => {
+        this.props.onPinMove(this.getSelectedPins())
+    }
+
     // ===== STAGE/WINDOW EVENTS =====
 
     onMouseDownOnStage = (e) => {
@@ -301,7 +305,7 @@ class ScrollingStage extends React.Component {
     }
 
     onPinDragEnd = (e) => {
-        this.props.onPinMove(this.getSelectedPins())
+        this.onPinMoveEnd()
     }
 
     onPinDoubleClick = (e) => {
