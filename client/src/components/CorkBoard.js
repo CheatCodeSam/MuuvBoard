@@ -18,16 +18,7 @@ class CorkBoard extends React.Component {
     }
 
     onPinMove = (pins) => {
-        const modifiedPins = {
-            pins: pins.map(pin => {
-                return {
-                    id: pin.id,
-                    action: "move",
-                    movement: { x: pin.x_coordinate, y: pin.y_coordinate }
-                }
-            })
-        }
-        axios.patch(this.url, modifiedPins);
+        this.request.onPinsMoveEnd(pins)
     }
 
     onPinDelete = (pins) => {

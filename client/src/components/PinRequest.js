@@ -8,13 +8,14 @@ class PinRequest {
         this.id = boardId
     }
 
-    onPinsMoveEnd = (pinIds, coords) => {
+    // TODO work with ids and coords instead of pins object.
+    onPinsMoveEnd = (pins) => {
         const modifiedPins = {
-            pins: pinIds.map(pinId => {
+            pins: pins.map(pin => {
                 return {
-                    id: pinId,
+                    id: pin.id,
                     action: "move",
-                    movement: { x: coords.x, y: coords.y }
+                    movement: { x: pin.x_coordinate, y: pin.y_coordinate }
                 }
             })
         }
