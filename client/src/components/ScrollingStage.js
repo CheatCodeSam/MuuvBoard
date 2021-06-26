@@ -100,6 +100,29 @@ class ScrollingStage extends React.Component {
         return this.state.pins.filter(pin => pin.selected).map(pin => pin.id)
     }
 
+    getPinById = (id) => {
+        return this.state.pins.find(pin => pin.id === id);
+    };
+
+    calculateSelectionBox = () => {
+        return {
+            x: Math.min(this.state.selection.x1, this.state.selection.x2),
+            y: Math.min(this.state.selection.y1, this.state.selection.y2),
+            height: Math.abs(this.state.selection.y2 - this.state.selection.y1),
+            width: Math.abs(this.state.selection.x2 - this.state.selection.x1)
+        };
+    }
+
+    hideContextMenu = () => {
+        this.setState((state) => {
+            return { contextMenu: { ...state.contextMenu, visible: false } };
+        });
+    };
+
+    hideSelectionBox = () => {
+        this.setState({ selection: { ...this.state.selection, visible: false } })
+    }
+
     //! This function is special
     selectPins = (ids) => {
         const _selectPinsById = (state) => {
@@ -125,13 +148,8 @@ class ScrollingStage extends React.Component {
         this.setState({ pins: [...otherPins, ...pinsToPush] })
     }
 
-    // This could also be moved
-    // TODO: break these down
     moveSelectedPins = (coords) => {
         this.movePins(coords, this.getSelectedPinsIds())
-        // const selectedPins = this.getSelectedPins()
-        // const movedPins = selectedPins.map(pin => { return { ...pin, x_coordinate: pin.x_coordinate + coords.x, y_coordinate: pin.y_coordinate + coords.y } })
-        // this.setState({ pins: this.mergePinsbyId(this.state.pins, movedPins) })
     }
 
     movePins = (coords, ids) => {
@@ -140,44 +158,21 @@ class ScrollingStage extends React.Component {
         this.setState({ pins: this.mergePinsbyId(this.state.pins, movedPins) })
     }
 
-    // This too
-    // TODO: break these down
     deleteSelectedPins = () => {
-        this.hideContextMenu();
-        const pinsToDelete = this.getSelectedPins()
-        this.setState({ pins: this.state.pins.filter(pin => !!!pin.selected) })
-        this.props.onPinDelete(pinsToDelete)
+        this.deletePins(this.getSelectedPinsIds())
     }
 
     deletePins = (ids) => {
+        const PinsToDelete = ids.map(id => this.getPinById(id))
+        this.setState({ pins: this.state.pins.filter(pin => !!!ids.includes(pin.id)) })
+        this.props.onPinDelete(PinsToDelete)
     }
 
     mergePinsbyId = (entry, modified) => {
         return entry.map((obj) => modified.find((o) => o.id === obj.id) || obj);
     }
 
-    getPinById = (id) => {
-        return this.state.pins.find(pin => pin.id === id);
-    };
 
-    calculateSelectionBox = () => {
-        return {
-            x: Math.min(this.state.selection.x1, this.state.selection.x2),
-            y: Math.min(this.state.selection.y1, this.state.selection.y2),
-            height: Math.abs(this.state.selection.y2 - this.state.selection.y1),
-            width: Math.abs(this.state.selection.x2 - this.state.selection.x1)
-        };
-    }
-
-    hideContextMenu = () => {
-        this.setState((state) => {
-            return { contextMenu: { ...state.contextMenu, visible: false } };
-        });
-    };
-
-    hideSelectionBox = () => {
-        this.setState({ selection: { ...this.state.selection, visible: false } })
-    }
 
 
 
@@ -331,7 +326,7 @@ class ScrollingStage extends React.Component {
     generateContextMenuOptions = () => {
         let returnValue = [{ name: 'Create Pin', func: () => { this.showPinEditor(); this.hideContextMenu(); } }]
         if (!!this.getSelectedPins().length) {
-            returnValue.push({ name: "Delete Pin", func: this.deleteSelectedPins })
+            returnValue.push({ name: "Delete Pin", func: () => { this.deleteSelectedPins(); this.hideContextMenu(); } })
         }
         return returnValue
     }
