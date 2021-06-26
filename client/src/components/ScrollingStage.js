@@ -5,19 +5,20 @@ import ContextMenu from './ContextMenu';
 import ImagePin from './ImagePin'
 import PinEditor from './PinEditor';
 import PinView from './PinView';
+import SelectionBoxEvents from './SelectionBoxEvents';
 
 
 
 
-const selectionState = {
-    selection: {
-        visible: false,
-        x1: null,
-        y1: null,
-        x2: null,
-        y2: null
-    }
-}
+// const selectionState = {
+//     selection: {
+//         visible: false,
+//         x1: null,
+//         y1: null,
+//         x2: null,
+//         y2: null
+//     }
+// }
 const contextMenuState = {
     contextMenu: {
         visible: false,
@@ -49,7 +50,9 @@ class ScrollingStage extends React.Component {
 
     constructor(props) {
         super(props);
+        this.setState = this.setState.bind(this);
         this.stage = React.createRef()
+        this.selectionBox = new SelectionBoxEvents(this.setState);
         this.state = {
             stageOffset: {
                 x: 0,
@@ -58,7 +61,7 @@ class ScrollingStage extends React.Component {
             showPinEditor: false,
             showPinView: false,
             pinToView: 0,
-            ...selectionState,
+            ...this.selectionBox.getState(),
             ...contextMenuState,
             ...panningState,
             ...windowSizeState
@@ -101,24 +104,11 @@ class ScrollingStage extends React.Component {
         return this.props.pins.find(pin => pin.id === id);
     };
 
-    calculateSelectionBox = () => {
-        return {
-            x: Math.min(this.state.selection.x1, this.state.selection.x2),
-            y: Math.min(this.state.selection.y1, this.state.selection.y2),
-            height: Math.abs(this.state.selection.y2 - this.state.selection.y1),
-            width: Math.abs(this.state.selection.x2 - this.state.selection.x1)
-        };
-    }
-
     hideContextMenu = () => {
         this.setState((state) => {
             return { contextMenu: { ...state.contextMenu, visible: false } };
         });
     };
-
-    hideSelectionBox = () => {
-        this.setState({ selection: { ...this.state.selection, visible: false } })
-    }
 
     // ===== PROPS REQUEST =====
 
@@ -154,19 +144,8 @@ class ScrollingStage extends React.Component {
         if (e.evt.button === MOUSEONE) {
             if (target === stage) {
                 this.selectPins([])
-                const { x, y } = this.calculateStageOffset(stage.getPointerPosition())
-                this.setState(state => {
-                    return {
-                        selection: {
-                            ...state.selection,
-                            visible: true,
-                            x1: x,
-                            y1: y,
-                            x2: x,
-                            y2: y
-                        }
-                    }
-                })
+                const coords = this.calculateStageOffset(stage.getPointerPosition())
+                this.selectionBox.selectionBoxCreate(coords)
             } else if (target.parent.name() === "pin") {
                 const pin = this.getPinById(target.parent.id())
                 if (!!!pin.selected) {
@@ -177,7 +156,7 @@ class ScrollingStage extends React.Component {
 
         if (e.evt.button === MOUSETHREE) {
             e.evt.preventDefault();
-            this.hideSelectionBox()
+            this.selectionBox.hideSelectionBox()
             this.setState({ grab: true });
         }
     }
@@ -185,14 +164,10 @@ class ScrollingStage extends React.Component {
     onMouseUpWindow = (e) => {
         const stage = this.stage.current;
 
-        if (this.state.selection.visible) {
-            this.hideSelectionBox()
-
-            const selectionBox = this.calculateSelectionBox()
+        if (this.selectionBox.isVisible(this.state)) {
             const pinShapes = stage.find('.pin')
-            // TODO fix this ugly line
-            const selected = pinShapes.filter(pin => Konva.Util.haveIntersection(selectionBox, { x: pin.x(), y: pin.y(), width: pin.width(), height: pin.height() }))
-            this.selectPins(selected.map((a) => a.id()))
+            const selectedPins = this.selectionBox.selectionBoxEnd(this.state, pinShapes)
+            this.selectPins(selectedPins.map((a) => a.id()))
         }
 
         if (this.state.grab) {
@@ -202,17 +177,9 @@ class ScrollingStage extends React.Component {
 
     onMouseMoveWindow = (e) => {
         const stage = this.stage.current;
-        if (this.state.selection.visible) {
-            const { x, y } = this.calculateStageOffset({ x: e.clientX, y: e.clientY })
-            this.setState(
-                {
-                    selection: {
-                        ...this.state.selection,
-                        x2: x,
-                        y2: y
-                    }
-                }
-            )
+        if (this.selectionBox.isVisible(this.state)) {
+            const coords = this.calculateStageOffset({ x: e.clientX, y: e.clientY })
+            this.selectionBox.selectionBoxMove(coords)
         }
     }
 
@@ -267,7 +234,7 @@ class ScrollingStage extends React.Component {
         const { target } = e;
 
         e.evt.preventDefault()
-        this.hideSelectionBox()
+        this.selectionBox.hideSelectionBox()
         const { x, y } = this.calculateStageOffset(stage.getPointerPosition())
         this.setState(
             {
@@ -314,7 +281,7 @@ class ScrollingStage extends React.Component {
             backgroundPosition:
                 this.state.stageOffset.x + "px " + this.state.stageOffset.y + "px"
         }
-        const selc = this.calculateSelectionBox()
+        const selc = this.selectionBox.calculateSelectionBox(this.state)
 
         return (
             <div
@@ -369,7 +336,7 @@ class ScrollingStage extends React.Component {
                             })
                         }
 
-                        {this.state.selection.visible && (
+                        {this.selectionBox.isVisible(this.state) && (
                             <Rect
                                 name="selection"
                                 x={selc.x}
