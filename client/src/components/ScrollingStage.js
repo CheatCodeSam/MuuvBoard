@@ -96,25 +96,29 @@ class ScrollingStage extends React.Component {
         return this.state.pins.filter(pin => pin.selected);
     }
 
+    getSelectedPinsIds = () => {
+        return this.state.pins.filter(pin => pin.selected).map(pin => pin.id)
+    }
+
     //! This function is special
-    selectPins = (pins) => {
+    selectPins = (ids) => {
         const _selectPinsById = (state) => {
             return state.pins.map(pin => {
-                if (pins.includes(pin.id)) {
+                if (ids.includes(pin.id)) {
                     return { ...pin, selected: true }
                 } else {
                     return { ...pin, selected: false };
                 }
             })
         }
-        this.pushPinsToTop(pins)
+        this.pushPinsToTop(ids)
         this.setState(state => {
             return { pins: _selectPinsById(state) }
         })
 
     }
 
-    // Subset of a special Function
+    // Member of a selectPins Function
     pushPinsToTop = (ids) => {
         const pinsToPush = this.state.pins.filter(pin => ids.includes(pin.id))
         const otherPins = this.state.pins.filter(pin => !ids.includes(pin.id))
@@ -124,8 +128,15 @@ class ScrollingStage extends React.Component {
     // This could also be moved
     // TODO: break these down
     moveSelectedPins = (coords) => {
-        const selectedPins = this.getSelectedPins()
-        const movedPins = selectedPins.map(pin => { return { ...pin, x_coordinate: pin.x_coordinate + coords.x, y_coordinate: pin.y_coordinate + coords.y } })
+        this.movePins(coords, this.getSelectedPinsIds())
+        // const selectedPins = this.getSelectedPins()
+        // const movedPins = selectedPins.map(pin => { return { ...pin, x_coordinate: pin.x_coordinate + coords.x, y_coordinate: pin.y_coordinate + coords.y } })
+        // this.setState({ pins: this.mergePinsbyId(this.state.pins, movedPins) })
+    }
+
+    movePins = (coords, ids) => {
+        const PinsToMove = ids.map(id => this.getPinById(id))
+        const movedPins = PinsToMove.map(pin => { return { ...pin, x_coordinate: pin.x_coordinate + coords.x, y_coordinate: pin.y_coordinate + coords.y } })
         this.setState({ pins: this.mergePinsbyId(this.state.pins, movedPins) })
     }
 
@@ -136,6 +147,9 @@ class ScrollingStage extends React.Component {
         const pinsToDelete = this.getSelectedPins()
         this.setState({ pins: this.state.pins.filter(pin => !!!pin.selected) })
         this.props.onPinDelete(pinsToDelete)
+    }
+
+    deletePins = (ids) => {
     }
 
     mergePinsbyId = (entry, modified) => {
