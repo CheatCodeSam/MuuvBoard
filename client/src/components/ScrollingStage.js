@@ -96,7 +96,7 @@ class ScrollingStage extends React.Component {
         return this.state.pins.filter(pin => pin.selected);
     }
 
-    // This function is special
+    //! This function is special
     selectPins = (pins) => {
         const _selectPinsById = (state) => {
             return state.pins.map(pin => {
@@ -112,14 +112,6 @@ class ScrollingStage extends React.Component {
             return { pins: _selectPinsById(state) }
         })
 
-    }
-
-    deselectAllPins = () => {
-        this.selectPins([])
-    }
-
-    selectPinsById = (pins) => {
-        this.selectPins([...pins])
     }
 
     // Subset of a special Function
@@ -186,7 +178,7 @@ class ScrollingStage extends React.Component {
 
         if (e.evt.button === MOUSEONE) {
             if (target === stage) {
-                this.deselectAllPins()
+                this.selectPins([])
                 const { x, y } = this.calculateStageOffset(stage.getPointerPosition())
                 this.setState(state => {
                     return {
@@ -203,8 +195,7 @@ class ScrollingStage extends React.Component {
             } else if (target.parent.name() === "pin") {
                 const pin = this.getPinById(target.parent.id())
                 if (!!!pin.selected) {
-                    this.deselectAllPins()
-                    this.selectPinsById([pin.id])
+                    this.selectPins([pin.id])
                 }
             }
         }
@@ -221,12 +212,12 @@ class ScrollingStage extends React.Component {
 
         if (this.state.selection.visible) {
             this.hideSelectionBox()
-            this.deselectAllPins()
+
             const selectionBox = this.calculateSelectionBox()
             const pinShapes = stage.find('.pin')
             // TODO fix this ugly line
             const selected = pinShapes.filter(pin => Konva.Util.haveIntersection(selectionBox, { x: pin.x(), y: pin.y(), width: pin.width(), height: pin.height() }))
-            this.selectPinsById(selected.map((a) => a.id()))
+            this.selectPins(selected.map((a) => a.id()))
         }
 
         if (this.state.grab) {
@@ -269,8 +260,7 @@ class ScrollingStage extends React.Component {
         const pin = this.getPinById(target.id());
 
         if (!!!pin.selected) {
-            this.deselectAllPins()
-            this.selectPinsById([pin.id])
+            this.selectPins([pin.id])
         }
     }
 
@@ -315,12 +305,11 @@ class ScrollingStage extends React.Component {
             }
         )
         if (target === stage) {
-            this.deselectAllPins()
+            this.selectPins([])
         } else if (target.parent.name() === "pin") {
             const pin = this.getPinById(target.parent.id())
             if (!!!pin.selected) {
-                this.deselectAllPins()
-                this.selectPinsById([pin.id])
+                this.selectPins([pin.id])
             }
         }
     }
