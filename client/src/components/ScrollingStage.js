@@ -1,6 +1,5 @@
 import React from 'react'
 import { Stage, Layer, Rect } from 'react-konva';
-import { v4 as uuidv4 } from 'uuid'
 import Konva from "konva";
 import ContextMenu from './ContextMenu';
 import ImagePin from './ImagePin'
@@ -42,7 +41,6 @@ const stageStyles = {
 }
 
 
-
 const MOUSEONE = 0;
 const MOUSETWO = 2;
 const MOUSETHREE = 1;
@@ -53,7 +51,6 @@ class ScrollingStage extends React.Component {
         super(props);
         this.stage = React.createRef()
         this.state = {
-            pins: props.pins.map(pin => { return { ...pin, selected: false } }),
             stageOffset: {
                 x: 0,
                 y: 0
@@ -93,15 +90,15 @@ class ScrollingStage extends React.Component {
     }
 
     getSelectedPins = () => {
-        return this.state.pins.filter(pin => pin.selected);
+        return this.props.pins.filter(pin => pin.selected);
     }
 
     getSelectedPinsIds = () => {
-        return this.state.pins.filter(pin => pin.selected).map(pin => pin.id)
+        return this.props.pins.filter(pin => pin.selected).map(pin => pin.id)
     }
 
     getPinById = (id) => {
-        return this.state.pins.find(pin => pin.id === id);
+        return this.props.pins.find(pin => pin.id === id);
     };
 
     calculateSelectionBox = () => {
@@ -123,76 +120,26 @@ class ScrollingStage extends React.Component {
         this.setState({ selection: { ...this.state.selection, visible: false } })
     }
 
-    //! This function is special
+    // ===== PROPS REQUEST =====
+
     selectPins = (ids) => {
-        const _selectPinsById = (state) => {
-            return state.pins.map(pin => {
-                if (ids.includes(pin.id)) {
-                    return { ...pin, selected: true }
-                } else {
-                    return { ...pin, selected: false };
-                }
-            })
-        }
-        this.pushPinsToTop(ids)
-        this.setState(state => {
-            return { pins: _selectPinsById(state) }
-        })
-
-    }
-
-    // Member of a selectPins Function
-    pushPinsToTop = (ids) => {
-        const pinsToPush = this.state.pins.filter(pin => ids.includes(pin.id))
-        const otherPins = this.state.pins.filter(pin => !ids.includes(pin.id))
-        this.setState({ pins: [...otherPins, ...pinsToPush] })
+        this.props.onPinSelect(ids)
     }
 
     moveSelectedPins = (coords) => {
-        this.movePins(coords, this.getSelectedPinsIds())
-    }
-
-    movePins = (coords, ids) => {
-        const PinsToMove = ids.map(id => this.getPinById(id))
-        const movedPins = PinsToMove.map(pin => { return { ...pin, x_coordinate: pin.x_coordinate + coords.x, y_coordinate: pin.y_coordinate + coords.y } })
-        this.setState({ pins: this.mergePinsbyId(this.state.pins, movedPins) })
+        this.props.onPinMove(coords, this.getSelectedPinsIds())
     }
 
     deleteSelectedPins = () => {
-        this.deletePins(this.getSelectedPinsIds())
-    }
-
-    deletePins = (ids) => {
-        const PinsToDelete = ids.map(id => this.getPinById(id))
-        this.setState({ pins: this.state.pins.filter(pin => !!!ids.includes(pin.id)) })
-        this.props.onPinDelete(PinsToDelete)
-    }
-
-    mergePinsbyId = (entry, modified) => {
-        return entry.map((obj) => modified.find((o) => o.id === obj.id) || obj);
+        this.props.onPinDelete(this.getSelectedPinsIds())
     }
 
     onPinCreate = (pin) => {
-        const newPinId = uuidv4()
-        const newPin =
-        {
-            id: newPinId,
-            title: pin.title,
-            image: URL.createObjectURL(pin.image),
-            x_coordinate: pin.x_coordinate,
-            y_coordinate: pin.y_coordinate,
-            selected: false
-        }
-        this.setState({
-            pins: [...this.state.pins, newPin],
-        })
-        this.selectPins([newPinId])
-
         this.props.onPinCreate(pin)
     }
 
     onPinMoveEnd = () => {
-        this.props.onPinMove(this.getSelectedPins())
+        this.props.onPinMoveEnd(this.getSelectedPins())
     }
 
     // ===== STAGE/WINDOW EVENTS =====
@@ -403,7 +350,7 @@ class ScrollingStage extends React.Component {
                 >
                     <Layer>
                         {
-                            this.state.pins.map((pin) => {
+                            this.props.pins.map((pin) => {
                                 return <ImagePin
                                     key={pin.id}
                                     id={pin.id}

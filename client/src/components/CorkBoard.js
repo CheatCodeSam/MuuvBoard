@@ -65,11 +65,9 @@ class CorkBoard extends React.Component {
     }
 
     onPinDelete = (pins) => {
-        const ids = this.getIds(pins)
-        const PinsToDelete = ids.map(id => this.getPinById(id))
-        this.setState({ pins: this.state.pins.filter(pin => !!!ids.includes(pin.id)) })
+        this.setState({ pins: this.state.pins.filter(pin => !!!pins.includes(pin.id)) })
 
-        this.request.onPinsDelete(PinsToDelete)
+        this.request.onPinsDelete(pins)
     }
 
     onPinCreate = (pin) => {
@@ -87,7 +85,7 @@ class CorkBoard extends React.Component {
         this.setState({
             pins: [...this.state.pins, newPin],
         })
-        this.selectPins([newPinId])
+        this.onPinSelect([newPinId])
 
         this.request.onPinCreate(pin)
     }
@@ -103,8 +101,10 @@ class CorkBoard extends React.Component {
         return (
             <>
                 <ScrollingStage
-                    pins={this.props.data.pins}
-                    onPinMove={this.onPinMoveEnd}
+                    pins={this.state.pins}
+                    onPinSelect={this.onPinSelect}
+                    onPinMove={this.onPinMove}
+                    onPinMoveEnd={this.onPinMoveEnd}
                     onPinCreate={this.onPinCreate}
                     onPinDelete={this.onPinDelete}
                 />
