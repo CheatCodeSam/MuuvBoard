@@ -33,10 +33,15 @@ function ImagePin(props) {
                 y={0}
                 width={135}
                 height={160}
-                fill={props.selected ? "blue" : "white"}
+                fill={"white"}
                 shadowBlur={4}
                 shadowOffsetY={4}
                 shadowOpacity={0.25}
+                strokeEnabled={props.selected}
+                stroke='rgba(21, 156, 228, 0.4)'
+                strokeWidth={5}
+                hitStrokeWidth={0}
+                shadowForStrokeEnabled={false}
 
             />
             <Image width={120} height={120} x={7} y={7} image={image} />
