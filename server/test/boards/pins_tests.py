@@ -2,8 +2,9 @@ import pytest
 from django.core.files.uploadedfile import SimpleUploadedFile
 from PIL import Image
 
-from boards.models import Board, Pin
+from boards.models import Board
 from boards.serializers import BoardSerializer
+from pins.models import Pin
 
 from .conftest import generate_board_with_pins, generate_image
 

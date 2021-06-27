@@ -8,7 +8,9 @@ from rest_framework.parsers import FileUploadParser
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from .models import Board, Pin
+from pins.models import Pin
+
+from .models import Board
 from .serializers import BoardListSerializer, BoardSerializer, PinSerializer
 
 

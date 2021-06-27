@@ -5,7 +5,8 @@ import pytest
 from attr import s
 from PIL import Image
 
-from boards.models import Board, Pin
+from boards.models import Board
+from pins.models import Pin
 
 
 @pytest.fixture(scope="function")

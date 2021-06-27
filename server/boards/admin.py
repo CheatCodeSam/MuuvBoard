@@ -1,11 +1,6 @@
 from django.contrib import admin
 
-from .models import Board, Pin
-
-
-@admin.register(Pin)
-class PinAdmin(admin.ModelAdmin):
-    pass
+from .models import Board
 
 
 @admin.register(Board)
