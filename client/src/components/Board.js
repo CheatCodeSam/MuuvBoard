@@ -7,7 +7,7 @@ class Board extends React.Component {
 
     constructor(props) {
         super(props);
-        this.url = `${process.env.REACT_APP_BASE_URL}/api/boards/${props.match.params.BoardId}/pins/`;
+        this.url = `${process.env.REACT_APP_BASE_URL}/api/boards/${props.match.params.BoardId}/`;
         this.state = { loading: true, board: null };
     }
 

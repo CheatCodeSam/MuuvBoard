@@ -4,7 +4,7 @@ import axios from 'axios';
 
 class PinRequest {
     constructor(boardId) {
-        this.url = `${process.env.REACT_APP_BASE_URL}/api/boards/${boardId}/pins/`
+        this.url = `${process.env.REACT_APP_BASE_URL}/api/boards/${boardId}/`
         this.id = boardId
     }
 
