@@ -9,13 +9,18 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from .models import Board, Pin
-from .serializers import BoardSerializer, BoardWithPinsSerializer, PinSerializer
+from .serializers import (
+    BoardListSerializer,
+    BoardSerializer,
+    BoardWithPinsSerializer,
+    PinSerializer,
+)
 
 
 class BoardList(APIView):
     def get(self, request, format=None):
         boards = Board.objects.all()
-        serializer = BoardSerializer(boards, many=True)
+        serializer = BoardListSerializer(boards, many=True)
         return Response(serializer.data)
 
     def post(self, request, format=None):

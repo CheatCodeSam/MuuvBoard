@@ -42,6 +42,7 @@ line-length = 89
 
 [tool.isort]
 line_length = 89
+profile = "black"
 
 [tool.pytest.ini_options]
 DJANGO_SETTINGS_MODULE = "muuvboard.settings"
