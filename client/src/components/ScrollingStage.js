@@ -9,21 +9,6 @@ import SelectionBoxEvents from './SelectionBoxEvents';
 import ContextMenuEvents from './ContextMenuEvents';
 
 
-const panningState = {
-    grab: false,
-}
-const windowSizeState = {
-    width: 0, height: 0
-}
-
-const stageStyles = {
-    backgroundColor: "#e5e5f7",
-    opacity: 0.8,
-    backgroundImage: "radial-gradient(#444cf7 1.1px, #e5e5f7 1.1px)",
-    backgroundSize: "22px 22px",
-}
-
-
 const MOUSEONE = 0;
 const MOUSETWO = 2;
 const MOUSETHREE = 1;
@@ -37,6 +22,7 @@ class ScrollingStage extends React.Component {
         this.selectionBox = new SelectionBoxEvents(this.setState);
         this.contextMenu = new ContextMenuEvents(this.setState);
         this.state = {
+            width: 0, height: 0,
             stageOffset: {
                 x: 0,
                 y: 0
@@ -44,10 +30,9 @@ class ScrollingStage extends React.Component {
             showPinEditor: false,
             showPinView: false,
             pinToView: 0,
+            grab: false,
             ...this.selectionBox.getState(),
             ...this.contextMenu.getState(),
-            ...panningState,
-            ...windowSizeState
         }
     }
     // ===== LIFE CYCLE =====
@@ -223,7 +208,6 @@ class ScrollingStage extends React.Component {
 
     render() {
         const offsetStyle = {
-            ...stageStyles,
             backgroundPosition:
                 this.state.stageOffset.x + "px " + this.state.stageOffset.y + "px"
         }
@@ -255,6 +239,7 @@ class ScrollingStage extends React.Component {
                     height={this.state.height}
                     width={this.state.width}
                     style={offsetStyle}
+                    className='scrolling-stage'
                     ref={this.stage}
                     onContextMenu={this.onContextMenu}
                     onMouseDown={this.onMouseDownOnStage}

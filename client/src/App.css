@@ -99,3 +99,10 @@ margin-right: 2px;
     background-color: white;
     
 }
+
+.scrolling-stage {
+    background-color: #e5e5f7;
+    opacity: 0.8;
+    background-image: radial-gradient(#444cf7 1.1px, #e5e5f7 1.1px);
+    background-size: 22px 22px;
+}
