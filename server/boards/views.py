@@ -9,12 +9,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from .models import Board, Pin
-from .serializers import (
-    BoardListSerializer,
-    BoardSerializer,
-    BoardWithPinsSerializer,
-    PinSerializer,
-)
+from .serializers import BoardListSerializer, BoardSerializer, PinSerializer
 
 
 class BoardList(APIView):
@@ -51,19 +46,7 @@ class BoardDetail(APIView):
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-
-class BoardWithPinsDetail(APIView):
-    def get_object(self, pk):
-        try:
-            return Board.objects.get(pk=pk)
-        except Board.DoesNotExist:
-            return Http404
-
-    def get(self, request, pk, format=None):
-        board = self.get_object(pk)
-        serializer = BoardWithPinsSerializer(board)
-        return Response(serializer.data)
-
+    # TODO Move to Pin App
     @parser_classes([FileUploadParser])
     def post(self, request, pk, format=None):
         board = self.get_object(pk)
@@ -75,8 +58,8 @@ class BoardWithPinsDetail(APIView):
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+    # TODO Move to Pin App
     def patch(self, request, pk, format=None):
-        board = self.get_object(pk)
         modified_pins = request.data["pins"]
         for pin in modified_pins:
             if pin["action"] == "move":

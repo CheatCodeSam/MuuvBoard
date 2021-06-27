@@ -3,7 +3,7 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 from PIL import Image
 
 from boards.models import Board, Pin
-from boards.serializers import BoardWithPinsSerializer
+from boards.serializers import BoardSerializer
 
 from .conftest import generate_board_with_pins, generate_image
 
@@ -11,14 +11,14 @@ from .conftest import generate_board_with_pins, generate_image
 @pytest.mark.django_db
 def test_show_pins_on_board(client, generate_board_with_pins):
     board = generate_board_with_pins("Fresh Board", 3)
-    seralizer = BoardWithPinsSerializer(board)
+    seralizer = BoardSerializer(board)
     assert len(seralizer.data["pins"]) == 3
 
 
 @pytest.mark.django_db
 def test_get_pins_from_board(client, generate_board_with_pins):
     board = generate_board_with_pins("Fresh Board", 3)
-    resp = client.get(f"/api/boards/{board.id}/pins/")
+    resp = client.get(f"/api/boards/{board.id}/")
     assert resp.status_code == 200
     assert len(resp.data["pins"]) == 3
     assert resp.data["title"] == "Fresh Board"
@@ -29,7 +29,7 @@ def test_move_one_pin(client, generate_board_with_pins):
     board = generate_board_with_pins("Fresh Board", 3)
     pin_to_move = board.pins.first()
     resp = client.patch(
-        f"/api/boards/{board.id}/pins/",
+        f"/api/boards/{board.id}/",
         {
             "pins": [
                 {
@@ -55,7 +55,7 @@ def test_move_more_than_one_pin(client, generate_board_with_pins):
     first_pin_to_move = board.pins.first()
     second_pin_to_move = board.pins.last()
     resp = client.patch(
-        f"/api/boards/{board.id}/pins/",
+        f"/api/boards/{board.id}/",
         {
             "pins": [
                 {
@@ -92,7 +92,7 @@ def test_delete_pin(client, generate_board_with_pins):
     pin_to_delete = board.pins.first()
     pin_to_delete_id = pin_to_delete.id
     resp = client.patch(
-        f"/api/boards/{board.id}/pins/",
+        f"/api/boards/{board.id}/",
         {
             "pins": [
                 {
@@ -120,7 +120,7 @@ def test_create_pin(client, generate_board_with_pins, generate_image):
     tmp_file = generate_image("test.png")
 
     resp = client.post(
-        f"/api/boards/{board.id}/pins/",
+        f"/api/boards/{board.id}/",
         {"title": "Fresh Pin", "image": tmp_file, "board": board.id},
         format="multipart",
     )
