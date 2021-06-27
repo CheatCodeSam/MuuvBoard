@@ -6,26 +6,9 @@ import ImagePin from './ImagePin'
 import PinEditor from './PinEditor';
 import PinView from './PinView';
 import SelectionBoxEvents from './SelectionBoxEvents';
+import ContextMenuEvents from './ContextMenuEvents';
 
 
-
-
-// const selectionState = {
-//     selection: {
-//         visible: false,
-//         x1: null,
-//         y1: null,
-//         x2: null,
-//         y2: null
-//     }
-// }
-const contextMenuState = {
-    contextMenu: {
-        visible: false,
-        x: null,
-        y: null
-    }
-}
 const panningState = {
     grab: false,
 }
@@ -38,7 +21,6 @@ const stageStyles = {
     opacity: 0.8,
     backgroundImage: "radial-gradient(#444cf7 1.1px, #e5e5f7 1.1px)",
     backgroundSize: "22px 22px",
-
 }
 
 
@@ -53,6 +35,7 @@ class ScrollingStage extends React.Component {
         this.setState = this.setState.bind(this);
         this.stage = React.createRef()
         this.selectionBox = new SelectionBoxEvents(this.setState);
+        this.contextMenu = new ContextMenuEvents(this.setState);
         this.state = {
             stageOffset: {
                 x: 0,
@@ -62,7 +45,7 @@ class ScrollingStage extends React.Component {
             showPinView: false,
             pinToView: 0,
             ...this.selectionBox.getState(),
-            ...contextMenuState,
+            ...this.contextMenu.getState(),
             ...panningState,
             ...windowSizeState
         }
@@ -92,45 +75,23 @@ class ScrollingStage extends React.Component {
         return { x: coords.x - this.state.stageOffset.x, y: coords.y - this.state.stageOffset.y };
     }
 
-    getSelectedPins = () => {
-        return this.props.pins.filter(pin => pin.selected);
-    }
+    getSelectedPins = () => this.props.pins.filter(pin => pin.selected);
 
-    getSelectedPinsIds = () => {
-        return this.props.pins.filter(pin => pin.selected).map(pin => pin.id)
-    }
+    getSelectedPinsIds = () => this.props.pins.filter(pin => pin.selected).map(pin => pin.id)
 
-    getPinById = (id) => {
-        return this.props.pins.find(pin => pin.id === id);
-    };
-
-    hideContextMenu = () => {
-        this.setState((state) => {
-            return { contextMenu: { ...state.contextMenu, visible: false } };
-        });
-    };
+    getPinById = (id) => this.props.pins.find(pin => pin.id === id);
 
     // ===== PROPS REQUEST =====
 
-    selectPins = (ids) => {
-        this.props.onPinSelect(ids)
-    }
+    selectPins = (ids) => this.props.onPinSelect(ids)
 
-    moveSelectedPins = (coords) => {
-        this.props.onPinMove(coords, this.getSelectedPinsIds())
-    }
+    moveSelectedPins = (coords) => this.props.onPinMove(coords, this.getSelectedPinsIds())
 
-    deleteSelectedPins = () => {
-        this.props.onPinDelete(this.getSelectedPinsIds())
-    }
+    deleteSelectedPins = () => this.props.onPinDelete(this.getSelectedPinsIds())
 
-    onPinCreate = (pin) => {
-        this.props.onPinCreate(pin)
-    }
+    onPinCreate = (pin) => this.props.onPinCreate(pin)
 
-    onPinMoveEnd = () => {
-        this.props.onPinMoveEnd(this.getSelectedPins())
-    }
+    onPinMoveEnd = () => this.props.onPinMoveEnd(this.getSelectedPins())
 
     // ===== STAGE/WINDOW EVENTS =====
 
@@ -138,8 +99,7 @@ class ScrollingStage extends React.Component {
         const stage = this.stage.current;
         const { target } = e;
 
-
-        this.hideContextMenu()
+        this.contextMenu.hideContextMenu()
 
         if (e.evt.button === MOUSEONE) {
             if (target === stage) {
@@ -235,17 +195,8 @@ class ScrollingStage extends React.Component {
 
         e.evt.preventDefault()
         this.selectionBox.hideSelectionBox()
-        const { x, y } = this.calculateStageOffset(stage.getPointerPosition())
-        this.setState(
-            {
-                contextMenu: {
-                    ...this.state.contextMenu,
-                    x: x,
-                    y: y,
-                    visible: true
-                }
-            }
-        )
+        const coords = this.calculateStageOffset(stage.getPointerPosition())
+        this.contextMenu.createContextMenu(coords)
         if (target === stage) {
             this.selectPins([])
         } else if (target.parent.name() === "pin") {
@@ -257,23 +208,18 @@ class ScrollingStage extends React.Component {
     }
 
     generateContextMenuOptions = () => {
-        let returnValue = [{ name: 'Create Pin', func: () => { this.showPinEditor(); this.hideContextMenu(); } }]
+        let returnValue = [{ name: 'Create Pin', func: () => { this.showPinEditor(); this.contextMenu.hideContextMenu(); } }]
         if (!!this.getSelectedPins().length) {
-            returnValue.push({ name: "Delete Pin", func: () => { this.deleteSelectedPins(); this.hideContextMenu(); } })
+            returnValue.push({ name: "Delete Pin", func: () => { this.deleteSelectedPins(); this.contextMenu.hideContextMenu(); } })
         }
         return returnValue
     }
 
     // ===== PIN EDITOR =====
 
-    showPinEditor = () => {
-        this.setState({ showPinEditor: true })
+    showPinEditor = () => this.setState({ showPinEditor: true })
 
-    }
-
-    onPinEditorEscape = (e) => {
-        this.setState({ showPinEditor: false })
-    }
+    onPinEditorEscape = (e) => this.setState({ showPinEditor: false })
 
     render() {
         const offsetStyle = {
@@ -282,6 +228,7 @@ class ScrollingStage extends React.Component {
                 this.state.stageOffset.x + "px " + this.state.stageOffset.y + "px"
         }
         const selc = this.selectionBox.calculateSelectionBox(this.state)
+        const conMenu = this.contextMenu.getCoords(this.state)
 
         return (
             <div
@@ -290,8 +237,8 @@ class ScrollingStage extends React.Component {
             >
                 {this.state.showPinEditor &&
                     <PinEditor
-                        x={this.state.contextMenu.x}
-                        y={this.state.contextMenu.y}
+                        x={conMenu.x}
+                        y={conMenu.y}
                         onEscape={() => this.setState({ showPinEditor: false })}
                         onPinCreate={this.onPinCreate}
                     />
@@ -303,7 +250,6 @@ class ScrollingStage extends React.Component {
                         onEscape={() => this.setState({ showPinView: false })}
                     />
                 }
-
 
                 <Stage
                     height={this.state.height}
@@ -349,21 +295,18 @@ class ScrollingStage extends React.Component {
                                 stroke="blue"
                             />
                         )}
-                        {this.state.contextMenu.visible && (
+                        {this.contextMenu.isVisible(this.state) && (
                             <ContextMenu
-                                x={this.state.contextMenu.x}
-                                y={this.state.contextMenu.y}
+                                x={conMenu.x}
+                                y={conMenu.y}
                                 options={this.generateContextMenuOptions()}
                             />
                         )}
                     </Layer>
                 </Stage>
 
-
-
             </div>
         )
-
 
     }
 
