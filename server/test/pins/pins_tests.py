@@ -23,7 +23,7 @@ def test_move_one_pin(client, generate_board_with_pins):
     board = generate_board_with_pins("Fresh Board", 3)
     pin_to_move = board.pins.first()
     resp = client.patch(
-        f"/api/boards/{board.id}/",
+        f"/api/pins/",
         {
             "pins": [
                 {
@@ -47,7 +47,7 @@ def test_move_more_than_one_pin(client, generate_board_with_pins):
     first_pin_to_move = board.pins.first()
     second_pin_to_move = board.pins.last()
     resp = client.patch(
-        f"/api/boards/{board.id}/",
+        f"/api/pins/",
         {
             "pins": [
                 {
@@ -84,7 +84,7 @@ def test_delete_pin(client, generate_board_with_pins):
     pin_to_delete = board.pins.first()
     pin_to_delete_id = pin_to_delete.id
     resp = client.patch(
-        f"/api/boards/{board.id}/",
+        f"/api/pins/",
         {
             "pins": [
                 {
