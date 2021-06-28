@@ -9,9 +9,10 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from pins.models import Pin
+from pins.serializers import PinSerializer
 
 from .models import Board
-from .serializers import BoardListSerializer, BoardSerializer, PinSerializer
+from .serializers import BoardListSerializer, BoardSerializer
 
 
 class BoardList(APIView):

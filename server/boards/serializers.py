@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from pins.serializers import PinSerializer
+from pins.serializers import PinBoardListSerializer
 
 from .models import Board
 
@@ -20,7 +20,7 @@ class BoardListSerializer(serializers.ModelSerializer):
 class BoardSerializer(serializers.ModelSerializer):
 
     num_of_pins = serializers.SerializerMethodField()
-    pins = PinSerializer(many=True, read_only=True)
+    pins = PinBoardListSerializer(read_only=True, many=True)
 
     class Meta:
         model = Board
