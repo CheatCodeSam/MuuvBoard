@@ -44,15 +44,15 @@ class PinList(APIView):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def patch(self, request, format=None):
-        modified_pins = request.data["pins"]
-        for pin in modified_pins:
-            if pin["action"] == "move":
-                pin_to_be_modified = Pin.objects.get(pk=pin["id"])
-                pin_to_be_modified.x_coordinate = pin["movement"]["x"]
-                pin_to_be_modified.y_coordinate = pin["movement"]["y"]
+        actions = request.data["actions"]
+        for action in actions:
+            if action["op"] == "move":
+                pin_to_be_modified = Pin.objects.get(pk=action["path"])
+                pin_to_be_modified.x_coordinate = action["values"]["x"]
+                pin_to_be_modified.y_coordinate = action["values"]["y"]
                 pin_to_be_modified.save()
-            elif pin["action"] == "delete":
-                pin_to_be_deleted = Pin.objects.get(pk=pin["id"])
+            elif action["op"] == "remove":
+                pin_to_be_deleted = Pin.objects.get(pk=action["path"])
                 pin_to_be_deleted.delete()
             else:
                 return Response(status=status.HTTP_400_BAD_REQUEST)

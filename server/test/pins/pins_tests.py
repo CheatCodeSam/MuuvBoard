@@ -1,3 +1,4 @@
+import json
 from test.conftest import generate_board_with_pins
 
 import pytest
@@ -25,11 +26,11 @@ def test_move_one_pin(client, generate_board_with_pins):
     resp = client.patch(
         f"/api/pins/",
         {
-            "pins": [
+            "actions": [
                 {
-                    "id": pin_to_move.id,
-                    "action": "move",
-                    "movement": {"x": 100, "y": 100},
+                    "op": "move",
+                    "path": pin_to_move.id,
+                    "values": {"x": 100, "y": 100},
                 }
             ]
         },
@@ -49,16 +50,16 @@ def test_move_more_than_one_pin(client, generate_board_with_pins):
     resp = client.patch(
         f"/api/pins/",
         {
-            "pins": [
+            "actions": [
                 {
-                    "id": first_pin_to_move.id,
-                    "action": "move",
-                    "movement": {"x": 100, "y": 200},
+                    "op": "move",
+                    "path": first_pin_to_move.id,
+                    "values": {"x": 100, "y": 200},
                 },
                 {
-                    "id": second_pin_to_move.id,
-                    "action": "move",
-                    "movement": {"x": -100, "y": -200},
+                    "op": "move",
+                    "path": second_pin_to_move.id,
+                    "values": {"x": -100, "y": -200},
                 },
             ]
         },
@@ -86,10 +87,10 @@ def test_delete_pin(client, generate_board_with_pins):
     resp = client.patch(
         f"/api/pins/",
         {
-            "pins": [
+            "actions": [
                 {
-                    "id": pin_to_delete_id,
-                    "action": "delete",
+                    "op": "remove",
+                    "path": pin_to_delete_id,
                 }
             ]
         },
