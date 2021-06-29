@@ -14,9 +14,3 @@ class PinListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Pin
         fields = ["id", "title", "image", "x_coordinate", "y_coordinate", "board"]
-
-
-class PinBoardListSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Pin
-        fields = ["id", "title", "image", "x_coordinate", "y_coordinate"]

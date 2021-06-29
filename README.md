@@ -21,6 +21,9 @@ https://codesandbox.io/s/react-konva-infinite-grid-kkndq
 https://longviewcoder.com/2021/01/18/html5-canvas-bottoms-up-with-konva/
 https://codesandbox.io/s/react-konva-select-and-drag-7fct5
 https://facebook.github.io/flux/docs/in-depth-overview/
+https://williamdurand.fr/2014/02/14/please-do-not-patch-like-an-idiot/
+https://datatracker.ietf.org/doc/html/rfc6902
+Ensure PATCH request can only modify one board per request.
 
 testuser123
 testpass123
