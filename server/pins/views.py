@@ -9,7 +9,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from .models import Pin
-from .serializers import PinSerializer
+from .serializers import PinListSerializer, PinSerializer
 
 
 class PinDetail(APIView):
@@ -34,9 +34,8 @@ class PinDetail(APIView):
 
 
 class PinList(APIView):
-    @parser_classes([FileUploadParser])
     def post(self, request, format=None):
-        serializer = PinSerializer(data=request.data)
+        serializer = PinListSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)

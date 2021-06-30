@@ -15,6 +15,7 @@ def generate_board_with_pins():
         board = Board.objects.create(title=title)
         for i in range(num_of_pins):
             pin = Pin.objects.create(board=board)
+        board.save()
         return board
 
     return _generate_board_with_pins

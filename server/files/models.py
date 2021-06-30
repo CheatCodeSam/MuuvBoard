@@ -5,7 +5,11 @@ from pins.models import Pin
 
 class Image(models.Model):
     pin = models.ForeignKey(
-        Pin, on_delete=models.CASCADE, related_name="images", null=True
+        Pin,
+        on_delete=models.CASCADE,
+        related_name="images",
+        null=True,
+        blank=True,
     )
 
     image = models.ImageField(upload_to="images/", null=True)

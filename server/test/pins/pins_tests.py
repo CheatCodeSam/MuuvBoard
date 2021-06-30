@@ -2,8 +2,10 @@ import json
 from test.conftest import generate_board_with_pins
 
 import pytest
+from django.core.files.images import ImageFile
 
 from boards.models import Board
+from files.models import Image
 from pins.models import Pin
 from pins.serializers import PinSerializer
 
@@ -105,25 +107,28 @@ def test_delete_pin(client, generate_board_with_pins):
         modified_board.pins.get(pk=pin_to_delete_id)
 
 
-# @pytest.mark.django_db
-# def test_create_pin(client, generate_board_with_pins, generate_image):
-#     board = generate_board_with_pins("Fresh Board", 0)
-#     assert board.pins.count() == 0
+@pytest.mark.django_db
+def test_create_pin(client, generate_board_with_pins, generate_image):
+    board = generate_board_with_pins("Fresh Board", 0)
+    assert board.pins.count() == 0
 
-#     tmp_file = generate_image("test.png")
+    tmp_file = generate_image("test.png")
+    new_image = Image.objects.create(image=ImageFile(tmp_file))
+    new_image.save()
+    new_image_id = new_image.id
 
-#     resp = client.post(
-#         f"/api/pins/",
-#         {"title": "Fresh Pin", "image": tmp_file, "board": board.id},
-#         format="multipart",
-#     )
+    resp = client.post(
+        f"/api/pins/",
+        {"title": "Fresh Pin", "images": [new_image_id], "board": board.id},
+        format="multipart",
+    )
 
-#     assert resp.status_code == 201
-#     assert resp.data["title"] == "Fresh Pin"
-#     assert resp.data["x_coordinate"] == 0
-#     assert resp.data["y_coordinate"] == 0
-#     assert resp.data["board"] == board.id
-#     assert resp.data["image"][-4:] == ".png"
+    assert resp.status_code == 201
+    assert resp.data["title"] == "Fresh Pin"
+    assert resp.data["x_coordinate"] == 0
+    assert resp.data["y_coordinate"] == 0
+    assert resp.data["board"] == board.id
+    assert resp.data["images"][0] == new_image_id
 
-#     modified_board = Board.objects.get(pk=board.id)
-#     assert modified_board.pins.count() == 1
+    modified_board = Board.objects.get(pk=board.id)
+    assert modified_board.pins.count() == 1
