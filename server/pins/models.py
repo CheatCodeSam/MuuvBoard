@@ -10,8 +10,6 @@ class Pin(models.Model):
 
     board = models.ForeignKey(Board, on_delete=models.CASCADE, related_name="pins")
 
-    image = models.ImageField(upload_to="images/", null=True)
-
     x_coordinate = models.IntegerField(default=0)
     y_coordinate = models.IntegerField(default=0)
 
