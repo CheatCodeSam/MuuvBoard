@@ -21,6 +21,9 @@ class Image(models.Model):
 
     image = models.ImageField(upload_to="images/", null=True)
 
+    def __str__(self):
+        return f"{self.id}"
+
     def save(self, *args, **kwargs):
 
         if self.image:

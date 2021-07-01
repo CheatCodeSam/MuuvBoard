@@ -22,3 +22,6 @@ def test_create_pin(client, generate_board_with_pins, generate_image):
     assert resp.status_code == 201
     id = resp.data["id"]
     assert Image.objects.get(pk=id)
+
+
+# TODO Test for conversions

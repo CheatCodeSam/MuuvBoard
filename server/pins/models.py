@@ -15,3 +15,9 @@ class Pin(models.Model):
 
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        if self.title:
+            return f"{self.title} - id: {self.id} - Board {self.board}"
+        else:
+            return f"NULL - id: {self.id} - Board {self.board}"
