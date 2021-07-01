@@ -23,9 +23,9 @@ def generate_board_with_pins():
 
 @pytest.fixture(scope="function")
 def generate_image():
-    def _generate_image(file_name):
+    def _generate_image(file_name, x=100, y=100):
         file = io.BytesIO()
-        image = Image.new("RGBA", size=(100, 100), color=(155, 0, 0))
+        image = Image.new("RGBA", size=(x, y), color=(155, 0, 0))
         image.save(file, "png")
         file.name = file_name
         file.seek(0)

@@ -5,4 +5,7 @@ from .models import Image
 
 @admin.register(Image)
 class ImageAdmin(admin.ModelAdmin):
-    pass
+    readonly_fields = (
+        "width",
+        "height",
+    )
