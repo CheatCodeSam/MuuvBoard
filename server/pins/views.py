@@ -9,7 +9,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from .models import Pin
-from .serializers import PinListSerializer, PinSerializer
+from .serializers import PinCreateSerializer, PinListSerializer, PinSerializer
 
 
 class PinDetail(APIView):
@@ -35,7 +35,7 @@ class PinDetail(APIView):
 
 class PinList(APIView):
     def post(self, request, format=None):
-        serializer = PinListSerializer(data=request.data)
+        serializer = PinCreateSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)

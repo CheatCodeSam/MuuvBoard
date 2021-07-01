@@ -193,7 +193,8 @@ class ScrollingStage extends React.Component {
     }
 
     generateContextMenuOptions = () => {
-        let returnValue = [{ name: 'Create Pin', func: () => { this.showPinEditor(); this.contextMenu.hideContextMenu(); } }]
+        let returnValue = []
+        returnValue.push({ name: 'Create Pin', func: () => { this.showPinEditor(); this.contextMenu.hideContextMenu(); } })
         if (!!this.getSelectedPins().length) {
             returnValue.push({ name: "Delete Pin", func: () => { this.deleteSelectedPins(); this.contextMenu.hideContextMenu(); } })
         }
@@ -256,7 +257,7 @@ class ScrollingStage extends React.Component {
                                     x={pin.x_coordinate}
                                     y={pin.y_coordinate}
                                     title={pin.title}
-                                    thumbnail={pin.image}
+                                    thumbnail={pin.images[0]}
                                     draggable={!this.state.grab}
                                     selected={pin.selected}
                                     onDragStart={this.onPinDragStart}

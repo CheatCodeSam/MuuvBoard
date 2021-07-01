@@ -4,18 +4,18 @@ import axios from 'axios';
 
 class PinRequest {
     constructor(boardId) {
-        this.url = `${process.env.REACT_APP_BASE_URL}/api/boards/${boardId}/`
+        this.url = `${process.env.REACT_APP_BASE_URL}/api/pins/`
         this.id = boardId
     }
 
     // TODO work with ids and coords instead of pins object.
     onPinsMoveEnd = (pins) => {
         const modifiedPins = {
-            pins: pins.map(pin => {
+            actions: pins.map(pin => {
                 return {
-                    id: pin.id,
-                    action: "move",
-                    movement: { x: pin.x_coordinate, y: pin.y_coordinate }
+                    path: pin.id,
+                    op: "move",
+                    values: { x: pin.x_coordinate, y: pin.y_coordinate }
                 }
             })
         }
@@ -24,10 +24,10 @@ class PinRequest {
 
     onPinsDelete = (pinIds) => {
         const modifiedPins = {
-            pins: pinIds.map(pinId => {
+            actions: pinIds.map(pinId => {
                 return {
-                    id: pinId,
-                    action: "delete",
+                    path: pinId,
+                    op: "remove",
                 }
             })
         }

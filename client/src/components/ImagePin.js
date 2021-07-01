@@ -6,10 +6,10 @@ import useImage from 'use-image'
 function ImagePin(props) {
 
     let url
-    if (props.thumbnail.includes('blob')) {
+    if (props.thumbnail.image.includes('blob')) {
         url = props.thumbnail
     } else {
-        url = `${process.env.REACT_APP_BASE_URL}${props.thumbnail}`
+        url = `${process.env.REACT_APP_BASE_URL}${props.thumbnail.image}`
     }
 
     const [image] = useImage(url);
