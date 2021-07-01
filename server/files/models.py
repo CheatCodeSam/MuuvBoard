@@ -1,3 +1,4 @@
+import os
 from io import BytesIO
 
 from django.core.files.base import ContentFile
@@ -27,7 +28,7 @@ class Image(models.Model):
     def save(self, *args, **kwargs):
 
         if self.image:
-            filename = "%s.png" % self.image.name.split(".")[0]
+            filename = "%s.png" % os.path.basename(self.image.name.split(".")[0])
             image = PImg.open(self.image)
             image_io = BytesIO()
             image.save(image_io, format="PNG", quality=100)
