@@ -23,7 +23,7 @@ class Image(models.Model):
     image = models.ImageField(upload_to="images/", null=True)
 
     def __str__(self):
-        return self.image.name
+        return os.path.basename(self.image.name)
 
     def save(self, *args, **kwargs):
 
