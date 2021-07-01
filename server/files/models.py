@@ -22,7 +22,7 @@ class Image(models.Model):
     image = models.ImageField(upload_to="images/", null=True)
 
     def __str__(self):
-        return f"{self.id}"
+        return self.image.name
 
     def save(self, *args, **kwargs):
 
