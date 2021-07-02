@@ -1,6 +1,5 @@
 import React from 'react'
 import CorkBoard from './CorkBoard'
-import Toolbar from './Toolbar'
 import axios from 'axios'
 
 class Board extends React.Component {
@@ -21,7 +20,6 @@ class Board extends React.Component {
         } else {
             return (
                 <>
-                    <Toolbar title={this.state.board.title} />
                     <CorkBoard data={this.state.board} />
                 </>
             )

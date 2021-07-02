@@ -3,7 +3,6 @@ import { Stage, Layer, Rect } from 'react-konva';
 import Konva from "konva";
 import ContextMenu from './ContextMenu';
 import ImagePin from './ImagePin'
-import PinEditor from './PinEditor';
 import PinView from './PinView';
 import SelectionBoxEvents from './SelectionBoxEvents';
 import ContextMenuEvents from './ContextMenuEvents';
@@ -193,19 +192,15 @@ class ScrollingStage extends React.Component {
     }
 
     generateContextMenuOptions = () => {
+        const { x, y } = this.contextMenu.getCoords(this.state)
         let returnValue = []
-        returnValue.push({ name: 'Create Pin', func: () => { this.showPinEditor(); this.contextMenu.hideContextMenu(); } })
+        returnValue.push({ name: 'Create Pin', func: () => { this.props.showPinEditor(x, y); this.contextMenu.hideContextMenu(); } })
         if (!!this.getSelectedPins().length) {
             returnValue.push({ name: "Delete Pin", func: () => { this.deleteSelectedPins(); this.contextMenu.hideContextMenu(); } })
         }
         return returnValue
     }
 
-    // ===== PIN EDITOR =====
-
-    showPinEditor = () => this.setState({ showPinEditor: true })
-
-    onPinEditorEscape = (e) => this.setState({ showPinEditor: false })
 
     render() {
         const offsetStyle = {
@@ -218,17 +213,8 @@ class ScrollingStage extends React.Component {
         return (
             <div
                 tabIndex='0'
-                className={this.state.grab ? "grabbing" : ""}
+                className={"stage-view " + (this.state.grab ? "grabbing" : "")}
             >
-                {this.state.showPinEditor &&
-                    <PinEditor
-                        x={conMenu.x}
-                        y={conMenu.y}
-                        onEscape={() => this.setState({ showPinEditor: false })}
-                        onPinCreate={this.onPinCreate}
-                    />
-                }
-
                 {this.state.showPinView &&
                     <PinView
                         data={this.getPinById(this.state.pinToView)}

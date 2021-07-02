@@ -2,6 +2,11 @@ import React from 'react';
 import ScrollingStage from './ScrollingStage'
 import PinRequest from './PinRequest'
 import { v4 as uuidv4 } from 'uuid'
+import Toolbar from './Toolbar'
+import PinEditor from './PinEditor';
+
+
+
 
 
 
@@ -11,7 +16,9 @@ class CorkBoard extends React.Component {
         super(props)
         this.request = new PinRequest(props.data.id);
         this.state = {
-            pins: props.data.pins.map(pin => this.createPinForBoard(pin))
+            pins: props.data.pins.map(pin => this.createPinForBoard(pin)),
+            showPinEditor: false,
+            PinEditorX: 0, PinEditorY: 0,
         }
     }
 
@@ -97,9 +104,24 @@ class CorkBoard extends React.Component {
     }
 
 
+    // ===== PIN EDITOR =====
+
+    showPinEditor = (x, y) => this.setState({ showPinEditor: true, PinEditorX: x, PinEditorY: y })
+
     render() {
         return (
             <>
+                <Toolbar title={this.props.data.title} />
+
+                {this.state.showPinEditor &&
+                    <PinEditor
+                        x={this.state.PinEditorX}
+                        y={this.state.PinEditorY}
+                        onEscape={() => this.setState({ showPinEditor: false })}
+                        onPinCreate={this.onPinCreate}
+                    />
+                }
+
                 <ScrollingStage
                     pins={this.state.pins}
                     onPinSelect={this.onPinSelect}
@@ -107,6 +129,8 @@ class CorkBoard extends React.Component {
                     onPinMoveEnd={this.onPinMoveEnd}
                     onPinCreate={this.onPinCreate}
                     onPinDelete={this.onPinDelete}
+                    showPinEditor={this.showPinEditor}
+                    onPinEditorEscape={this.showPinEditor}
                 />
             </>
         )
