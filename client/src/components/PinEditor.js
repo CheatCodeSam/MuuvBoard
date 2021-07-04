@@ -44,8 +44,8 @@ class PinEditor extends React.Component {
                                 </div>
                                 <div className="form-group">
                                     <label htmlFor="file">File upload</label>
-                                    <input id="file" name="file" type="file" onChange={(event) => {
-                                        setFieldValue("file", event.currentTarget.files[0]);
+                                    <input id="file" name="file" type="file" multiple accept={"image/jpeg,image/png,image/webp"} onChange={(event) => {
+                                        setFieldValue("file", event.currentTarget.files);
                                     }} className="form-control" />
                                 </div>
                                 <button type="submit" >submit</button>

@@ -78,21 +78,25 @@ class CorkBoard extends React.Component {
     }
 
     onPinCreate = (pin) => {
+        console.log(pin)
+        // console.log(pin.image[0])
 
-        const newPinId = uuidv4()
-        const newPin =
-        {
-            id: newPinId,
-            title: pin.title,
-            image: URL.createObjectURL(pin.image),
-            x_coordinate: pin.x_coordinate,
-            y_coordinate: pin.y_coordinate,
-            selected: false
-        }
-        this.setState({
-            pins: [...this.state.pins, newPin],
-        })
-        this.onPinSelect([newPinId])
+        // this.request.onFileCreate(pin.image[0])
+
+        // const newPinId = uuidv4()
+        // const newPin =
+        // {
+        //     id: newPinId,
+        //     title: pin.title,
+        //     image: URL.createObjectURL(pin.image),
+        //     x_coordinate: pin.x_coordinate,
+        //     y_coordinate: pin.y_coordinate,
+        //     selected: false
+        // }
+        // this.setState({
+        //     pins: [...this.state.pins, newPin],
+        // })
+        // this.onPinSelect([newPinId])
 
         this.request.onPinCreate(pin)
     }
