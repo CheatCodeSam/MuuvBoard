@@ -25,6 +25,13 @@ https://williamdurand.fr/2014/02/14/please-do-not-patch-like-an-idiot/
 https://datatracker.ietf.org/doc/html/rfc6902
 Ensure PATCH request can only modify one board per request.
 
+
+Big features to still add in order:
+Tagging
+Search
+Users
+Zooming
+
 testuser123
 testpass123
 

@@ -166,9 +166,8 @@ class ScrollingStage extends React.Component {
         this.onPinMoveEnd()
     }
 
-    onPinDoubleClick = (e) => {
-        const { target } = e;
-        this.setState({ showPinView: true, pinToView: target.parent.id() })
+    onPinDoubleClick = (id) => {
+        this.setState({ showPinView: true, pinToView: id })
     }
 
     // ===== CONTEXT MENU =====

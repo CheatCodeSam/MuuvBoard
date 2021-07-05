@@ -41,7 +41,7 @@ function ImagePin(props) {
             onDragStart={props.onDragStart}
             onDragMove={props.onDragMove}
             onDragEnd={props.onDragEnd}
-            onDblClick={props.onDblClick}
+            onDblClick={() => props.onDblClick(props.id)}
             name={props.name}
             width={135}
             height={160}
