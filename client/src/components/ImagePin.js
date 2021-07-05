@@ -5,12 +5,30 @@ import useImage from 'use-image'
 
 function ImagePin(props) {
 
-    let url
-    if (props.thumbnail.image.includes('blob')) {
-        url = props.thumbnail
-    } else {
-        url = `${process.env.REACT_APP_BASE_URL}${props.thumbnail.image}`
+    const url = `${process.env.REACT_APP_BASE_URL}${props.thumbnails[0].image}`
+    const mutliImages = props.thumbnails.length > 1;
+
+    const generateIndexBox = () => {
+        return (
+            <Group
+                x={127 - 2 - 30}
+                y={7 + 2}
+                width={30}
+                height={16}
+            >
+                <Rect
+
+                    width={30}
+                    height={16}
+                    opacity={0.80}
+                    fill="black"
+                    cornerRadius={5}
+                />
+                <Text text={props.thumbnails.length} align="center" width={30} height={16} y={2} fontSize={12} fill="white" />
+            </Group>
+        )
     }
+
 
     const [image] = useImage(url);
 
@@ -42,10 +60,10 @@ function ImagePin(props) {
                 strokeWidth={5}
                 hitStrokeWidth={0}
                 shadowForStrokeEnabled={false}
-
             />
             <Image width={120} height={120} x={7} y={7} image={image} />
             <Text text={props.title} align="center" width={135} height={32} y={128} fontSize={12} />
+            {mutliImages && generateIndexBox()}
         </Group >
     )
 }

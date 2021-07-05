@@ -243,7 +243,7 @@ class ScrollingStage extends React.Component {
                                     x={pin.x_coordinate}
                                     y={pin.y_coordinate}
                                     title={pin.title}
-                                    thumbnail={pin.images[0]}
+                                    thumbnails={pin.images}
                                     draggable={!this.state.grab}
                                     selected={pin.selected}
                                     onDragStart={this.onPinDragStart}
