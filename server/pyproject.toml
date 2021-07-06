@@ -16,6 +16,7 @@ pylint = "^2.8.2"
 pylint-django = "^2.4.4"
 django-taggit = "^1.4.0"
 Pillow = "^8.2.0"
+django-taggit-serializer = "^0.1.7"
 
 [tool.poetry.dev-dependencies]
 pytest = "^6.2.4"

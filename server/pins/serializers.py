@@ -1,28 +1,60 @@
 from rest_framework import serializers
+from taggit_serializer.serializers import TaggitSerializer, TagListSerializerField
 
 from files.serializers import ImageDetailSerializer
 
 from .models import Pin
 
 
-class PinSerializer(serializers.ModelSerializer):
+class PinSerializer(TaggitSerializer, serializers.ModelSerializer):
+
+    tags = TagListSerializerField()
+
     class Meta:
         model = Pin
-        fields = ["id", "title", "images", "x_coordinate", "y_coordinate", "board"]
+        fields = [
+            "id",
+            "title",
+            "images",
+            "x_coordinate",
+            "y_coordinate",
+            "board",
+            "tags",
+        ]
         depth = 1
 
 
-class PinCreateSerializer(serializers.ModelSerializer):
+class PinCreateSerializer(TaggitSerializer, serializers.ModelSerializer):
+
+    tags = TagListSerializerField()
+
     class Meta:
         model = Pin
-        fields = ["id", "title", "images", "x_coordinate", "y_coordinate", "board"]
+        fields = [
+            "id",
+            "title",
+            "images",
+            "x_coordinate",
+            "y_coordinate",
+            "board",
+            "tags",
+        ]
         read_only_fields = ["id", "created", "updated"]
 
 
-class PinListSerializer(serializers.ModelSerializer):
+class PinListSerializer(TaggitSerializer, serializers.ModelSerializer):
     images = ImageDetailSerializer(many=True)
+    tags = TagListSerializerField()
 
     class Meta:
         model = Pin
-        fields = ["id", "title", "images", "x_coordinate", "y_coordinate", "board"]
+        fields = [
+            "id",
+            "title",
+            "images",
+            "x_coordinate",
+            "y_coordinate",
+            "board",
+            "tags",
+        ]
         read_only_fields = ["id", "created", "updated"]

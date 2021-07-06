@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     "rest_framework",
     "corsheaders",
     "taggit",
+    "taggit_serializer",
     "files",
     "pins",
     "boards",
