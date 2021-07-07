@@ -1,8 +1,9 @@
 from functools import partial
 from os import stat
 
+from django.db.models import Q
 from django.http import Http404
-from rest_framework import status
+from rest_framework import filters, generics, serializers, status
 from rest_framework.decorators import parser_classes
 from rest_framework.parsers import FileUploadParser
 from rest_framework.response import Response
@@ -34,6 +35,18 @@ class PinDetail(APIView):
 
 
 class PinList(APIView):
+    def get(self, request, format=None):
+        get_data = request.query_params
+        if not "search" in get_data or not "board" in get_data:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+        search = get_data["search"]
+        board = get_data["board"]
+        pins = Pin.objects.filter(
+            Q(title__icontains=search) | Q(tags__name__icontains=search), board=board
+        )
+        serializer = PinListSerializer(pins, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
     def post(self, request, format=None):
         serializer = PinCreateSerializer(data=request.data)
         if serializer.is_valid():

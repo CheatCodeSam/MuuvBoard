@@ -13,7 +13,6 @@ Refactor out Image Pin from Pins
 Thumbnails for Images
 Boards show last updated as last updated pin
 Refactor Boards into viewset
-Cartesian Graph - Before 1.0.0
 
 
 Interesting Links:
@@ -27,8 +26,10 @@ Ensure PATCH request can only modify one board per request.
 
 
 Big features to still add in order:
-Tagging
 Search
+    Search based off of tag
+    Search Based off of title
+    Search based on Board
 Users
 Zooming
 
