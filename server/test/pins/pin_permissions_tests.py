@@ -1,7 +1,9 @@
+import json
 from test.conftest import create_image, create_user, generate_board_with_pins
 
 import pytest
 
+from boards.models import Board
 from pins.models import Pin
 
 
@@ -110,3 +112,110 @@ def test_cant_search_unless_logged_in(
     resp = client.get(f"/api/pins/?search=title&board={board.id}")
 
     assert resp.status_code == 403
+
+
+# @pytest.mark.django_db
+# def test_cant_move_single_pin_if_not_owned(
+#     client, generate_board_with_pins, create_user, create_image
+# ):
+#     pass
+
+
+# @pytest.mark.django_db
+# def test_cant_bulk_move_pins_not_owned(
+#     client, generate_board_with_pins, create_user, create_image
+# ):
+#     pass
+
+
+@pytest.mark.django_db
+def test_cant_delete_pins_not_owned(
+    client, generate_board_with_pins, create_user, create_image
+):
+    user_A = create_user(username="_username")
+
+    board = generate_board_with_pins("Fresh Board", user_A, 3)
+
+    user_B = create_user()
+    client.force_login(user_B)
+
+    pin_to_delete = board.pins.first()
+
+    data = [
+        {
+            "op": "remove",
+            "path": pin_to_delete.id,
+        }
+    ]
+    resp = client.patch(
+        f"/api/pins/",
+        data=json.dumps(data),
+        content_type="application/json",
+    )
+
+    assert resp.status_code == 403
+
+    modified_board = Board.objects.get(pk=board.id)
+    assert modified_board.pins.count() == 3
+
+
+@pytest.mark.django_db
+def test_cant_bulk_delete_pins_not_owned(client, generate_board_with_pins, create_user):
+    user_A = create_user(username="_username")
+
+    board = generate_board_with_pins("Fresh Board", user_A, 3)
+
+    user_B = create_user()
+    client.force_login(user_B)
+
+    pin_to_delete = board.pins.first()
+    other_pin_to_delete = board.pins.last()
+
+    data = [
+        {
+            "op": "remove",
+            "path": pin_to_delete.id,
+        },
+        {
+            "op": "remove",
+            "path": other_pin_to_delete.id,
+        },
+    ]
+    resp = client.patch(
+        f"/api/pins/",
+        data=json.dumps(data),
+        content_type="application/json",
+    )
+
+    assert resp.status_code == 403
+
+    modified_board = Board.objects.get(pk=board.id)
+    assert modified_board.pins.count() == 3
+
+
+@pytest.mark.django_db
+def test_return_403_on_anon_user_sending_patch_to_pins(
+    client, generate_board_with_pins, create_user
+):
+    user = create_user()
+
+    board = generate_board_with_pins("Fresh Board", 3)
+
+    pin_to_delete = board.pins.first()
+
+    data = [
+        {
+            "op": "remove",
+            "path": pin_to_delete.id,
+        }
+    ]
+    resp = client.patch(
+        f"/api/pins/",
+        data=json.dumps(data),
+        content_type="application/json",
+    )
+
+    assert resp.status_code == 403
+
+    modified_board = Board.objects.get(pk=board.id)
+    assert modified_board.pins.count() == 3

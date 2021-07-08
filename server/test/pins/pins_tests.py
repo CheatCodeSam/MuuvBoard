@@ -28,6 +28,8 @@ def test_move_one_pin(client, generate_board_with_pins, create_user):
     board = generate_board_with_pins("Fresh Board", user, 3)
     pin_to_move = board.pins.first()
 
+    client.force_login(user)
+
     data = [
         {
             "op": "move",
@@ -52,6 +54,8 @@ def test_move_more_than_one_pin(client, generate_board_with_pins, create_user):
     board = generate_board_with_pins("Fresh Board", author=user, num_of_pins=2)
     first_pin_to_move = board.pins.first()
     second_pin_to_move = board.pins.last()
+
+    client.force_login(user)
 
     data = [
         {
@@ -91,6 +95,8 @@ def test_delete_pin(client, generate_board_with_pins, create_user):
     assert board.pins.count() == 3
     pin_to_delete = board.pins.first()
     pin_to_delete_id = pin_to_delete.id
+
+    client.force_login(user)
 
     data = [
         {

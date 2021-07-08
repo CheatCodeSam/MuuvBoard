@@ -60,6 +60,7 @@ class PinList(generics.GenericAPIView, mixins.CreateModelMixin):
                 pin_to_be_modified.save()
             elif action["op"] == "remove":
                 pin_to_be_deleted = Pin.objects.get(pk=action["path"])
+                self.check_object_permissions(request, pin_to_be_deleted)
                 pin_to_be_deleted.delete()
             else:
                 return Response(status=status.HTTP_400_BAD_REQUEST)
