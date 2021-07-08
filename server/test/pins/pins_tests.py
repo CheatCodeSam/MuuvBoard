@@ -186,3 +186,43 @@ def test_create_pin(client, generate_board_with_pins, generate_image, create_use
     modified_board = Board.objects.get(pk=board.id)
     assert modified_board.pins.count() == 1
     assert modified_board.pins.first().author == user
+
+
+@pytest.mark.django_db
+def test_cant_set_user_manually(
+    client, generate_board_with_pins, generate_image, create_user
+):
+    username = "username_"
+    password = "p4ssw0rd"
+    user_making_request_to_own_pin = create_user(username=username, password=password)
+
+    # More explicit than client.login
+    client.force_login(user_making_request_to_own_pin)
+
+    board = generate_board_with_pins("Fresh Board", user_making_request_to_own_pin, 0)
+
+    tmp_file = generate_image("test.png")
+    new_image = Image.objects.create(image=ImageFile(tmp_file))
+    new_image.save()
+    new_image_id = new_image.id
+
+    user_that_should_not_own_pin = create_user()
+
+    data = {
+        "title": "Fresh Pin",
+        "images": [new_image_id],
+        "board": board.id,
+        "author": user_that_should_not_own_pin.id,
+    }
+
+    resp = client.post(
+        f"/api/pins/",
+        data=data,
+        format="application/json",
+    )
+
+    assert resp.status_code == 201
+
+    pin_just_created = Pin.objects.get(pk=resp.data["id"])
+    assert pin_just_created.author == user_making_request_to_own_pin
+    assert pin_just_created.author != user_that_should_not_own_pin

@@ -25,6 +25,9 @@ class PinList(generics.GenericAPIView, mixins.CreateModelMixin):
 
     serializer_class = PinCreateSerializer
 
+    def perform_create(self, serializer):
+        serializer.save(author=self.request.user)
+
     def get(self, request, format=None):
         get_data = request.query_params
         if not "search" in get_data or not "board" in get_data:

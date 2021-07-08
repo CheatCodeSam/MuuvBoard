@@ -29,7 +29,7 @@ class PinCreateSerializer(TaggitSerializer, serializers.ModelSerializer):
 
     tags = TagListSerializerField(required=False)
     author = serializers.PrimaryKeyRelatedField(
-        default=serializers.CurrentUserDefault(), queryset=get_user_model().objects.all()
+        read_only=True,
     )
 
     class Meta:
