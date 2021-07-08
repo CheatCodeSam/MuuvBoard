@@ -107,6 +107,12 @@ def test_delete_pin(client, generate_board_with_pins):
         modified_board.pins.get(pk=pin_to_delete_id)
 
 
+@pytest.mark.django_db
+def test_get_pin_that_doesnt_exist(client):
+    resp = client.get(f"/api/pins/1/")
+    assert resp.status_code == 404
+
+
 # @pytest.mark.django_db
 # def test_create_pin(client, generate_board_with_pins, generate_image):
 #     board = generate_board_with_pins("Fresh Board", 0)

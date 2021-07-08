@@ -18,7 +18,7 @@ class PinDetail(APIView):
         try:
             return Pin.objects.get(pk=pk)
         except Pin.DoesNotExist:
-            return Http404
+            raise Http404
 
     def get(self, request, pk, format=None):
         pin = self.get_object(pk)
