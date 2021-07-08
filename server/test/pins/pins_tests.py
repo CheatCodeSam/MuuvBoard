@@ -23,33 +23,6 @@ def test_get_pin_by_id(client, generate_board_with_pins, create_user):
 
 
 @pytest.mark.django_db
-def test_get_pin_if_wrong_user(client, generate_board_with_pins, create_user):
-    user = create_user()
-    board = generate_board_with_pins("Fresh Board", user, 1)
-    idToGet = board.pins.first().id
-
-    username = "other_username"
-    password = "p4ssw0rd"
-    wrong_user = create_user(username=username, password=password)
-
-    client.login(username=username, password=password)
-    resp = client.get(f"/api/pins/{idToGet}/")
-
-    assert resp.status_code == 403
-
-
-@pytest.mark.django_db
-def test_get_pin_if_anon(client, generate_board_with_pins, create_user):
-    user = create_user()
-    board = generate_board_with_pins("Fresh Board", user, 1)
-    idToGet = board.pins.first().id
-
-    resp = client.get(f"/api/pins/{idToGet}/")
-
-    assert resp.status_code == 403
-
-
-@pytest.mark.django_db
 def test_move_one_pin(client, generate_board_with_pins, create_user):
     user = create_user()
     board = generate_board_with_pins("Fresh Board", user, 3)
