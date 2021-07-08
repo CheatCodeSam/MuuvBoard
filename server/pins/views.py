@@ -31,6 +31,10 @@ class PinList(generics.GenericAPIView, mixins.CreateModelMixin):
 
     def get(self, request, format=None):
         get_data = request.query_params
+        if request.user.is_anonymous:
+            return Response(
+                status=status.HTTP_403_FORBIDDEN,
+            )
         if not "search" in get_data or not "board" in get_data:
             return Response(status=status.HTTP_400_BAD_REQUEST)
         search = get_data["search"]

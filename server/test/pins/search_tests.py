@@ -18,6 +18,7 @@ def test_search_pin_titles(client, generate_board_with_pins, create_user):
     firstpin = board.pins.first()
     firstpin.title = "this is my title"
     firstpin.save()
+    client.force_login(user)
     resp = client.get(f"/api/pins/?search=title&board={board.id}")
 
     assert resp.status_code == 200

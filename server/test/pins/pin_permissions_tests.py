@@ -96,3 +96,17 @@ def test_cant_create_pin_on_board_not_owned_by_user(
     )
     assert resp.status_code == 403
     assert resp.data["detail"] == "Pins can only be set to Boards owned by User."
+
+
+@pytest.mark.django_db
+def test_cant_search_unless_logged_in(
+    client, generate_board_with_pins, create_user, create_image
+):
+    user = create_user()
+    board = generate_board_with_pins("Fresh Board", user, 2)
+    firstpin = board.pins.first()
+    firstpin.title = "this is my title"
+    firstpin.save()
+    resp = client.get(f"/api/pins/?search=title&board={board.id}")
+
+    assert resp.status_code == 403
