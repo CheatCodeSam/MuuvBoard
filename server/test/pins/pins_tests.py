@@ -1,5 +1,5 @@
 import json
-from test.conftest import generate_board_with_pins
+from test.conftest import create_user, generate_board_with_pins
 
 import pytest
 from django.core.files.images import ImageFile
@@ -11,19 +11,26 @@ from pins.serializers import PinSerializer
 
 
 @pytest.mark.django_db
-def test_get_pin_by_id(client, generate_board_with_pins):
-    board = generate_board_with_pins("Fresh Board", 1)
+def test_get_pin_by_id(client, generate_board_with_pins, create_user):
+    username = "username"
+    password = "p4ssw0rd"
+    user = create_user(username=username, password=password)
+    board = generate_board_with_pins("Fresh Board", user, 1)
     idToGet = board.pins.first().id
+    print(board.pins.first().author.password)
 
+    client.login(username=username, password=password)
     resp = client.get(f"/api/pins/{idToGet}/")
+    print(resp.wsgi_request.user)
 
     assert resp.status_code == 200
     assert resp.data["id"] == idToGet
 
 
 @pytest.mark.django_db
-def test_move_one_pin(client, generate_board_with_pins):
-    board = generate_board_with_pins("Fresh Board", 3)
+def test_move_one_pin(client, generate_board_with_pins, create_user):
+    user = create_user()
+    board = generate_board_with_pins("Fresh Board", user, 3)
     pin_to_move = board.pins.first()
     resp = client.patch(
         f"/api/pins/",
@@ -45,8 +52,9 @@ def test_move_one_pin(client, generate_board_with_pins):
 
 
 @pytest.mark.django_db
-def test_move_more_than_one_pin(client, generate_board_with_pins):
-    board = generate_board_with_pins("Fresh Board", 2)
+def test_move_more_than_one_pin(client, generate_board_with_pins, create_user):
+    user = create_user()
+    board = generate_board_with_pins("Fresh Board", author=user, num_of_pins=2)
     first_pin_to_move = board.pins.first()
     second_pin_to_move = board.pins.last()
     resp = client.patch(
@@ -81,8 +89,9 @@ def test_move_more_than_one_pin(client, generate_board_with_pins):
 
 
 @pytest.mark.django_db
-def test_delete_pin(client, generate_board_with_pins):
-    board = generate_board_with_pins("Fresh Board", 3)
+def test_delete_pin(client, generate_board_with_pins, create_user):
+    user = create_user()
+    board = generate_board_with_pins("Fresh Board", user, 3)
     assert board.pins.count() == 3
     pin_to_delete = board.pins.first()
     pin_to_delete_id = pin_to_delete.id

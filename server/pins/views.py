@@ -9,29 +9,16 @@ from rest_framework.parsers import FileUploadParser
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from pins.permissions import IsAuthor
+
 from .models import Pin
 from .serializers import PinCreateSerializer, PinListSerializer, PinSerializer
 
 
-class PinDetail(APIView):
-    def get_object(self, pk):
-        try:
-            return Pin.objects.get(pk=pk)
-        except Pin.DoesNotExist:
-            raise Http404
-
-    def get(self, request, pk, format=None):
-        pin = self.get_object(pk)
-        serializer = PinSerializer(pin)
-        return Response(serializer.data)
-
-    def put(self, request, pk, format=None):
-        pin = self.get_object(pk)
-        serializer = PinSerializer(pin, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+class PinDetail(generics.RetrieveUpdateAPIView):
+    queryset = Pin.objects.all()
+    serializer_class = PinSerializer
+    permission_classes = (IsAuthor,)
 
 
 class PinList(APIView):

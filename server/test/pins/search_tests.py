@@ -1,5 +1,5 @@
 import json
-from test.conftest import generate_board_with_pins
+from test.conftest import create_user, generate_board_with_pins
 
 import pytest
 from django.core.files.images import ImageFile
@@ -12,8 +12,9 @@ from pins.serializers import PinSerializer
 
 # TODO add more search test
 @pytest.mark.django_db
-def test_move_more_than_one_pin(client, generate_board_with_pins):
-    board = generate_board_with_pins("Fresh Board", 2)
+def test_search_pin_titles(client, generate_board_with_pins, create_user):
+    user = create_user()
+    board = generate_board_with_pins("Fresh Board", user, 2)
     firstpin = board.pins.first()
     firstpin.title = "this is my title"
     firstpin.save()
