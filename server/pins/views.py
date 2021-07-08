@@ -15,7 +15,7 @@ from .models import Pin
 from .serializers import PinCreateSerializer, PinListSerializer, PinSerializer
 
 
-class PinDetail(generics.RetrieveUpdateAPIView):
+class PinDetail(generics.RetrieveAPIView):
     queryset = Pin.objects.all()
     serializer_class = PinSerializer
     permission_classes = (IsAuthor,)

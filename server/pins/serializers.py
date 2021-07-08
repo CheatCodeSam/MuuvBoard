@@ -21,8 +21,12 @@ class PinSerializer(TaggitSerializer, serializers.ModelSerializer):
             "y_coordinate",
             "board",
             "tags",
+            "created",
+            "updated",
+            "author",
         ]
         depth = 1
+        read_only_fields = ["id", "created", "updated", "author", "board"]
 
 
 class PinCreateSerializer(TaggitSerializer, serializers.ModelSerializer):
