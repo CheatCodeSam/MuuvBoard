@@ -26,7 +26,8 @@ class PinSerializer(TaggitSerializer, serializers.ModelSerializer):
 
 class PinCreateSerializer(TaggitSerializer, serializers.ModelSerializer):
 
-    tags = TagListSerializerField()
+    tags = TagListSerializerField(required=False)
+    author = serializers.HiddenField(default=serializers.CurrentUserDefault())
 
     class Meta:
         model = Pin
@@ -38,6 +39,7 @@ class PinCreateSerializer(TaggitSerializer, serializers.ModelSerializer):
             "y_coordinate",
             "board",
             "tags",
+            "author",
         ]
         read_only_fields = ["id", "created", "updated"]
 

@@ -3,7 +3,7 @@ from os import stat
 
 from django.db.models import Q
 from django.http import Http404
-from rest_framework import filters, generics, serializers, status
+from rest_framework import filters, generics, mixins, serializers, status
 from rest_framework.decorators import parser_classes
 from rest_framework.parsers import FileUploadParser
 from rest_framework.response import Response
@@ -21,7 +21,10 @@ class PinDetail(generics.RetrieveUpdateAPIView):
     permission_classes = (IsAuthor,)
 
 
-class PinList(APIView):
+class PinList(generics.GenericAPIView, mixins.CreateModelMixin):
+
+    serializer_class = PinCreateSerializer
+
     def get(self, request, format=None):
         get_data = request.query_params
         if not "search" in get_data or not "board" in get_data:
@@ -34,13 +37,8 @@ class PinList(APIView):
         serializer = PinListSerializer(pins, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-    def post(self, request, format=None):
-        serializer = PinCreateSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        else:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    def post(self, request, *args, **kwargs):
+        return self.create(request, *args, **kwargs)
 
     def patch(self, request, format=None):
         actions = request.data

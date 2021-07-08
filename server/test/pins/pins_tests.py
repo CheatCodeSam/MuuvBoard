@@ -148,28 +148,41 @@ def test_get_pin_that_doesnt_exist(client):
     assert resp.status_code == 404
 
 
-# @pytest.mark.django_db
-# def test_create_pin(client, generate_board_with_pins, generate_image):
-#     board = generate_board_with_pins("Fresh Board", 0)
-#     assert board.pins.count() == 0
+@pytest.mark.django_db
+def test_create_pin(client, generate_board_with_pins, generate_image, create_user):
+    username = "username"
+    password = "p4ssw0rd"
+    user = create_user(username=username, password=password)
+    board = generate_board_with_pins("Fresh Board", user, 0)
 
-#     tmp_file = generate_image("test.png")
-#     new_image = Image.objects.create(image=ImageFile(tmp_file))
-#     new_image.save()
-#     new_image_id = new_image.id
+    client.login(username=username, password=password)
 
-#     resp = client.post(
-#         f"/api/pins/",
-#         {"title": "Fresh Pin", "images": [new_image_id], "board": board.id},
-#         format="multipart",
-#     )
+    tmp_file = generate_image("test.png")
+    new_image = Image.objects.create(image=ImageFile(tmp_file))
+    new_image.save()
+    new_image_id = new_image.id
 
-#     assert resp.status_code == 201
-#     assert resp.data["title"] == "Fresh Pin"
-#     assert resp.data["x_coordinate"] == 0
-#     assert resp.data["y_coordinate"] == 0
-#     assert resp.data["board"] == board.id
-#     assert resp.data["images"][0] == new_image_id
+    data = {
+        "title": "Fresh Pin",
+        "images": [new_image_id],
+        "board": board.id,
+    }
 
-#     modified_board = Board.objects.get(pk=board.id)
-#     assert modified_board.pins.count() == 1
+    resp = client.post(
+        f"/api/pins/",
+        data=data,
+        format="application/json",
+    )
+
+    print(resp.data)
+
+    assert resp.status_code == 201
+    assert resp.data["title"] == "Fresh Pin"
+    assert resp.data["x_coordinate"] == 0
+    assert resp.data["y_coordinate"] == 0
+    assert resp.data["board"] == board.id
+    assert resp.data["images"][0] == new_image_id
+
+    modified_board = Board.objects.get(pk=board.id)
+    assert modified_board.pins.count() == 1
+    assert modified_board.pins.first().author == user
