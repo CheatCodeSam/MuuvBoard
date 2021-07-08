@@ -114,18 +114,93 @@ def test_cant_search_unless_logged_in(
     assert resp.status_code == 403
 
 
-# @pytest.mark.django_db
-# def test_cant_move_single_pin_if_not_owned(
-#     client, generate_board_with_pins, create_user, create_image
-# ):
-#     pass
+@pytest.mark.django_db
+def test_cant_move_single_pin_if_not_owned(
+    client, generate_board_with_pins, create_user
+):
+    user_A = create_user(username="_username")
+
+    board = generate_board_with_pins("Fresh Board", user_A, 3)
+
+    user_B = create_user()
+    client.force_login(user_B)
+
+    pin_attempted_to_move = board.pins.first()
+    original_pin_coords = {
+        "x": pin_attempted_to_move.x_coordinate,
+        "y": pin_attempted_to_move.y_coordinate,
+    }
+
+    data = [
+        {
+            "op": "move",
+            "path": pin_attempted_to_move.id,
+            "values": {"x": 100, "y": 100},
+        }
+    ]
+    resp = client.patch(
+        f"/api/pins/",
+        data=json.dumps(data),
+        content_type="application/json",
+    )
+
+    assert resp.status_code == 403
+
+    hopefully_unmodified_pin = Pin.objects.get(pk=pin_attempted_to_move.id)
+    assert hopefully_unmodified_pin.x_coordinate == original_pin_coords["x"]
+    assert hopefully_unmodified_pin.y_coordinate == original_pin_coords["y"]
 
 
-# @pytest.mark.django_db
-# def test_cant_bulk_move_pins_not_owned(
-#     client, generate_board_with_pins, create_user, create_image
-# ):
-#     pass
+@pytest.mark.django_db
+def test_cant_bulk_move_pins_not_owned(
+    client, generate_board_with_pins, create_user, create_image
+):
+    user_A = create_user(username="_username")
+
+    board = generate_board_with_pins("Fresh Board", user_A, 3)
+
+    user_B = create_user()
+    client.force_login(user_B)
+
+    pin_attempted_to_move = board.pins.first()
+    original_pin_coords = {
+        "x": pin_attempted_to_move.x_coordinate,
+        "y": pin_attempted_to_move.y_coordinate,
+    }
+
+    other_pin_attempted_to_move = board.pins.last()
+    original_other_pin_coords = {
+        "x": pin_attempted_to_move.x_coordinate,
+        "y": pin_attempted_to_move.y_coordinate,
+    }
+
+    data = [
+        {
+            "op": "move",
+            "path": pin_attempted_to_move.id,
+            "values": {"x": 100, "y": 100},
+        },
+        {
+            "op": "move",
+            "path": other_pin_attempted_to_move.id,
+            "values": {"x": 2, "y": 2},
+        },
+    ]
+    resp = client.patch(
+        f"/api/pins/",
+        data=json.dumps(data),
+        content_type="application/json",
+    )
+
+    assert resp.status_code == 403
+
+    hopefully_unmodified_pin = Pin.objects.get(pk=pin_attempted_to_move.id)
+    assert hopefully_unmodified_pin.x_coordinate == original_pin_coords["x"]
+    assert hopefully_unmodified_pin.y_coordinate == original_pin_coords["y"]
+
+    hopefully_other_unmodified_pin = Pin.objects.get(pk=other_pin_attempted_to_move.id)
+    assert hopefully_other_unmodified_pin.x_coordinate == original_other_pin_coords["x"]
+    assert hopefully_other_unmodified_pin.y_coordinate == original_other_pin_coords["y"]
 
 
 @pytest.mark.django_db
@@ -139,12 +214,12 @@ def test_cant_delete_pins_not_owned(
     user_B = create_user()
     client.force_login(user_B)
 
-    pin_to_delete = board.pins.first()
+    pin_attemped_to_delete = board.pins.first()
 
     data = [
         {
             "op": "remove",
-            "path": pin_to_delete.id,
+            "path": pin_attemped_to_delete.id,
         }
     ]
     resp = client.patch(
@@ -155,8 +230,8 @@ def test_cant_delete_pins_not_owned(
 
     assert resp.status_code == 403
 
-    modified_board = Board.objects.get(pk=board.id)
-    assert modified_board.pins.count() == 3
+    hopefully_unmodified_board = Board.objects.get(pk=board.id)
+    assert hopefully_unmodified_board.pins.count() == 3
 
 
 @pytest.mark.django_db
@@ -168,17 +243,17 @@ def test_cant_bulk_delete_pins_not_owned(client, generate_board_with_pins, creat
     user_B = create_user()
     client.force_login(user_B)
 
-    pin_to_delete = board.pins.first()
-    other_pin_to_delete = board.pins.last()
+    pin_attmped_to_delete = board.pins.first()
+    other_pin_attmped_to_delete = board.pins.last()
 
     data = [
         {
             "op": "remove",
-            "path": pin_to_delete.id,
+            "path": pin_attmped_to_delete.id,
         },
         {
             "op": "remove",
-            "path": other_pin_to_delete.id,
+            "path": other_pin_attmped_to_delete.id,
         },
     ]
     resp = client.patch(
@@ -189,8 +264,8 @@ def test_cant_bulk_delete_pins_not_owned(client, generate_board_with_pins, creat
 
     assert resp.status_code == 403
 
-    modified_board = Board.objects.get(pk=board.id)
-    assert modified_board.pins.count() == 3
+    hopefully_unmodified_board = Board.objects.get(pk=board.id)
+    assert hopefully_unmodified_board.pins.count() == 3
 
 
 @pytest.mark.django_db
@@ -199,14 +274,14 @@ def test_return_403_on_anon_user_sending_patch_to_pins(
 ):
     user = create_user()
 
-    board = generate_board_with_pins("Fresh Board", 3)
+    board = generate_board_with_pins("Fresh Board", user, 3)
 
-    pin_to_delete = board.pins.first()
+    pin_attempted_to_delete = board.pins.first()
 
     data = [
         {
             "op": "remove",
-            "path": pin_to_delete.id,
+            "path": pin_attempted_to_delete.id,
         }
     ]
     resp = client.patch(
@@ -217,5 +292,5 @@ def test_return_403_on_anon_user_sending_patch_to_pins(
 
     assert resp.status_code == 403
 
-    modified_board = Board.objects.get(pk=board.id)
-    assert modified_board.pins.count() == 3
+    hopefully_unmodified_board = Board.objects.get(pk=board.id)
+    assert hopefully_unmodified_board.pins.count() == 3

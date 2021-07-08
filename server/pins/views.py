@@ -55,6 +55,7 @@ class PinList(generics.GenericAPIView, mixins.CreateModelMixin):
         for action in actions:
             if action["op"] == "move":
                 pin_to_be_modified = Pin.objects.get(pk=action["path"])
+                self.check_object_permissions(request, pin_to_be_modified)
                 pin_to_be_modified.x_coordinate = action["values"]["x"]
                 pin_to_be_modified.y_coordinate = action["values"]["y"]
                 pin_to_be_modified.save()
