@@ -1,3 +1,4 @@
+from django.contrib.auth import get_user_model
 from rest_framework import serializers
 from taggit_serializer.serializers import TaggitSerializer, TagListSerializerField
 
@@ -27,7 +28,9 @@ class PinSerializer(TaggitSerializer, serializers.ModelSerializer):
 class PinCreateSerializer(TaggitSerializer, serializers.ModelSerializer):
 
     tags = TagListSerializerField(required=False)
-    author = serializers.HiddenField(default=serializers.CurrentUserDefault())
+    author = serializers.PrimaryKeyRelatedField(
+        default=serializers.CurrentUserDefault(), queryset=get_user_model().objects.all()
+    )
 
     class Meta:
         model = Pin
