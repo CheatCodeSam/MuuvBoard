@@ -4,6 +4,8 @@ from boards.models import Board
 
 
 class IsAuthor(permissions.BasePermission):
+    message = "Pins can only be set to Boards owned by User."
+
     def has_object_permission(self, request, view, obj):
         return obj.author == request.user
 

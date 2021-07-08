@@ -9,9 +9,7 @@ from pins.models import Pin
 def test_cant_set_user_manually(
     client, generate_board_with_pins, create_user, create_image
 ):
-    username = "username_"
-    password = "p4ssw0rd"
-    user_making_request_to_own_pin = create_user(username=username, password=password)
+    user_making_request_to_own_pin = create_user(username="username_")
 
     # More explicit than client.login
     client.force_login(user_making_request_to_own_pin)
@@ -47,9 +45,7 @@ def test_cant_set_user_manually(
 def test_cant_create_pin_on_board_not_owned_by_user(
     client, generate_board_with_pins, create_user, create_image
 ):
-    username = "username_"
-    password = "p4ssw0rd"
-    user_A = create_user(username=username, password=password)
+    user_A = create_user(username="username_")
 
     board_owned_by_user_A = generate_board_with_pins("Fresh Board", user_A, 0)
 
@@ -72,5 +68,5 @@ def test_cant_create_pin_on_board_not_owned_by_user(
         data=data,
         format="application/json",
     )
-
     assert resp.status_code == 403
+    assert resp.data["detail"] == "Pins can only be set to Boards owned by User."
