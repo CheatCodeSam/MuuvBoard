@@ -1,5 +1,5 @@
 import json
-from test.conftest import generate_board_with_pins, generate_image
+from test.conftest import generate_board_with_pins, generate_image_bytes
 
 import pytest
 from django.core.files.images import ImageFile

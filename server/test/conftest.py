@@ -4,10 +4,21 @@ import os
 import pytest
 from attr import s
 from django.contrib.auth import get_user, get_user_model
-from PIL import Image
+from django.core.files.images import ImageFile
+from PIL import Image as PImg
 
 from boards.models import Board
+from files.models import Image
 from pins.models import Pin
+
+
+def _generate_image(file_name, x=100, y=100):
+    file = io.BytesIO()
+    image = PImg.new("RGBA", size=(x, y), color=(155, 0, 0))
+    image.save(file, "png")
+    file.name = file_name
+    file.seek(0)
+    return file
 
 
 @pytest.fixture(scope="function")
@@ -23,16 +34,19 @@ def generate_board_with_pins():
 
 
 @pytest.fixture(scope="function")
-def generate_image():
-    def _generate_image(file_name, x=100, y=100):
-        file = io.BytesIO()
-        image = Image.new("RGBA", size=(x, y), color=(155, 0, 0))
-        image.save(file, "png")
-        file.name = file_name
-        file.seek(0)
-        return file
-
+def generate_image_bytes():
     return _generate_image
+
+
+@pytest.fixture(scope="function")
+def create_image():
+    def _create_image():
+        tmp_file = _generate_image("file.png")
+        new_image = Image.objects.create(image=ImageFile(tmp_file))
+        new_image.save()
+        return new_image
+
+    return _create_image
 
 
 @pytest.fixture(scope="function")

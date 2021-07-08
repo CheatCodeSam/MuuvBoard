@@ -1,5 +1,10 @@
 import json
-from test.conftest import create_user, generate_board_with_pins
+from test.conftest import (
+    create_image,
+    create_user,
+    generate_board_with_pins,
+    generate_image_bytes,
+)
 
 import pytest
 from django.core.files.images import ImageFile
@@ -149,7 +154,9 @@ def test_get_pin_that_doesnt_exist(client):
 
 
 @pytest.mark.django_db
-def test_create_pin(client, generate_board_with_pins, generate_image, create_user):
+def test_create_pin(
+    client, generate_board_with_pins, generate_image_bytes, create_user, create_image
+):
     username = "username"
     password = "p4ssw0rd"
     user = create_user(username=username, password=password)
@@ -157,9 +164,7 @@ def test_create_pin(client, generate_board_with_pins, generate_image, create_use
 
     client.login(username=username, password=password)
 
-    tmp_file = generate_image("test.png")
-    new_image = Image.objects.create(image=ImageFile(tmp_file))
-    new_image.save()
+    new_image = create_image()
     new_image_id = new_image.id
 
     data = {
@@ -190,7 +195,7 @@ def test_create_pin(client, generate_board_with_pins, generate_image, create_use
 
 @pytest.mark.django_db
 def test_cant_set_user_manually(
-    client, generate_board_with_pins, generate_image, create_user
+    client, generate_board_with_pins, generate_image_bytes, create_user, create_image
 ):
     username = "username_"
     password = "p4ssw0rd"
@@ -201,9 +206,7 @@ def test_cant_set_user_manually(
 
     board = generate_board_with_pins("Fresh Board", user_making_request_to_own_pin, 0)
 
-    tmp_file = generate_image("test.png")
-    new_image = Image.objects.create(image=ImageFile(tmp_file))
-    new_image.save()
+    new_image = create_image()
     new_image_id = new_image.id
 
     user_that_should_not_own_pin = create_user()
