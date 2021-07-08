@@ -24,6 +24,7 @@ class PinDetail(generics.RetrieveUpdateAPIView):
 class PinList(generics.GenericAPIView, mixins.CreateModelMixin):
 
     serializer_class = PinCreateSerializer
+    permission_classes = (IsAuthor,)
 
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
