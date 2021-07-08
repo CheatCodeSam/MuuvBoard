@@ -57,17 +57,17 @@ def test_move_one_pin(client, generate_board_with_pins, create_user):
     user = create_user()
     board = generate_board_with_pins("Fresh Board", user, 3)
     pin_to_move = board.pins.first()
+
+    data = [
+        {
+            "op": "move",
+            "path": pin_to_move.id,
+            "values": {"x": 100, "y": 100},
+        }
+    ]
     resp = client.patch(
         f"/api/pins/",
-        {
-            "actions": [
-                {
-                    "op": "move",
-                    "path": pin_to_move.id,
-                    "values": {"x": 100, "y": 100},
-                }
-            ]
-        },
+        data=json.dumps(data),
         content_type="application/json",
     )
 
@@ -82,22 +82,23 @@ def test_move_more_than_one_pin(client, generate_board_with_pins, create_user):
     board = generate_board_with_pins("Fresh Board", author=user, num_of_pins=2)
     first_pin_to_move = board.pins.first()
     second_pin_to_move = board.pins.last()
+
+    data = [
+        {
+            "op": "move",
+            "path": first_pin_to_move.id,
+            "values": {"x": 100, "y": 200},
+        },
+        {
+            "op": "move",
+            "path": second_pin_to_move.id,
+            "values": {"x": -100, "y": -200},
+        },
+    ]
+
     resp = client.patch(
         f"/api/pins/",
-        {
-            "actions": [
-                {
-                    "op": "move",
-                    "path": first_pin_to_move.id,
-                    "values": {"x": 100, "y": 200},
-                },
-                {
-                    "op": "move",
-                    "path": second_pin_to_move.id,
-                    "values": {"x": -100, "y": -200},
-                },
-            ]
-        },
+        data=json.dumps(data),
         content_type="application/json",
     )
 
@@ -120,16 +121,16 @@ def test_delete_pin(client, generate_board_with_pins, create_user):
     assert board.pins.count() == 3
     pin_to_delete = board.pins.first()
     pin_to_delete_id = pin_to_delete.id
+
+    data = [
+        {
+            "op": "remove",
+            "path": pin_to_delete_id,
+        }
+    ]
     resp = client.patch(
         f"/api/pins/",
-        {
-            "actions": [
-                {
-                    "op": "remove",
-                    "path": pin_to_delete_id,
-                }
-            ]
-        },
+        data=json.dumps(data),
         content_type="application/json",
     )
 

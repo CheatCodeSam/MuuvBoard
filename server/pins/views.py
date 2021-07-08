@@ -43,7 +43,7 @@ class PinList(APIView):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def patch(self, request, format=None):
-        actions = request.data["actions"]
+        actions = request.data
         for action in actions:
             if action["op"] == "move":
                 pin_to_be_modified = Pin.objects.get(pk=action["path"])
