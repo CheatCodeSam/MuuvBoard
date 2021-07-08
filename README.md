@@ -26,14 +26,13 @@ Ensure PATCH request can only modify one board per request.
 
 
 Big features to still add in order:
-Search
-    Search based off of tag
-    Search Based off of title
-    Search based on Board
 Users
 Zooming
 
 testuser123
 testpass123
+
+testuser456
+ptDCaMzFaivL37V
 
 
