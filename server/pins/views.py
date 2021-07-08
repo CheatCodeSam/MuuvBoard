@@ -31,7 +31,7 @@ class PinList(generics.GenericAPIView, mixins.CreateModelMixin):
 
     def get(self, request, format=None):
         get_data = request.query_params
-        if request.user.is_anonymous:
+        if not request.user.is_authenticated:
             return Response(
                 status=status.HTTP_403_FORBIDDEN,
             )
@@ -40,7 +40,9 @@ class PinList(generics.GenericAPIView, mixins.CreateModelMixin):
         search = get_data["search"]
         board = get_data["board"]
         pins = Pin.objects.filter(
-            Q(title__icontains=search) | Q(tags__name__icontains=search), board=board
+            Q(title__icontains=search) | Q(tags__name__icontains=search),
+            board=board,
+            author=request.user,
         )
         serializer = PinListSerializer(pins, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
