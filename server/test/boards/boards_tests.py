@@ -27,6 +27,13 @@ def test_get_list_of_boards(client, generate_board_with_pins, create_user):
     assert resp.data[1]["title"] == board_two.title
 
 
+@pytest.mark.django_db
+def test_get_board_that_doesnt_exist(client, generate_board_with_pins, create_user):
+    resp = client.get(f"/api/boards/-1/")
+
+    assert resp.status_code == 404
+
+
 # TODO
 # @pytest.mark.django_db
 # def test_create_board(client, create_user):

@@ -34,7 +34,7 @@ class BoardDetail(APIView):
         try:
             return Board.objects.get(pk=pk)
         except Board.DoesNotExist:
-            return Http404
+            raise Http404
 
     def get(self, request, pk, format=None):
         board = self.get_object(pk)
