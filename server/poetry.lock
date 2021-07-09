@@ -108,6 +108,21 @@ optional = false
 python-versions = "*"
 
 [[package]]
+name = "dj-rest-auth"
+version = "2.1.7"
+description = "Authentication and Registration in Django Rest Framework"
+category = "main"
+optional = false
+python-versions = ">=3.5"
+
+[package.dependencies]
+Django = ">=2.0"
+djangorestframework = ">=3.7.0"
+
+[package.extras]
+with_social = ["django-allauth (>=0.40.0,<0.45.0)"]
+
+[[package]]
 name = "django"
 version = "3.2.3"
 description = "A high-level Python Web framework that encourages rapid development and clean, pragmatic design."
@@ -482,7 +497,7 @@ python-versions = "*"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.9"
-content-hash = "06d5b19d1183bfd76ac6844db416314e21613985be6f69cab8b1e03af27e1a4a"
+content-hash = "fd79235d0252237437c9937230fda56068875027fb6857a1f697e825bfd8f366"
 
 [metadata.files]
 appdirs = [
@@ -524,6 +539,9 @@ colorama = [
 distlib = [
     {file = "distlib-0.3.1-py2.py3-none-any.whl", hash = "sha256:8c09de2c67b3e7deef7184574fc060ab8a793e7adbb183d942c389c8b13c52fb"},
     {file = "distlib-0.3.1.zip", hash = "sha256:edf6116872c863e1aa9d5bb7cb5e05a022c519a4594dc703843343a9ddd9bff1"},
+]
+dj-rest-auth = [
+    {file = "dj-rest-auth-2.1.7.tar.gz", hash = "sha256:45f95fa982c41ae7ba5dee041de5dbb6e3724347796e718cf2bb5c0b681b2d10"},
 ]
 django = [
     {file = "Django-3.2.3-py3-none-any.whl", hash = "sha256:7e0a1393d18c16b503663752a8b6790880c5084412618990ce8a81cc908b4962"},

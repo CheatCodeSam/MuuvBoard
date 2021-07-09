@@ -1,6 +1,7 @@
 from functools import partial
 from os import stat
 
+from django.db import transaction
 from django.db.models import Q
 from django.http import Http404
 from rest_framework import filters, generics, mixins, serializers, status
@@ -50,6 +51,8 @@ class PinList(generics.GenericAPIView, mixins.CreateModelMixin):
     def post(self, request, *args, **kwargs):
         return self.create(request, *args, **kwargs)
 
+    # If any of these fail, rollback the save opertaion.
+    @transaction.atomic
     def patch(self, request, format=None):
         actions = request.data
         for action in actions:
