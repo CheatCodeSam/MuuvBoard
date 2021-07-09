@@ -2,7 +2,7 @@ from functools import partial
 from os import stat
 
 from django.http import Http404
-from rest_framework import status
+from rest_framework import generics, status
 from rest_framework.decorators import parser_classes
 from rest_framework.parsers import FileUploadParser
 from rest_framework.response import Response
@@ -12,21 +12,18 @@ from pins.models import Pin
 from pins.serializers import PinSerializer
 
 from .models import Board
+from .permissions import IsAuthor
 from .serializers import BoardListSerializer, BoardSerializer
 
 
-class BoardList(APIView):
-    def get(self, request, format=None):
-        boards = Board.objects.all()
-        serializer = BoardListSerializer(boards, many=True)
-        return Response(serializer.data)
+class BoardList(generics.ListCreateAPIView):
 
-    def post(self, request, format=None):
-        serializer = BoardSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    queryset = Board.objects.all()
+    serializer_class = BoardListSerializer
+    permission_classes = (IsAuthor,)
+
+    def perform_create(self, serializer):
+        serializer.save(author=self.request.user)
 
 
 class BoardDetail(APIView):

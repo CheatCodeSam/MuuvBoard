@@ -20,6 +20,9 @@ def test_get_list_of_boards(client, generate_board_with_pins, create_user):
 
     board_one = generate_board_with_pins("Board One", user)
     board_two = generate_board_with_pins("Board Two", user)
+
+    client.force_login(user)
+
     resp = client.get(f"/api/boards/")
     assert resp.status_code == 200
     assert resp.data[0]["title"] == board_one.title
@@ -28,28 +31,22 @@ def test_get_list_of_boards(client, generate_board_with_pins, create_user):
 
 
 @pytest.mark.django_db
-def test_get_board_that_doesnt_exist(client, generate_board_with_pins, create_user):
-    resp = client.get(f"/api/boards/-1/")
+def test_create_board(client, create_user):
+    user = create_user()
+    boards = Board.objects.all()
+    assert len(boards) == 0
 
-    assert resp.status_code == 404
+    client.force_login(user)
 
+    resp = client.post(
+        "/api/boards/", {"title": "Fresh Board"}, content_type="application/json"
+    )
+    assert resp.status_code == 201
+    assert resp.data["title"] == "Fresh Board"
+    assert resp.data["num_of_pins"] == 0
 
-# TODO
-# @pytest.mark.django_db
-# def test_create_board(client, create_user):
-#     user = create_user()
-#     boards = Board.objects.all()
-#     assert len(boards) == 0
-
-#     resp = client.post(
-#         "/api/boards/", {"title": "Fresh Board"}, content_type="application/json"
-#     )
-#     assert resp.status_code == 201
-#     assert resp.data["title"] == "Fresh Board"
-#     assert resp.data["num_of_pins"] == 0
-
-#     boards = Board.objects.all()
-#     assert len(boards) == 1
+    boards = Board.objects.all()
+    assert len(boards) == 1
 
 
 @pytest.mark.django_db
@@ -63,7 +60,7 @@ def test_get_single_board(client, generate_board_with_pins, create_user):
 
 @pytest.mark.django_db
 def test_get_incorrect_board(client):
-    resp = client.get(f"/api/movies/-1/")
+    resp = client.get(f"/api/movies/100/")
     assert resp.status_code == 404
 
 

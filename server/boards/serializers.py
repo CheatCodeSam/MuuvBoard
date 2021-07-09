@@ -8,10 +8,13 @@ from .models import Board
 class BoardListSerializer(serializers.ModelSerializer):
 
     num_of_pins = serializers.SerializerMethodField()
+    author = serializers.PrimaryKeyRelatedField(
+        read_only=True,
+    )
 
     class Meta:
         model = Board
-        fields = ["id", "title", "num_of_pins"]
+        fields = ["id", "title", "num_of_pins", "author"]
 
     def get_num_of_pins(self, obj):
         return obj.pins.count()
