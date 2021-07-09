@@ -50,7 +50,7 @@ def test_create_board(client, create_user):
 
 
 @pytest.mark.django_db
-def test_user_cant_get_list_of_boards_that_are_not_theirs(
+def test_user_does_not_get_list_of_boards_that_are_not_theirs(
     client, create_user, generate_board_with_pins
 ):
     user_A = create_user(username="_username")
@@ -72,6 +72,7 @@ def test_user_cant_get_list_of_boards_that_are_not_theirs(
 def test_get_single_board(client, generate_board_with_pins, create_user):
     user = create_user()
     board = generate_board_with_pins("Fresh Board", user)
+    client.force_login(user)
     resp = client.get(f"/api/boards/{board.id}/")
     assert resp.status_code == 200
     assert resp.data["title"] == "Fresh Board"
@@ -87,6 +88,8 @@ def test_get_incorrect_board(client):
 def test_update_board_title(client, generate_board_with_pins, create_user):
     user = create_user()
     board = generate_board_with_pins("Fresh Board", user)
+    client.force_login(user)
+
     resp = client.put(
         f"/api/boards/{board.id}/",
         {"title": "New Board Title"},
@@ -105,6 +108,7 @@ def test_update_board_title(client, generate_board_with_pins, create_user):
 def test_update_board_invalid_json(client, generate_board_with_pins, create_user):
     user = create_user()
     board = generate_board_with_pins("Fresh Board", user)
+    client.force_login(user)
     resp = client.put(
         f"/api/boards/{board.id}/",
         {""},
@@ -126,7 +130,34 @@ def test_show_pins_on_board(client, generate_board_with_pins, create_user):
 def test_get_pins_from_board(client, generate_board_with_pins, create_user):
     user = create_user()
     board = generate_board_with_pins("Fresh Board", user, 3)
+    client.force_login(user)
     resp = client.get(f"/api/boards/{board.id}/")
     assert resp.status_code == 200
     assert len(resp.data["pins"]) == 3
     assert resp.data["title"] == "Fresh Board"
+
+
+@pytest.mark.django_db
+def test_anon_user_cannot_get_single_pin(client, generate_board_with_pins, create_user):
+    user = create_user()
+    board = generate_board_with_pins("Fresh Board", user)
+    resp = client.get(f"/api/boards/{board.id}/")
+    assert resp.status_code == 403
+
+
+@pytest.mark.django_db
+def test_other_user_cannot_get_single_pin(client, generate_board_with_pins, create_user):
+    user = create_user(username="_username")
+    board = generate_board_with_pins("Fresh Board", user)
+    wrong_user = create_user()
+    client.force_login(wrong_user)
+    resp = client.get(f"/api/boards/{board.id}/")
+    assert resp.status_code == 403
+
+
+@pytest.mark.django_db
+def test_anon_user_cannot_get_list(client, generate_board_with_pins, create_user):
+    user = create_user()
+    board = generate_board_with_pins("Fresh Board", user)
+    resp = client.get(f"/api/boards/")
+    assert resp.status_code == 403
