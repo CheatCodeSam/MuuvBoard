@@ -50,6 +50,25 @@ def test_create_board(client, create_user):
 
 
 @pytest.mark.django_db
+def test_user_cant_get_list_of_boards_that_are_not_theirs(
+    client, create_user, generate_board_with_pins
+):
+    user_A = create_user(username="_username")
+    generate_board_with_pins("Fresh Board 1", user_A)
+    generate_board_with_pins("Fresh Board 2", user_A)
+    generate_board_with_pins("Fresh Board 3", user_A)
+
+    user_B = create_user()
+    generate_board_with_pins("User B Board", user_B)
+
+    client.force_login(user_B)
+    resp = client.get(f"/api/boards/")
+    assert resp.status_code == 200
+    assert len(resp.data) == 1
+    assert resp.data[0]["title"] == "User B Board"
+
+
+@pytest.mark.django_db
 def test_get_single_board(client, generate_board_with_pins, create_user):
     user = create_user()
     board = generate_board_with_pins("Fresh Board", user)

@@ -18,9 +18,12 @@ from .serializers import BoardListSerializer, BoardSerializer
 
 class BoardList(generics.ListCreateAPIView):
 
-    queryset = Board.objects.all()
     serializer_class = BoardListSerializer
     permission_classes = (IsAuthor,)
+
+    def get_queryset(self):
+        user = self.request.user
+        return Board.objects.filter(author=user)
 
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
