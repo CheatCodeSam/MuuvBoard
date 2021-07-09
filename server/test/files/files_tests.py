@@ -1,5 +1,6 @@
 import json
-from test.conftest import generate_board_with_pins
+import os
+from test.conftest import create_user, generate_image_bytes
 
 import pytest
 
@@ -11,9 +12,13 @@ from pins.serializers import PinSerializer
 
 
 @pytest.mark.django_db
-def test_create_file(client, generate_image):
+def test_create_file(client, generate_image_bytes, create_user):
 
-    tmp_file = generate_image("test.png")
+    user = create_user()
+
+    tmp_file = generate_image_bytes("test.png")
+
+    client.force_login(user)
 
     resp = client.post(
         f"/api/files/",
@@ -23,4 +28,19 @@ def test_create_file(client, generate_image):
 
     assert resp.status_code == 201
     id = resp.data["id"]
-    assert Image.objects.get(pk=id)
+    img = Image.objects.get(pk=id)
+    assert img
+
+
+@pytest.mark.django_db
+def test_cant_upload_image_if_not_authenticated(client, generate_image_bytes):
+
+    tmp_file = generate_image_bytes("test.png")
+
+    resp = client.post(
+        f"/api/files/",
+        {"image": tmp_file},
+        format="multipart",
+    )
+
+    assert resp.status_code == 403

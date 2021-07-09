@@ -1,24 +1,12 @@
-from functools import partial
-from os import stat
+from rest_framework import generics
+from rest_framework.parsers import MultiPartParser
+from rest_framework.permissions import IsAuthenticated
 
-from django.http import Http404
-from django.shortcuts import render
-from rest_framework import status
-from rest_framework.decorators import parser_classes
-from rest_framework.parsers import FileUploadParser
-from rest_framework.response import Response
-from rest_framework.views import APIView
-
-from .models import Image
 from .serializers import ImageDetailSerializer
 
 
-class ImageDetail(APIView):
-    @parser_classes([FileUploadParser])
-    def post(self, request, format=None):
-        serializer = ImageDetailSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        else:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+class ImageDetail(generics.CreateAPIView):
+
+    serializer_class = ImageDetailSerializer
+    permission_classes = (IsAuthenticated,)
+    parser_classes = [MultiPartParser]
