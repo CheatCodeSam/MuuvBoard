@@ -4,6 +4,7 @@ import PinRequest from './PinRequest'
 import { v4 as uuidv4 } from 'uuid'
 import Toolbar from './Toolbar'
 import PinEditor from './PinEditor';
+import { MainContext } from '../context/MainContext';
 
 
 
@@ -12,9 +13,10 @@ import PinEditor from './PinEditor';
 
 class CorkBoard extends React.Component {
 
+
     constructor(props) {
         super(props)
-        this.request = new PinRequest(props.data.id);
+        this.request = new PinRequest(props.data.id, this.props.token);
         this.state = {
             pins: props.data.pins.map(pin => this.createPinForBoard(pin)),
             showPinEditor: false,

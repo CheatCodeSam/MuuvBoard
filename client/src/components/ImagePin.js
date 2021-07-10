@@ -5,7 +5,7 @@ import useImage from 'use-image'
 
 function ImagePin(props) {
 
-    const url = `${process.env.REACT_APP_BASE_URL}${props.thumbnails[0].image}`
+    const url = `${props.thumbnails[0].image}`
     const mutliImages = props.thumbnails.length > 1;
 
     const generateIndexBox = () => {

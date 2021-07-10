@@ -53,7 +53,12 @@ function ListOfBoards(props) {
         const formData = new FormData();
         formData.append('title', values.title);
         try {
-            axios.post(url, formData).then((data) => {
+            axios.post(url,
+                formData, {
+                headers: {
+                    'Authorization': `token ${token}`
+                }
+            }).then((data) => {
                 const board = data.data
                 const newList = appState.boards.concat(board);
                 setAppState({

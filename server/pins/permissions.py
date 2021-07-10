@@ -11,7 +11,7 @@ class IsAuthor(permissions.BasePermission):
 
     def has_permission(self, request, view):
         if request.method == "POST":
-            board_id = request.POST.get("board")
+            board_id = request.data["board"]
             if not Board.objects.filter(id=board_id, author=request.user).exists():
                 return False
         return True
