@@ -5,6 +5,7 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import axios from 'axios';
 import { BrowserRouter } from 'react-router-dom';
+import { MainContextProvider } from './context/MainContext'
 
 
 axios.defaults.xsrfCookieName = 'csrftoken';
@@ -12,9 +13,11 @@ axios.defaults.xsrfHeaderName = 'X-CSRFToken';
 
 ReactDOM.render(
     <React.StrictMode>
-        <BrowserRouter>
-            <App />
-        </BrowserRouter>
+        <MainContextProvider>
+            <BrowserRouter>
+                <App />
+            </BrowserRouter>
+        </MainContextProvider>
     </React.StrictMode>,
     document.getElementById('root')
 );

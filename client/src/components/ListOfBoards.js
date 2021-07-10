@@ -1,4 +1,4 @@
-import React, { useEffect, useState, component } from "react";
+import React, { useEffect, useState, component, useContext } from "react";
 import {
     useParams,
     Link
@@ -6,6 +6,7 @@ import {
 
 import axios from 'axios'
 import CreateBoard from "./CreateBoard";
+import { MainContext } from "../context/MainContext";
 
 
 function ListOfBoards(props) {
@@ -14,6 +15,8 @@ function ListOfBoards(props) {
 
     const url = `${process.env.REACT_APP_BASE_URL}/api/boards/`
 
+    const { token } = useContext(MainContext)
+
     const [appState, setAppState] = useState({
         loading: false,
         boards: null,
@@ -21,7 +24,11 @@ function ListOfBoards(props) {
 
     useEffect(() => {
         setAppState({ loading: true });
-        axios.get(url).then((response) => {
+        axios.get(url, {
+            headers: {
+                'Authorization': `token ${token}`
+            }
+        }).then((response) => {
             const loadedBoards = response.data;
             setAppState({ loading: false, boards: loadedBoards });
         });

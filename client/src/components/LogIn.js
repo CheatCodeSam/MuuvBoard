@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import PropTypes from 'prop-types';
+import { MainContext } from '../context/MainContext';
 
 async function loginUser(credentials) {
     return fetch(`${process.env.REACT_APP_BASE_URL}/api/dj-rest-auth/login/`, {
@@ -12,7 +13,10 @@ async function loginUser(credentials) {
         .then(data => data.json())
 }
 
-export default function Login({ setToken }) {
+export default function Login() {
+    const { setToken } = useContext(MainContext)
+
+
     const [username, setUserName] = useState();
     const [password, setPassword] = useState();
 
@@ -22,7 +26,7 @@ export default function Login({ setToken }) {
             username,
             password
         });
-        setToken(token);
+        setToken(token.key)
     }
 
     return (

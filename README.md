@@ -26,8 +26,18 @@ Ensure PATCH request can only modify one board per request.
 
 
 Big features to still add in order:
-Users
 Zooming
+
+
+Authentication:
+* when entering page
+* * if no token, login
+* * if 403 error, validate token
+* * * if invalid token, login
+* * * if valid token, redirect to boards list
+* * if valid token, make all request on page with token
+
+
 
 testuser123
 testpass123

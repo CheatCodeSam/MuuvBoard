@@ -6,23 +6,16 @@ import Board from './components/Board';
 import ListOfBoards from './components/ListOfBoards'
 
 import LogIn from './components/LogIn';
+import { useContext } from 'react';
+import { MainContext } from './context/MainContext';
 
 
-const setToken = (userToken) => {
-    sessionStorage.setItem('token', JSON.stringify(userToken))
-}
-
-const getToken = () => {
-    const tokenString = sessionStorage.getItem('token')
-    const userToken = JSON.parse(tokenString)
-    return userToken?.key
-}
 
 function App() {
-    const token = getToken()
+    const { token } = useContext(MainContext)
 
     if (!token) {
-        return <LogIn setToken={setToken} />
+        return <LogIn />
     }
 
     return (
