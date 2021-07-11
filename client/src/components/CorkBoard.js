@@ -90,7 +90,7 @@ class CorkBoard extends React.Component {
 
     makePin = async (data) => {
         const pin = await data
-        console.log(pin.data)
+        // TODO this is incredibly jank
         pin.data.images = pin.data.images.map(img => { return { ...img, image: `${process.env.REACT_APP_BASE_URL}${img.image}` } })
         this.setState({
             pins: [...this.state.pins, this.createPinForBoard(pin.data)],
