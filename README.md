@@ -22,6 +22,7 @@ https://codesandbox.io/s/react-konva-select-and-drag-7fct5
 https://facebook.github.io/flux/docs/in-depth-overview/
 https://williamdurand.fr/2014/02/14/please-do-not-patch-like-an-idiot/
 https://datatracker.ietf.org/doc/html/rfc6902
+https://pixijs.io/examples/#/events/drag-n-drop.js
 Ensure PATCH request can only modify one board per request.
 
 

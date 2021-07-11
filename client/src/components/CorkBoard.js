@@ -4,6 +4,7 @@ import PinRequest from './PinRequest'
 import Toolbar from './Toolbar'
 import PinEditor from './PinEditor';
 import PinView from './PinView'
+import SearchResultsView from './SearchResultsView';
 
 
 
@@ -22,6 +23,8 @@ class CorkBoard extends React.Component {
             pinToView: 0,
             showPinEditor: false,
             PinEditorX: 0, PinEditorY: 0,
+            showSearchResults: false,
+            searchResuts: []
         }
     }
 
@@ -111,8 +114,9 @@ class CorkBoard extends React.Component {
         this.setState({ pins: this.mergePinsbyId(this.state.pins, movedPins) })
     }
 
-    onSearch = (query) => {
-        this.request.onSearch(query)
+    onSearch = async (query) => {
+        const results = await this.request.onSearch(query)
+        this.setState({ searchResuts: results.data })
     }
 
 
@@ -141,14 +145,13 @@ class CorkBoard extends React.Component {
                     />
                 }
 
-                {/* {this.state.showSearchResults &&
-                    <PinEditor
-                        x={this.state.PinEditorX}
-                        y={this.state.PinEditorY}
-                        onEscape={() => this.setState({ showPinEditor: false })}
-                        onPinCreate={this.onPinCreate}
+                {this.state.showSearchResults &&
+                    <SearchResultsView
+                        onEscape={() => this.setState({ showSearchResults: false })}
+                        results={this.state.searchResuts}
+                        onPinView={(id) => console.log(id)}
                     />
-                } */}
+                }
 
                 <ScrollingStage
                     pins={this.state.pins}
