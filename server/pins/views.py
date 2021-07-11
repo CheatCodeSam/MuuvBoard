@@ -40,6 +40,7 @@ class PinList(generics.GenericAPIView, mixins.CreateModelMixin):
             return Response(status=status.HTTP_400_BAD_REQUEST)
         search = get_data["search"]
         board = get_data["board"]
+        ## TODO test for duplicates
         pins = Pin.objects.distinct().filter(
             Q(title__icontains=search) | Q(tags__name__icontains=search),
             board=board,

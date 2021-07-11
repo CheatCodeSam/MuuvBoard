@@ -1,10 +1,9 @@
 import React from 'react';
 import ScrollingStage from './ScrollingStage'
 import PinRequest from './PinRequest'
-import { v4 as uuidv4 } from 'uuid'
 import Toolbar from './Toolbar'
 import PinEditor from './PinEditor';
-import { MainContext } from '../context/MainContext';
+import PinView from './PinView'
 
 
 
@@ -19,6 +18,8 @@ class CorkBoard extends React.Component {
         this.request = new PinRequest(props.data.id, this.props.token);
         this.state = {
             pins: props.data.pins.map(pin => this.createPinForBoard(pin)),
+            showPinView: false,
+            pinToView: 0,
             showPinEditor: false,
             PinEditorX: 0, PinEditorY: 0,
         }
@@ -100,6 +101,10 @@ class CorkBoard extends React.Component {
         this.request.onPinCreate(pin)
     }
 
+    onPinView = (id) => this.setState({ showPinView: true, pinToView: id })
+
+
+
     onPinMove = (coords, ids) => {
         const PinsToMove = ids.map(id => this.getPinById(id))
         const movedPins = PinsToMove.map(pin => { return { ...pin, x_coordinate: pin.x_coordinate + coords.x, y_coordinate: pin.y_coordinate + coords.y } })
@@ -129,6 +134,13 @@ class CorkBoard extends React.Component {
                     />
                 }
 
+                {this.state.showPinView &&
+                    <PinView
+                        data={this.getPinById(this.state.pinToView)}
+                        onEscape={() => this.setState({ showPinView: false })}
+                    />
+                }
+
                 {/* {this.state.showSearchResults &&
                     <PinEditor
                         x={this.state.PinEditorX}
@@ -147,6 +159,7 @@ class CorkBoard extends React.Component {
                     onPinDelete={this.onPinDelete}
                     showPinEditor={this.showPinEditor}
                     onPinEditorEscape={this.showPinEditor}
+                    onPinView={this.onPinView}
                 />
             </>
         )

@@ -3,7 +3,6 @@ import { Stage, Layer, Rect } from 'react-konva';
 import Konva from "konva";
 import ContextMenu from './ContextMenu';
 import ImagePin from './ImagePin'
-import PinView from './PinView';
 import SelectionBoxEvents from './SelectionBoxEvents';
 import ContextMenuEvents from './ContextMenuEvents';
 
@@ -26,9 +25,6 @@ class ScrollingStage extends React.Component {
                 x: 0,
                 y: 0
             },
-            showPinEditor: false,
-            showPinView: false,
-            pinToView: 0,
             grab: false,
             ...this.selectionBox.getState(),
             ...this.contextMenu.getState(),
@@ -162,13 +158,9 @@ class ScrollingStage extends React.Component {
 
     }
 
-    onPinDragEnd = (e) => {
-        this.onPinMoveEnd()
-    }
+    onPinDragEnd = (e) => this.onPinMoveEnd()
 
-    onPinDoubleClick = (id) => {
-        this.setState({ showPinView: true, pinToView: id })
-    }
+    onPinDoubleClick = (id) => this.props.onPinView(id)
 
     // ===== CONTEXT MENU =====
 
@@ -214,12 +206,6 @@ class ScrollingStage extends React.Component {
                 tabIndex='0'
                 className={"stage-view " + (this.state.grab ? "grabbing" : "")}
             >
-                {this.state.showPinView &&
-                    <PinView
-                        data={this.getPinById(this.state.pinToView)}
-                        onEscape={() => this.setState({ showPinView: false })}
-                    />
-                }
 
                 <Stage
                     height={this.state.height}
