@@ -83,25 +83,18 @@ class CorkBoard extends React.Component {
         this.request.onPinsDelete(pins)
     }
 
+    // TODO This is very jank, refactor so it doesnt need to use a callback,
     onPinCreate = (pin) => {
-        console.log(pin)
+        this.request.onPinCreate(pin, this.makePin)
+    }
 
-        // const newPinId = uuidv4()
-        // const newPin =
-        // {
-        //     id: newPinId,
-        //     title: pin.title,
-        //     image: URL.createObjectURL(pin.image),
-        //     x_coordinate: pin.x_coordinate,
-        //     y_coordinate: pin.y_coordinate,
-        //     selected: false
-        // }
-        // this.setState({
-        //     pins: [...this.state.pins, newPin],
-        // })
-        // this.onPinSelect([newPinId])
-
-        this.request.onPinCreate(pin)
+    makePin = async (data) => {
+        const pin = await data
+        console.log(pin.data)
+        pin.data.images = pin.data.images.map(img => { return { ...img, image: `${process.env.REACT_APP_BASE_URL}${img.image}` } })
+        this.setState({
+            pins: [...this.state.pins, this.createPinForBoard(pin.data)],
+        })
     }
 
     onPinView = (id) => this.setState({ showSearchResults: false, showPinView: true, pinToView: id })

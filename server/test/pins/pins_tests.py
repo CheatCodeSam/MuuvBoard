@@ -148,14 +148,12 @@ def test_create_pin(client, generate_board_with_pins, create_user, create_image)
         format="application/json",
     )
 
-    print(resp.data)
-
     assert resp.status_code == 201
     assert resp.data["title"] == "Fresh Pin"
     assert resp.data["x_coordinate"] == 0
     assert resp.data["y_coordinate"] == 0
-    assert resp.data["board"] == board.id
-    assert resp.data["images"][0] == new_image_id
+    assert resp.data["board"]["id"] == board.id
+    assert resp.data["images"][0]["id"] == new_image_id
 
     modified_board = Board.objects.get(pk=board.id)
     assert modified_board.pins.count() == 1

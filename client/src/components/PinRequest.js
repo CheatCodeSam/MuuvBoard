@@ -51,13 +51,12 @@ class PinRequest {
 
     // TODO learn what async is
     // TODO make this async
-    onPinCreate = async (pin) => {
+    onPinCreate = async (pin, callback) => {
         this._onFileCreate(Array.from(pin.image))
         Promise.all(this.promises).then(results => {
             const fileIds = results.map(result => result.data.id)
-            this._onPinCreate(pin, fileIds)
-
-
+            const finalResults = this._onPinCreate(pin, fileIds)
+            callback(finalResults)
         })
 
 
@@ -74,16 +73,12 @@ class PinRequest {
             board: this.id
         }
 
-        try {
-            axios.post(this.url, pinData, {
-                headers: {
-                    'Authorization': `token ${this.token}`
-                }
-            })
-        } catch (response) {
-            const data = response.response.data;
-            console.log(data)
-        }
+        return axios.post(this.url, pinData, {
+            headers: {
+                'Authorization': `token ${this.token}`
+            }
+        })
+
     }
 
     _onFileCreate = (files) => {

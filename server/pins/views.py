@@ -49,8 +49,15 @@ class PinList(generics.GenericAPIView, mixins.CreateModelMixin):
         serializer = PinListSerializer(pins, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
+    # TODO make this less clunky, create image with PinCreateSerializer and return response with PinSerializer
     def post(self, request, *args, **kwargs):
-        return self.create(request, *args, **kwargs)
+        x = self.create(request, *args, **kwargs)
+        if x.status_code == 201:
+            pin = Pin.objects.get(pk=x.data["id"])
+            serializer = PinSerializer(pin)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return x
 
     # If any of these fail, rollback the save opertaion.
     @transaction.atomic
