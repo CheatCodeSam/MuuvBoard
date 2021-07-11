@@ -104,9 +104,7 @@ class CorkBoard extends React.Component {
         this.request.onPinCreate(pin)
     }
 
-    onPinView = (id) => this.setState({ showPinView: true, pinToView: id })
-
-
+    onPinView = (id) => this.setState({ showSearchResults: false, showPinView: true, pinToView: id })
 
     onPinMove = (coords, ids) => {
         const PinsToMove = ids.map(id => this.getPinById(id))
@@ -149,7 +147,7 @@ class CorkBoard extends React.Component {
                     <SearchResultsView
                         onEscape={() => this.setState({ showSearchResults: false })}
                         results={this.state.searchResuts}
-                        onPinView={(id) => console.log(id)}
+                        onPinView={this.onPinView}
                     />
                 }
 
