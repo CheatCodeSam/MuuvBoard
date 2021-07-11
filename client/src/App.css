@@ -106,3 +106,29 @@ margin-right: 2px;
     background-image: radial-gradient(#444cf7 1.1px, #e5e5f7 1.1px);
     background-size: 22px 22px;
 }
+
+.searchbar {
+    display: flex;
+    flex: 0 1 auto;
+    height: var(--toolbar-height);
+    text-align: center;
+    justify-content: center;
+    box-sizing: border-box;
+    align-items: center;
+}
+
+.searchbar-input {
+    color: snow;
+    background-color: rgba(0, 0, 0, 0);
+    border-left: none;
+    border-top: none;
+    border-right:none;
+    border-bottom: 1px black solid;
+
+
+}
+
+.searchbar-input:focus{
+    outline: none;
+    border-bottom: 1px red solid;
+}

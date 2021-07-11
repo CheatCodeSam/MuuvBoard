@@ -1,7 +1,7 @@
 import React from 'react'
 import { Link } from "react-router-dom";
 import { ChevronDownIcon, HomeIcon } from '@heroicons/react/outline'
-
+import SearchBar from './SearchBar'
 
 class Toolbar extends React.Component {
 
@@ -22,6 +22,8 @@ class Toolbar extends React.Component {
                         <ChevronDownIcon style={{ height: "10px", width: "10px" }} />
                     </div>
                 </div>
+
+                <SearchBar />
             </div>
         )
     }
