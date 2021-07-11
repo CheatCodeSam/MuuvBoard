@@ -28,7 +28,14 @@ class PinList(generics.GenericAPIView, mixins.CreateModelMixin):
     permission_classes = (IsAuthor,)
 
     def perform_create(self, serializer):
-        serializer.save(author=self.request.user)
+        return serializer.save(author=self.request.user)
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        instance = self.perform_create(serializer)
+        instance_serializer = PinSerializer(instance)
+        return Response(instance_serializer.data, status=status.HTTP_201_CREATED)
 
     def get(self, request, format=None):
         get_data = request.query_params
@@ -49,15 +56,8 @@ class PinList(generics.GenericAPIView, mixins.CreateModelMixin):
         serializer = PinListSerializer(pins, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-    # TODO make this less clunky, create image with PinCreateSerializer and return response with PinSerializer
     def post(self, request, *args, **kwargs):
-        x = self.create(request, *args, **kwargs)
-        if x.status_code == 201:
-            pin = Pin.objects.get(pk=x.data["id"])
-            serializer = PinSerializer(pin)
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        else:
-            return x
+        return self.create(request, *args, **kwargs)
 
     # If any of these fail, rollback the save opertaion.
     @transaction.atomic
