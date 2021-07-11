@@ -40,6 +40,15 @@ class PinRequest {
         })
     }
 
+    onSearch = query => {
+        const searchUrl = `${this.url}?search=${query}&board=${this.id}`
+        axios.get(searchUrl, {
+            headers: {
+                'Authorization': `token ${this.token}`
+            }
+        }).then((response) => console.log(response))
+    }
+
     // TODO learn what async is
     // TODO make this async
     onPinCreate = async (pin) => {

@@ -81,9 +81,6 @@ class CorkBoard extends React.Component {
 
     onPinCreate = (pin) => {
         console.log(pin)
-        // console.log(pin.image[0])
-
-        // this.request.onFileCreate(pin.image[0])
 
         // const newPinId = uuidv4()
         // const newPin =
@@ -109,6 +106,10 @@ class CorkBoard extends React.Component {
         this.setState({ pins: this.mergePinsbyId(this.state.pins, movedPins) })
     }
 
+    onSearch = (query) => {
+        this.request.onSearch(query)
+    }
+
 
     // ===== PIN EDITOR =====
 
@@ -117,7 +118,7 @@ class CorkBoard extends React.Component {
     render() {
         return (
             <>
-                <Toolbar title={this.props.data.title} />
+                <Toolbar title={this.props.data.title} onSearch={this.onSearch} />
 
                 {this.state.showPinEditor &&
                     <PinEditor
@@ -127,6 +128,15 @@ class CorkBoard extends React.Component {
                         onPinCreate={this.onPinCreate}
                     />
                 }
+
+                {/* {this.state.showSearchResults &&
+                    <PinEditor
+                        x={this.state.PinEditorX}
+                        y={this.state.PinEditorY}
+                        onEscape={() => this.setState({ showPinEditor: false })}
+                        onPinCreate={this.onPinCreate}
+                    />
+                } */}
 
                 <ScrollingStage
                     pins={this.state.pins}

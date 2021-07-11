@@ -23,7 +23,7 @@ class Toolbar extends React.Component {
                     </div>
                 </div>
 
-                <SearchBar />
+                <SearchBar onSearch={this.props.onSearch} />
             </div>
         )
     }
