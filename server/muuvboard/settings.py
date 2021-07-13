@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     "corsheaders",
     "taggit",
     "taggit_serializer",
+    "easy_thumbnails",
     "files",
     "pins",
     "boards",

@@ -186,6 +186,18 @@ python-versions = ">=3.5"
 django = ">=2.2"
 
 [[package]]
+name = "easy-thumbnails"
+version = "2.7.1"
+description = "Easy thumbnails for Django"
+category = "main"
+optional = false
+python-versions = ">=3.5"
+
+[package.dependencies]
+django = ">=1.11,<4.0"
+pillow = "*"
+
+[[package]]
 name = "filelock"
 version = "3.0.12"
 description = "A platform independent file lock."
@@ -499,7 +511,7 @@ python-versions = "*"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.9"
-content-hash = "6bccbb6fd7f24712ef169c40fc93984b66726516576c8f278d443b964c8a75aa"
+content-hash = "a3e131a2294bd02376aaf8284e7f74e3d4aaf42ade163dfe5df3fc4e7aef6cf9"
 
 [metadata.files]
 appdirs = [
@@ -563,6 +575,9 @@ django-taggit-serializer = [
 djangorestframework = [
     {file = "djangorestframework-3.12.4-py3-none-any.whl", hash = "sha256:6d1d59f623a5ad0509fe0d6bfe93cbdfe17b8116ebc8eda86d45f6e16e819aaf"},
     {file = "djangorestframework-3.12.4.tar.gz", hash = "sha256:f747949a8ddac876e879190df194b925c177cdeb725a099db1460872f7c0a7f2"},
+]
+easy-thumbnails = [
+    {file = "easy-thumbnails-2.7.1.tar.gz", hash = "sha256:f862949208d9066cd3d84ffcf9c2dbe9c7344ea6152b741e440f861eca46855c"},
 ]
 filelock = [
     {file = "filelock-3.0.12-py3-none-any.whl", hash = "sha256:929b7d63ec5b7d6b71b0fa5ac14e030b3f70b75747cef1b10da9b879fef15836"},
