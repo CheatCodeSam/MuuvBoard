@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     "taggit",
     "taggit_serializer",
     "easy_thumbnails",
+    "core",
     "files",
     "pins",
     "boards",

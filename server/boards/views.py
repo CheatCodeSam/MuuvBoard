@@ -9,11 +9,11 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from core.permissions import IsAuthor
 from pins.models import Pin
 from pins.serializers import PinSerializer
 
 from .models import Board
-from .permissions import IsAuthor
 from .serializers import BoardListSerializer, BoardSerializer
 
 

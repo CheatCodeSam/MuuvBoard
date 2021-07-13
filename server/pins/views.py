@@ -10,7 +10,8 @@ from rest_framework.parsers import FileUploadParser
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from pins.permissions import IsAuthor
+from core.permissions import IsAuthor
+from pins.permissions import IsOwnerOfObjBoard
 
 from .models import Pin
 from .serializers import PinCreateSerializer, PinListSerializer, PinSerializer
@@ -25,7 +26,10 @@ class PinDetail(generics.RetrieveAPIView):
 class PinList(generics.GenericAPIView, mixins.CreateModelMixin):
 
     serializer_class = PinCreateSerializer
-    permission_classes = (IsAuthor,)
+    permission_classes = (
+        IsAuthor,
+        IsOwnerOfObjBoard,
+    )
 
     def perform_create(self, serializer):
         return serializer.save(author=self.request.user)
