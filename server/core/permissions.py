@@ -1,7 +1,5 @@
 from rest_framework import permissions
 
-from boards.models import Board
-
 
 class IsAuthor(permissions.BasePermission):
     message = "This model can only be modified by its author."

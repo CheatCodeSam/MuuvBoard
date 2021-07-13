@@ -1,17 +1,10 @@
 from functools import partial
-from os import stat
 
-from django.http import Http404
-from rest_framework import generics, status
+from rest_framework import generics
 from rest_framework.decorators import parser_classes
-from rest_framework.parsers import FileUploadParser
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.response import Response
-from rest_framework.views import APIView
 
 from core.permissions import IsAuthor
-from pins.models import Pin
-from pins.serializers import PinSerializer
 
 from .models import Board
 from .serializers import BoardListSerializer, BoardSerializer

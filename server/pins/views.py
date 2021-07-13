@@ -1,14 +1,8 @@
-from functools import partial
-from os import stat
-
 from django.db import transaction
 from django.db.models import Q
-from django.http import Http404
-from rest_framework import filters, generics, mixins, serializers, status
+from rest_framework import generics, mixins, status
 from rest_framework.decorators import parser_classes
-from rest_framework.parsers import FileUploadParser
 from rest_framework.response import Response
-from rest_framework.views import APIView
 
 from core.permissions import IsAuthor
 from pins.permissions import IsOwnerOfObjBoard
