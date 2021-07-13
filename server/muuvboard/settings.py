@@ -153,3 +153,9 @@ REST_FRAMEWORK = {
         "rest_framework.authentication.TokenAuthentication",
     ],
 }
+
+THUMBNAIL_ALIASES = {
+    "": {
+        "medium_thumbnail": {"size": (120, 120), "crop": True},
+    },
+}
