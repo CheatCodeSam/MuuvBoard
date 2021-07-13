@@ -10,6 +10,7 @@ from .models import Pin
 class PinSerializer(TaggitSerializer, serializers.ModelSerializer):
 
     tags = TagListSerializerField()
+    images = ImageDetailSerializer(many=True, read_only=True)
 
     class Meta:
         model = Pin

@@ -12,5 +12,9 @@ class ImageDetailSerializer(serializers.ModelSerializer):
         fields = ["image", "id", "width", "height", "thumbnail"]
         read_only_fields = ["id", "width", "height", "thumbnail"]
 
+    # TODO make sure this isnt hardcoded in the future.
+    # TODO force thumbnails to be jpg
     def get_thumbnail(self, obj):
-        return get_thumbnailer(obj.image)["medium_thumbnail"].url
+        return (
+            "http://localhost:8003" + get_thumbnailer(obj.image)["medium_thumbnail"].url
+        )
