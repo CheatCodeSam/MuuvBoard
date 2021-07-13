@@ -131,7 +131,7 @@ class CorkBoard extends React.Component {
 
                 {this.state.showPinView &&
                     <PinView
-                        data={this.getPinById(this.state.pinToView)}
+                        pinId={this.state.pinToView}
                         onEscape={() => this.setState({ showPinView: false })}
                     />
                 }
