@@ -17,6 +17,7 @@ class CorkBoard extends React.Component {
     constructor(props) {
         super(props)
         this.request = new PinRequest(props.data.id, this.props.token);
+        this.canvas = React.createRef()
         this.state = {
             pins: props.data.pins.map(pin => this.createPinForBoard(pin)),
             showPinView: false,
@@ -100,14 +101,16 @@ class CorkBoard extends React.Component {
     onPinView = (id) => this.setState({ showSearchResults: false, showPinView: true, pinToView: id })
 
     onPinMove = (coords, ids) => {
+
         const PinsToMove = ids.map(id => this.getPinById(id))
         const movedPins = PinsToMove.map(pin => { return { ...pin, x_coordinate: pin.x_coordinate + coords.x, y_coordinate: pin.y_coordinate + coords.y } })
         this.setState({ pins: this.mergePinsbyId(this.state.pins, movedPins) })
     }
 
     onSearch = async (query) => {
-        const results = await this.request.onSearch(query)
-        this.setState({ searchResuts: results.data, showSearchResults: true })
+        this.canvas.current.move(4, 5)
+        // const results = await this.request.onSearch(query)
+        // this.setState({ searchResuts: results.data, showSearchResults: true })
     }
 
 
@@ -145,6 +148,7 @@ class CorkBoard extends React.Component {
                 }
 
                 <ScrollingStage
+                    ref={this.canvas}
                     pins={this.state.pins}
                     onPinSelect={this.onPinSelect}
                     onPinMove={this.onPinMove}

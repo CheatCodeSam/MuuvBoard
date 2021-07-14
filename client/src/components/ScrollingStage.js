@@ -30,6 +30,22 @@ class ScrollingStage extends React.Component {
             ...this.contextMenu.getState(),
         }
     }
+
+
+    move = (x, y) => {
+        console.log(this.stage.current.offsetX())
+        this.stage.current.x(x)
+        this.stage.current.y(y)
+        this.setState({
+            stageOffset: {
+                x: x,
+                y: y
+            }
+        })
+    }
+
+
+
     // ===== LIFE CYCLE =====
 
     componentDidMount() {
@@ -217,6 +233,9 @@ class ScrollingStage extends React.Component {
                     onMouseDown={this.onMouseDownOnStage}
                     draggable={this.state.grab}
                     onDragMove={this.onStageDrag}
+
+                    x={this.state.stageOffset.x}
+                    y={this.state.stageOffset.y}
                 >
                     <Layer>
                         {
