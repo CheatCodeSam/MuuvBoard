@@ -108,9 +108,14 @@ class CorkBoard extends React.Component {
     }
 
     onSearch = async (query) => {
-        this.canvas.current.move(4, 5)
-        // const results = await this.request.onSearch(query)
-        // this.setState({ searchResuts: results.data, showSearchResults: true })
+        // this.canvas.current.move(4, 5)
+        const results = await this.request.onSearch(query)
+        this.setState({ searchResuts: results.data, showSearchResults: true })
+    }
+
+    onGoToPin = (pin) => {
+        this.onPinSelect([pin.id])
+        this.canvas.current.move(-pin.x_coordinate, -pin.y_coordinate)
     }
 
 
@@ -136,6 +141,7 @@ class CorkBoard extends React.Component {
                     <PinView
                         pinId={this.state.pinToView}
                         onEscape={() => this.setState({ showPinView: false })}
+                        onGoToPin={this.onGoToPin}
                     />
                 }
 

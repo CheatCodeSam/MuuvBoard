@@ -11,6 +11,11 @@ const MOUSEONE = 0;
 const MOUSETWO = 2;
 const MOUSETHREE = 1;
 
+//! REACT WAS NOT MADE TO SUPPORT CANVAS
+// all laws involving how React should operate
+// should be taken with a grain of salt. We are 
+// not working with a DOMError, we are working 
+// with a canvas.
 class ScrollingStage extends React.Component {
 
     constructor(props) {

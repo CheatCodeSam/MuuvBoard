@@ -52,6 +52,7 @@ class PinView extends React.Component {
                 <div>{this.state.data.title}</div>
                 <div>{this.state.data.id}</div>
                 <div>{this.state.data.image}</div>
+                <button onClick={() => this.props.onGoToPin(this.state.data)}>Go to pin.</button>
             </div>
         )
     }
