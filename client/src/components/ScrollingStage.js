@@ -14,7 +14,7 @@ const MOUSETHREE = 1;
 //! REACT WAS NOT MADE TO SUPPORT CANVAS
 // all laws involving how React should operate
 // should be taken with a grain of salt. We are 
-// not working with a DOMError, we are working 
+// not working with a DOM, we are working 
 // with a canvas.
 class ScrollingStage extends React.Component {
 
@@ -22,6 +22,7 @@ class ScrollingStage extends React.Component {
         super(props);
         this.setState = this.setState.bind(this);
         this.stage = React.createRef()
+
         this.selectionBox = new SelectionBoxEvents(this.setState);
         this.contextMenu = new ContextMenuEvents(this.setState);
         this.state = {
@@ -38,7 +39,6 @@ class ScrollingStage extends React.Component {
 
 
     move = (x, y) => {
-        console.log(this.stage.current.offsetX())
         this.stage.current.x(x)
         this.stage.current.y(y)
         this.setState({
@@ -213,6 +213,14 @@ class ScrollingStage extends React.Component {
         return returnValue
     }
 
+    // ===== SCROLL =====
+
+    onWheel = (e) => {
+        e.evt.preventDefault()
+        console.log(e.evt.deltaX, e.evt.deltaY)
+        this.move(this.state.stageOffset.x + e.evt.deltaX, this.state.stageOffset.y + e.evt.deltaY)
+    }
+
 
     render() {
         const offsetStyle = {
@@ -238,6 +246,8 @@ class ScrollingStage extends React.Component {
                     onMouseDown={this.onMouseDownOnStage}
                     draggable={this.state.grab}
                     onDragMove={this.onStageDrag}
+
+                    onWheel={this.onWheel}
 
                     x={this.state.stageOffset.x}
                     y={this.state.stageOffset.y}
