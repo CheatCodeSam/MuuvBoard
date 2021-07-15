@@ -82,6 +82,29 @@ class ScrollingStage extends React.Component {
 
     getPinById = (id) => this.props.pins.find(pin => pin.id === id);
 
+    getCenterPointOfPins = (ids) => {
+
+        const pinCoords = ids.map(id => {
+            const pin = this.getPinById(id)
+            return { x: pin.x_coordinate, y: pin.y_coordinate, width: 135, height: 160 }
+        })
+        if (pinCoords.length == 0) {
+            return null
+        }
+        const x1 = Math.min(...pinCoords.map(pin => pin.x))
+        const x2 = Math.max(...pinCoords.map(pin => pin.x + pin.width))
+
+        const y1 = Math.min(...pinCoords.map(pin => pin.y))
+        const y2 = Math.max(...pinCoords.map(pin => pin.y + pin.height))
+
+        const midPointX = (x1 + x2) / 2
+        const midPointY = (y1 + y2) / 2
+
+        return { x: midPointX, y: midPointY }
+
+
+    }
+
     // ===== PROPS REQUEST =====
 
     selectPins = (ids) => this.props.onPinSelect(ids)
@@ -129,6 +152,7 @@ class ScrollingStage extends React.Component {
             const pinShapes = stage.find('.pin')
             const selectedPins = this.selectionBox.selectionBoxEnd(this.state, pinShapes)
             this.selectPins(selectedPins.map((a) => a.id()))
+            this.getCenterPointOfPins(this.getSelectedPinsIds())
         }
 
         if (this.state.grab) {
@@ -217,8 +241,7 @@ class ScrollingStage extends React.Component {
 
     onWheel = (e) => {
         e.evt.preventDefault()
-        console.log(e.evt.deltaX, e.evt.deltaY)
-        this.move(this.state.stageOffset.x + e.evt.deltaX, this.state.stageOffset.y + e.evt.deltaY)
+        this.move(this.state.stageOffset.x - e.evt.deltaX, this.state.stageOffset.y - e.evt.deltaY)
     }
 
 
@@ -229,6 +252,8 @@ class ScrollingStage extends React.Component {
         }
         const selc = this.selectionBox.calculateSelectionBox(this.state)
         const conMenu = this.contextMenu.getCoords(this.state)
+
+        const midPointOfSelection = this.getCenterPointOfPins(this.getSelectedPinsIds())
 
         return (
             <div
@@ -273,6 +298,17 @@ class ScrollingStage extends React.Component {
                             })
                         }
 
+                        {midPointOfSelection && (
+                            <Rect
+                                name="e"
+                                x={midPointOfSelection.x}
+                                y={midPointOfSelection.y}
+                                height={4}
+                                width={4}
+                                fill="red"
+                            />
+                        )}
+
                         {this.selectionBox.isVisible(this.state) && (
                             <Rect
                                 name="selection"
@@ -286,6 +322,12 @@ class ScrollingStage extends React.Component {
                                 stroke="blue"
                             />
                         )}
+
+
+
+
+
+
                         {this.contextMenu.isVisible(this.state) && (
                             <ContextMenu
                                 x={conMenu.x}

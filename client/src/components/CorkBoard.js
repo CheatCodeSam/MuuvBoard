@@ -108,7 +108,6 @@ class CorkBoard extends React.Component {
     }
 
     onSearch = async (query) => {
-        // this.canvas.current.move(4, 5)
         const results = await this.request.onSearch(query)
         this.setState({ searchResuts: results.data, showSearchResults: true })
     }
