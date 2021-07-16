@@ -11,6 +11,8 @@ const MOUSEONE = 0;
 const MOUSETWO = 2;
 const MOUSETHREE = 1;
 
+const SCROLLINGSPEED = 34;
+
 //! REACT WAS NOT MADE TO SUPPORT CANVAS
 // all laws involving how React should operate
 // should be taken with a grain of salt. We are 
@@ -102,7 +104,21 @@ class ScrollingStage extends React.Component {
 
         return { x: midPointX, y: midPointY }
 
+    }
 
+    scrollStageIfNessecary = (mousePos) => {
+        let moveX = 0;
+        let moveY = 0;
+
+        if (mousePos.x < 15) {
+            moveX = -SCROLLINGSPEED
+        }
+        if (mousePos.x > this.state.width - 15) {
+            moveX = SCROLLINGSPEED
+        }
+
+
+        this.move(this.state.stageOffset.x - moveX, this.state.stageOffset.y - moveY)
     }
 
     // ===== PROPS REQUEST =====
@@ -152,7 +168,6 @@ class ScrollingStage extends React.Component {
             const pinShapes = stage.find('.pin')
             const selectedPins = this.selectionBox.selectionBoxEnd(this.state, pinShapes)
             this.selectPins(selectedPins.map((a) => a.id()))
-            this.getCenterPointOfPins(this.getSelectedPinsIds())
         }
 
         if (this.state.grab) {
@@ -198,6 +213,9 @@ class ScrollingStage extends React.Component {
             x: target.x() - pin.x_coordinate,
             y: target.y() - pin.y_coordinate
         };
+
+        // console.log(window.event.clientX, window.event.clientY)
+        this.scrollStageIfNessecary({ x: window.event.clientX, y: window.event.clientY })
 
         this.moveSelectedPins(movement)
 
