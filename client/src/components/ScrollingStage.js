@@ -14,7 +14,7 @@ const MOUSETHREE = 1;
 const SCROLLINGSPEED = 34;
 
 //! REACT WAS NOT MADE TO SUPPORT CANVAS
-// all laws involving how React should operate
+// All rules involving how React should operate
 // should be taken with a grain of salt. We are 
 // not working with a DOM, we are working 
 // with a canvas.
@@ -28,7 +28,6 @@ class ScrollingStage extends React.Component {
         this.selectionBox = new SelectionBoxEvents(this.setState);
         this.contextMenu = new ContextMenuEvents(this.setState);
         this.state = {
-            stageOffsetX: 0, stageOffsetY: 0,
             grab: false,
             dragging: false,
             ...this.selectionBox.getState(),
@@ -38,12 +37,7 @@ class ScrollingStage extends React.Component {
 
 
     move = (x, y) => {
-        this.stage.current.x(x)
-        this.stage.current.y(y)
-        this.setState({
-            stageOffsetX: x,
-            stageOffsetY: y
-        })
+        this.props.onStagePan({ x: x, y: y })
     }
 
 
@@ -65,7 +59,7 @@ class ScrollingStage extends React.Component {
 
 
     calculateStageOffset = (coords) => {
-        return { x: coords.x - this.state.stageOffsetX, y: coords.y - this.state.stageOffsetY };
+        return { x: coords.x - this.props.x, y: coords.y - this.props.y };
     }
 
     getSelectedPins = () => this.props.pins.filter(pin => pin.selected);
@@ -108,7 +102,7 @@ class ScrollingStage extends React.Component {
         }
 
 
-        this.move(this.state.stageOffsetX - moveX, this.state.stageOffsetY - moveY)
+        this.move(this.props.x - moveX, this.props.y - moveY)
     }
 
     // ===== PROPS REQUEST =====
@@ -176,10 +170,7 @@ class ScrollingStage extends React.Component {
     onStageDrag = (e) => {
         if (this.state.grab) {
             const { target } = e
-            this.setState({
-                stageOffsetX: target.x(),
-                stageOffsetY: target.y()
-            })
+            this.move(target.x(), target.y())
         }
     }
 
@@ -246,14 +237,14 @@ class ScrollingStage extends React.Component {
 
     onWheel = (e) => {
         e.evt.preventDefault()
-        this.move(this.state.stageOffsetX - e.evt.deltaX, this.state.stageOffsetY - e.evt.deltaY)
+        this.move(this.props.x - e.evt.deltaX, this.props.y - e.evt.deltaY)
     }
 
 
     render() {
         const offsetStyle = {
             backgroundPosition:
-                this.state.stageOffsetX + "px " + this.state.stageOffsetY + "px"
+                this.props.x + "px " + this.props.y + "px"
         }
         const selc = this.selectionBox.calculateSelectionBox(this.state)
         const conMenu = this.contextMenu.getCoords(this.state)
@@ -279,8 +270,8 @@ class ScrollingStage extends React.Component {
 
                     onWheel={this.onWheel}
 
-                    x={this.state.stageOffsetX}
-                    y={this.state.stageOffsetY}
+                    x={this.props.x}
+                    y={this.props.y}
                 >
                     <Layer>
                         {

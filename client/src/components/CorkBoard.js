@@ -43,6 +43,7 @@ class CorkBoard extends React.Component {
     }
 
     // ===== UTIL =====
+
     createPinForBoard = (pin) => {
         return {
             ...pin,
@@ -66,9 +67,16 @@ class CorkBoard extends React.Component {
         this.setState({ pins: [...otherPins, ...pinsToPush] })
     }
 
+    // ===== BOARD MOVEMENT/SIZING =====
+
     updateWindowDimensions = () => {
         this.setState({ boardWidth: window.innerWidth, boardHeight: window.innerHeight });
     }
+
+    move = coords => {
+        this.setState({ boardX: coords.x, boardY: coords.y })
+    }
+
 
     // ===== PROPS TO PASS =====
 
@@ -115,7 +123,6 @@ class CorkBoard extends React.Component {
     onPinView = (id) => this.setState({ showSearchResults: false, showPinView: true, pinToView: id })
 
     onPinMove = (coords, ids) => {
-
         const PinsToMove = ids.map(id => this.getPinById(id))
         const movedPins = PinsToMove.map(pin => { return { ...pin, x_coordinate: pin.x_coordinate + coords.x, y_coordinate: pin.y_coordinate + coords.y } })
         this.setState({ pins: this.mergePinsbyId(this.state.pins, movedPins) })
@@ -128,7 +135,11 @@ class CorkBoard extends React.Component {
 
     onGoToPin = (pin) => {
         this.onPinSelect([pin.id])
-        this.canvas.current.move(-pin.x_coordinate, -pin.y_coordinate)
+        this.move({ x: -pin.x_coordinate, y: -pin.y_coordinate })
+    }
+
+    onStagePan = coords => {
+        this.move(coords)
     }
 
 
@@ -177,9 +188,11 @@ class CorkBoard extends React.Component {
                     showPinEditor={this.showPinEditor}
                     onPinEditorEscape={this.showPinEditor}
                     onPinView={this.onPinView}
+                    onStagePan={this.onStagePan}
                     height={this.state.boardHeight}
                     width={this.state.boardWidth}
-
+                    x={this.state.boardX}
+                    y={this.state.boardY}
                 />
             </>
         )
