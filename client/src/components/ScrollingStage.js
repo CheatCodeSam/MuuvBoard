@@ -29,11 +29,9 @@ class ScrollingStage extends React.Component {
         this.contextMenu = new ContextMenuEvents(this.setState);
         this.state = {
             width: 0, height: 0,
-            stageOffset: {
-                x: 0,
-                y: 0
-            },
+            stageOffsetX: 0, stageOffsetY: 0,
             grab: false,
+            dragging: false,
             ...this.selectionBox.getState(),
             ...this.contextMenu.getState(),
         }
@@ -44,10 +42,8 @@ class ScrollingStage extends React.Component {
         this.stage.current.x(x)
         this.stage.current.y(y)
         this.setState({
-            stageOffset: {
-                x: x,
-                y: y
-            }
+            stageOffsetX: x,
+            stageOffsetY: y
         })
     }
 
@@ -75,7 +71,7 @@ class ScrollingStage extends React.Component {
     }
 
     calculateStageOffset = (coords) => {
-        return { x: coords.x - this.state.stageOffset.x, y: coords.y - this.state.stageOffset.y };
+        return { x: coords.x - this.state.stageOffsetX, y: coords.y - this.state.stageOffsetY };
     }
 
     getSelectedPins = () => this.props.pins.filter(pin => pin.selected);
@@ -118,7 +114,7 @@ class ScrollingStage extends React.Component {
         }
 
 
-        this.move(this.state.stageOffset.x - moveX, this.state.stageOffset.y - moveY)
+        this.move(this.state.stageOffsetX - moveX, this.state.stageOffsetY - moveY)
     }
 
     // ===== PROPS REQUEST =====
@@ -187,10 +183,8 @@ class ScrollingStage extends React.Component {
         if (this.state.grab) {
             const { target } = e
             this.setState({
-                stageOffset: {
-                    x: target.x(),
-                    y: target.y()
-                }
+                stageOffsetX: target.x(),
+                stageOffsetY: target.y()
             })
         }
     }
@@ -259,14 +253,14 @@ class ScrollingStage extends React.Component {
 
     onWheel = (e) => {
         e.evt.preventDefault()
-        this.move(this.state.stageOffset.x - e.evt.deltaX, this.state.stageOffset.y - e.evt.deltaY)
+        this.move(this.state.stageOffsetX - e.evt.deltaX, this.state.stageOffsetY - e.evt.deltaY)
     }
 
 
     render() {
         const offsetStyle = {
             backgroundPosition:
-                this.state.stageOffset.x + "px " + this.state.stageOffset.y + "px"
+                this.state.stageOffsetX + "px " + this.state.stageOffsetY + "px"
         }
         const selc = this.selectionBox.calculateSelectionBox(this.state)
         const conMenu = this.contextMenu.getCoords(this.state)
@@ -292,8 +286,8 @@ class ScrollingStage extends React.Component {
 
                     onWheel={this.onWheel}
 
-                    x={this.state.stageOffset.x}
-                    y={this.state.stageOffset.y}
+                    x={this.state.stageOffsetX}
+                    y={this.state.stageOffsetY}
                 >
                     <Layer>
                         {
