@@ -28,7 +28,6 @@ class ScrollingStage extends React.Component {
         this.selectionBox = new SelectionBoxEvents(this.setState);
         this.contextMenu = new ContextMenuEvents(this.setState);
         this.state = {
-            width: 0, height: 0,
             stageOffsetX: 0, stageOffsetY: 0,
             grab: false,
             dragging: false,
@@ -52,23 +51,18 @@ class ScrollingStage extends React.Component {
     // ===== LIFE CYCLE =====
 
     componentDidMount() {
-        this.updateWindowDimensions();
-        window.addEventListener('resize', this.updateWindowDimensions);
         window.addEventListener('mouseup', this.onMouseUpWindow)
         window.addEventListener('mousemove', this.onMouseMoveWindow)
     }
 
     componentWillUnmount() {
-        window.removeEventListener('resize', this.updateWindowDimensions);
         window.removeEventListener('mouseup', this.onMouseUpWindow);
         window.removeEventListener('mousemove', this.onMouseMoveWindow)
     }
 
     // ===== UTIL =====
 
-    updateWindowDimensions = () => {
-        this.setState({ width: window.innerWidth, height: window.innerHeight });
-    }
+
 
     calculateStageOffset = (coords) => {
         return { x: coords.x - this.state.stageOffsetX, y: coords.y - this.state.stageOffsetY };
@@ -208,7 +202,6 @@ class ScrollingStage extends React.Component {
             y: target.y() - pin.y_coordinate
         };
 
-        // console.log(window.event.clientX, window.event.clientY)
         this.scrollStageIfNessecary({ x: window.event.clientX, y: window.event.clientY })
 
         this.moveSelectedPins(movement)
@@ -274,8 +267,8 @@ class ScrollingStage extends React.Component {
             >
 
                 <Stage
-                    height={this.state.height}
-                    width={this.state.width}
+                    height={this.props.height}
+                    width={this.props.width}
                     style={offsetStyle}
                     className='scrolling-stage'
                     ref={this.stage}

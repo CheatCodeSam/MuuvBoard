@@ -25,8 +25,21 @@ class CorkBoard extends React.Component {
             showPinEditor: false,
             PinEditorX: 0, PinEditorY: 0,
             showSearchResults: false,
-            searchResuts: []
+            searchResuts: [],
+            boardWidth: 0, boardHeight: 0,
+            boardX: 0, boardY: 0
         }
+    }
+
+    // ===== LIFE CYCLE =====
+
+    componentDidMount() {
+        this.updateWindowDimensions();
+        window.addEventListener('resize', this.updateWindowDimensions);
+    }
+
+    componentWillUnmount() {
+        window.removeEventListener('resize', this.updateWindowDimensions);
     }
 
     // ===== UTIL =====
@@ -37,9 +50,7 @@ class CorkBoard extends React.Component {
         }
     }
 
-    getIds = (pins) => {
-        return pins.map(pin => { return pin.id })
-    }
+    getIds = (pins) => pins.map(pin => { return pin.id })
 
     mergePinsbyId = (entry, modified) => {
         return entry.map((obj) => modified.find((o) => o.id === obj.id) || obj);
@@ -53,6 +64,10 @@ class CorkBoard extends React.Component {
         const pinsToPush = this.state.pins.filter(pin => ids.includes(pin.id))
         const otherPins = this.state.pins.filter(pin => !ids.includes(pin.id))
         this.setState({ pins: [...otherPins, ...pinsToPush] })
+    }
+
+    updateWindowDimensions = () => {
+        this.setState({ boardWidth: window.innerWidth, boardHeight: window.innerHeight });
     }
 
     // ===== PROPS TO PASS =====
@@ -80,7 +95,6 @@ class CorkBoard extends React.Component {
 
     onPinDelete = (pins) => {
         this.setState({ pins: this.state.pins.filter(pin => !!!pins.includes(pin.id)) })
-
         this.request.onPinsDelete(pins)
     }
 
@@ -163,6 +177,9 @@ class CorkBoard extends React.Component {
                     showPinEditor={this.showPinEditor}
                     onPinEditorEscape={this.showPinEditor}
                     onPinView={this.onPinView}
+                    height={this.state.boardHeight}
+                    width={this.state.boardWidth}
+
                 />
             </>
         )
