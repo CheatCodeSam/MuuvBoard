@@ -33,7 +33,7 @@
 
 .toolbar {
     cursor: default;
-    position: absolute;
+    position: relative;
     display: flex;
     justify-content: left;
     height: var(--toolbar-height);

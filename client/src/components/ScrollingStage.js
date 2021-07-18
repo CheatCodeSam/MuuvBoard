@@ -162,7 +162,9 @@ class ScrollingStage extends React.Component {
     onMouseMoveWindow = (e) => {
         const stage = this.stage.current;
         if (this.selectionBox.isVisible(this.state)) {
-            const coords = this.calculateStageOffset({ x: e.clientX, y: e.clientY })
+            // * Because were using mouseMoveWindow we have to account for the 48 px height of the toolbar
+            const stagePosition = stage.content.getBoundingClientRect()
+            const coords = this.calculateStageOffset({ x: e.clientX - stagePosition.x, y: e.clientY - stagePosition.y })
             this.selectionBox.selectionBoxMove(coords)
         }
     }
@@ -237,6 +239,8 @@ class ScrollingStage extends React.Component {
 
     onWheel = (e) => {
         e.evt.preventDefault()
+        this.selectionBox.hideSelectionBox()
+        this.contextMenu.hideContextMenu()
         this.move(this.props.x - e.evt.deltaX, this.props.y - e.evt.deltaY)
     }
 

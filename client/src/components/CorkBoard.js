@@ -17,7 +17,6 @@ class CorkBoard extends React.Component {
     constructor(props) {
         super(props)
         this.request = new PinRequest(props.data.id, this.props.token);
-        this.canvas = React.createRef()
         this.state = {
             pins: props.data.pins.map(pin => this.createPinForBoard(pin)),
             showPinView: false,
@@ -25,7 +24,7 @@ class CorkBoard extends React.Component {
             showPinEditor: false,
             PinEditorX: 0, PinEditorY: 0,
             showSearchResults: false,
-            searchResuts: [],
+            searchResults: [],
             boardWidth: 0, boardHeight: 0,
             boardX: 0, boardY: 0
         }
@@ -172,13 +171,12 @@ class CorkBoard extends React.Component {
                 {this.state.showSearchResults &&
                     <SearchResultsView
                         onEscape={() => this.setState({ showSearchResults: false })}
-                        results={this.state.searchResuts}
+                        results={this.state.searchResults}
                         onPinView={this.onPinView}
                     />
                 }
 
                 <ScrollingStage
-                    ref={this.canvas}
                     pins={this.state.pins}
                     onPinSelect={this.onPinSelect}
                     onPinMove={this.onPinMove}
@@ -189,7 +187,7 @@ class CorkBoard extends React.Component {
                     onPinEditorEscape={this.showPinEditor}
                     onPinView={this.onPinView}
                     onStagePan={this.onStagePan}
-                    height={this.state.boardHeight}
+                    height={this.state.boardHeight - 48}
                     width={this.state.boardWidth}
                     x={this.state.boardX}
                     y={this.state.boardY}
