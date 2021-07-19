@@ -30,6 +30,8 @@ class ScrollingStage extends React.Component {
         this.state = {
             grab: false,
             dragging: false,
+            leftSideOfScreen: false,
+            intervalId: undefined,
             ...this.selectionBox.getState(),
             ...this.contextMenu.getState(),
         }
@@ -40,11 +42,37 @@ class ScrollingStage extends React.Component {
         this.props.onStagePan({ x: x, y: y })
     }
 
+    scrollStageIfNessecary = (mousePos) => {
+        if (mousePos.x < 15) {
+            this.moveLeft()
+        } else {
+            this.stopMoveLeft()
+        }
+    }
+
+    moveLeft = () => {
+        this.setState({ leftSideOfScreen: true })
+        if (!this.state.intervalId) {
+            console.log("Setting Interval")
+            const intervalId = setInterval(() => {
+                this.move(this.props.x + SCROLLINGSPEED, this.props.y)
+            }, 1000 / 30)
+            this.setState({ intervalId: intervalId })
+
+        }
+    }
+    stopMoveLeft = () => {
+        this.setState({ leftSideOfScreen: false })
+        clearInterval(this.state.intervalId)
+        this.setState({ intervalId: undefined })
+    }
+
 
 
     // ===== LIFE CYCLE =====
 
     componentDidMount() {
+
         window.addEventListener('mouseup', this.onMouseUpWindow)
         window.addEventListener('mousemove', this.onMouseMoveWindow)
     }
@@ -55,8 +83,6 @@ class ScrollingStage extends React.Component {
     }
 
     // ===== UTIL =====
-
-
 
     calculateStageOffset = (coords) => {
         return { x: coords.x - this.props.x, y: coords.y - this.props.y };
@@ -90,20 +116,6 @@ class ScrollingStage extends React.Component {
 
     }
 
-    scrollStageIfNessecary = (mousePos) => {
-        let moveX = 0;
-        let moveY = 0;
-
-        if (mousePos.x < 15) {
-            moveX = -SCROLLINGSPEED
-        }
-        if (mousePos.x > this.state.width - 15) {
-            moveX = SCROLLINGSPEED
-        }
-
-
-        this.move(this.props.x - moveX, this.props.y - moveY)
-    }
 
     // ===== PROPS REQUEST =====
 
@@ -147,6 +159,7 @@ class ScrollingStage extends React.Component {
 
     onMouseUpWindow = (e) => {
         const stage = this.stage.current;
+        this.stopMoveLeft()
 
         if (this.selectionBox.isVisible(this.state)) {
             const pinShapes = stage.find('.pin')
@@ -306,6 +319,18 @@ class ScrollingStage extends React.Component {
                                 height={4}
                                 width={4}
                                 fill="red"
+                            />
+                        )}
+
+                        {this.state.leftSideOfScreen && (
+                            <Rect
+                                name="e"
+                                x={0 - this.props.x}
+                                y={0 - this.props.y}
+                                height={this.props.height}
+                                width={15}
+                                fill="red"
+                                opacity={0.5}
                             />
                         )}
 
