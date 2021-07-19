@@ -69,6 +69,11 @@ class ScrollingStage extends React.Component {
         if (!this.state.horizontalPanningInterval) {
             const intervalId = setInterval(() => {
                 this.move(this.props.x - SCROLLINGSPEED, this.props.y)
+                const movement = {
+                    x: SCROLLINGSPEED,
+                    y: 0
+                };
+                this.moveSelectedPins(movement)
             }, 1000 / 30)
             this.setState({ horizontalPanningInterval: intervalId })
         }
@@ -78,6 +83,11 @@ class ScrollingStage extends React.Component {
         if (!this.state.horizontalPanningInterval) {
             const intervalId = setInterval(() => {
                 this.move(this.props.x + SCROLLINGSPEED, this.props.y)
+                const movement = {
+                    x: -SCROLLINGSPEED,
+                    y: 0
+                };
+                this.moveSelectedPins(movement)
             }, 1000 / 30)
             this.setState({ horizontalPanningInterval: intervalId })
 
@@ -94,6 +104,11 @@ class ScrollingStage extends React.Component {
         if (!this.state.verticalPanningInterval) {
             const intervalId = setInterval(() => {
                 this.move(this.props.x, this.props.y + SCROLLINGSPEED)
+                const movement = {
+                    x: 0,
+                    y: -SCROLLINGSPEED
+                };
+                this.moveSelectedPins(movement)
             }, 1000 / 30)
             this.setState({ verticalPanningInterval: intervalId })
         }
@@ -103,6 +118,11 @@ class ScrollingStage extends React.Component {
         if (!this.state.verticalPanningInterval) {
             const intervalId = setInterval(() => {
                 this.move(this.props.x, this.props.y - SCROLLINGSPEED)
+                const movement = {
+                    x: 0,
+                    y: SCROLLINGSPEED
+                };
+                this.moveSelectedPins(movement)
             }, 1000 / 30)
             this.setState({ verticalPanningInterval: intervalId })
         }
