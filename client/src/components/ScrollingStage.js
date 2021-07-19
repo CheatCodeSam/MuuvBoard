@@ -31,6 +31,7 @@ class ScrollingStage extends React.Component {
             grab: false,
             dragging: false,
             leftSideOfScreen: false,
+            rightSideOfScreen: false,
             panningInterval: undefined,
             ...this.selectionBox.getState(),
             ...this.contextMenu.getState(),
@@ -45,15 +46,27 @@ class ScrollingStage extends React.Component {
     scrollStageIfNessecary = (mousePos) => {
         if (mousePos.x < 15) {
             this.moveLeft()
+        } else if (mousePos.x > this.props.width - 15) {
+            this.moveRight()
         } else {
             this.stopPanning()
+        }
+    }
+
+    moveRight = () => {
+        this.setState({ rightSideOfScreen: true })
+        if (!this.state.panningInterval) {
+            const intervalId = setInterval(() => {
+                this.move(this.props.x - SCROLLINGSPEED, this.props.y)
+            }, 1000 / 30)
+            this.setState({ panningInterval: intervalId })
+
         }
     }
 
     moveLeft = () => {
         this.setState({ leftSideOfScreen: true })
         if (!this.state.panningInterval) {
-            console.log("Setting Interval")
             const intervalId = setInterval(() => {
                 this.move(this.props.x + SCROLLINGSPEED, this.props.y)
             }, 1000 / 30)
@@ -62,7 +75,7 @@ class ScrollingStage extends React.Component {
         }
     }
     stopPanning = () => {
-        this.setState({ leftSideOfScreen: false })
+        this.setState({ leftSideOfScreen: false, rightSideOfScreen: false })
         clearInterval(this.state.panningInterval)
         this.setState({ panningInterval: undefined })
     }
@@ -326,6 +339,17 @@ class ScrollingStage extends React.Component {
                             <Rect
                                 name="e"
                                 x={0 - this.props.x}
+                                y={0 - this.props.y}
+                                height={this.props.height}
+                                width={15}
+                                fill="red"
+                                opacity={0.5}
+                            />
+                        )}
+                        {this.state.rightSideOfScreen && (
+                            <Rect
+                                name="e"
+                                x={(this.props.width - 15) - this.props.x}
                                 y={0 - this.props.y}
                                 height={this.props.height}
                                 width={15}
