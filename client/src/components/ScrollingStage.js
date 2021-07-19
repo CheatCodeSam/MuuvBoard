@@ -32,7 +32,9 @@ class ScrollingStage extends React.Component {
             dragging: false,
             leftSideOfScreen: false,
             rightSideOfScreen: false,
+            topOfScreen: false,
             horizontalPanningInterval: undefined,
+            verticalPanningInterval: undefined,
             ...this.selectionBox.getState(),
             ...this.contextMenu.getState(),
         }
@@ -44,13 +46,27 @@ class ScrollingStage extends React.Component {
     }
 
     scrollStageIfNessecary = (mousePos) => {
+
         if (mousePos.x < 15) {
             this.moveLeft()
         } else if (mousePos.x > this.props.width - 15) {
             this.moveRight()
         } else {
-            this.stopPanning()
+            this.stopHorizontalPanning()
         }
+
+        if (mousePos.y < 15) {
+            this.moveUp()
+        }
+        // else if (mousePos.x > this.props.width - 15) {
+        //     this.moveRight()
+        // } 
+        else {
+            this.stopVerticalPanning()
+        }
+
+
+
     }
 
     moveRight = () => {
@@ -62,7 +78,6 @@ class ScrollingStage extends React.Component {
             this.setState({ horizontalPanningInterval: intervalId })
         }
     }
-
     moveLeft = () => {
         this.setState({ leftSideOfScreen: true })
         if (!this.state.horizontalPanningInterval) {
@@ -73,10 +88,31 @@ class ScrollingStage extends React.Component {
 
         }
     }
-    stopPanning = () => {
+    stopHorizontalPanning = () => {
         this.setState({ leftSideOfScreen: false, rightSideOfScreen: false })
         clearInterval(this.state.horizontalPanningInterval)
         this.setState({ horizontalPanningInterval: undefined })
+    }
+
+    moveUp = () => {
+        this.setState({ topOfScreen: true })
+        if (!this.state.verticalPanningInterval) {
+            const intervalId = setInterval(() => {
+                this.move(this.props.x, this.props.y + SCROLLINGSPEED)
+            }, 1000 / 30)
+            this.setState({ verticalPanningInterval: intervalId })
+        }
+
+    }
+    stopVerticalPanning = () => {
+        this.setState({ topOfScreen: false })
+        clearInterval(this.state.verticalPanningInterval)
+        this.setState({ verticalPanningInterval: undefined })
+    }
+
+    stopPanning = () => {
+        this.stopHorizontalPanning()
+        this.stopVerticalPanning()
     }
 
 
@@ -84,7 +120,6 @@ class ScrollingStage extends React.Component {
     // ===== LIFE CYCLE =====
 
     componentDidMount() {
-
         window.addEventListener('mouseup', this.onMouseUpWindow)
         window.addEventListener('mousemove', this.onMouseMoveWindow)
     }
@@ -214,13 +249,16 @@ class ScrollingStage extends React.Component {
 
     onPinDrag = (e) => {
         const { target } = e;
+        const stage = this.stage.current;
+
         const pin = this.getPinById(target.id())
         const movement = {
             x: target.x() - pin.x_coordinate,
             y: target.y() - pin.y_coordinate
         };
 
-        this.scrollStageIfNessecary({ x: window.event.clientX, y: window.event.clientY })
+        const stagePosition = stage.content.getBoundingClientRect()
+        this.scrollStageIfNessecary({ x: window.event.clientX - stagePosition.x, y: window.event.clientY - stagePosition.y })
 
         this.moveSelectedPins(movement)
 
@@ -352,6 +390,17 @@ class ScrollingStage extends React.Component {
                                 y={0 - this.props.y}
                                 height={this.props.height}
                                 width={15}
+                                fill="red"
+                                opacity={0.5}
+                            />
+                        )}
+                        {this.state.topOfScreen && (
+                            <Rect
+                                name="e"
+                                x={0 - this.props.x}
+                                y={0 - this.props.y}
+                                height={15}
+                                width={this.props.width}
                                 fill="red"
                                 opacity={0.5}
                             />
