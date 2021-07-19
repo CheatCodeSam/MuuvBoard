@@ -46,8 +46,8 @@ class ScrollingStage extends React.Component {
         this.props.onStagePan({ x: x, y: y })
     }
 
-    scrollStageIfNessecary = (mousePos) => {
-
+    // TODO move all this into seperate class.
+    scrollStageIfNecessary = (mousePos) => {
         if (mousePos.x < 15) {
             this.moveLeft()
         } else if (mousePos.x > this.props.width - 15) {
@@ -55,7 +55,6 @@ class ScrollingStage extends React.Component {
         } else {
             this.stopHorizontalPanning()
         }
-
         if (mousePos.y < 15) {
             this.moveUp()
         } else if (mousePos.y > this.props.height - 15) {
@@ -63,9 +62,6 @@ class ScrollingStage extends React.Component {
         } else {
             this.stopVerticalPanning()
         }
-
-
-
     }
 
     moveRight = () => {
@@ -265,7 +261,7 @@ class ScrollingStage extends React.Component {
         };
 
         const stagePosition = stage.content.getBoundingClientRect()
-        this.scrollStageIfNessecary({ x: window.event.clientX - stagePosition.x, y: window.event.clientY - stagePosition.y })
+        this.scrollStageIfNecessary({ x: window.event.clientX - stagePosition.x, y: window.event.clientY - stagePosition.y })
 
         this.moveSelectedPins(movement)
 
@@ -437,12 +433,6 @@ class ScrollingStage extends React.Component {
                                 stroke="blue"
                             />
                         )}
-
-
-
-
-
-
                         {this.contextMenu.isVisible(this.state) && (
                             <ContextMenu
                                 x={conMenu.x}
