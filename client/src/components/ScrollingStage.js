@@ -32,7 +32,7 @@ class ScrollingStage extends React.Component {
             dragging: false,
             leftSideOfScreen: false,
             rightSideOfScreen: false,
-            panningInterval: undefined,
+            horizontalPanningInterval: undefined,
             ...this.selectionBox.getState(),
             ...this.contextMenu.getState(),
         }
@@ -55,29 +55,28 @@ class ScrollingStage extends React.Component {
 
     moveRight = () => {
         this.setState({ rightSideOfScreen: true })
-        if (!this.state.panningInterval) {
+        if (!this.state.horizontalPanningInterval) {
             const intervalId = setInterval(() => {
                 this.move(this.props.x - SCROLLINGSPEED, this.props.y)
             }, 1000 / 30)
-            this.setState({ panningInterval: intervalId })
-
+            this.setState({ horizontalPanningInterval: intervalId })
         }
     }
 
     moveLeft = () => {
         this.setState({ leftSideOfScreen: true })
-        if (!this.state.panningInterval) {
+        if (!this.state.horizontalPanningInterval) {
             const intervalId = setInterval(() => {
                 this.move(this.props.x + SCROLLINGSPEED, this.props.y)
             }, 1000 / 30)
-            this.setState({ panningInterval: intervalId })
+            this.setState({ horizontalPanningInterval: intervalId })
 
         }
     }
     stopPanning = () => {
         this.setState({ leftSideOfScreen: false, rightSideOfScreen: false })
-        clearInterval(this.state.panningInterval)
-        this.setState({ panningInterval: undefined })
+        clearInterval(this.state.horizontalPanningInterval)
+        this.setState({ horizontalPanningInterval: undefined })
     }
 
 
