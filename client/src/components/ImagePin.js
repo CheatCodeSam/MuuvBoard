@@ -45,6 +45,7 @@ function ImagePin(props) {
             name={props.name}
             width={135}
             height={160}
+            dragBoundFunc={props.dragBoundFunc}
         >
             <Rect
                 x={0}

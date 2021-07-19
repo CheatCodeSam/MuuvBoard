@@ -271,6 +271,17 @@ class ScrollingStage extends React.Component {
 
     onPinDoubleClick = (id) => this.props.onPinView(id)
 
+    dragBoundFunc = (pos) => {
+        let newY = Math.max(pos.y, 0 - 160)
+        newY = pos.y > this.props.height ? this.props.height : newY;
+        let newX = Math.max(pos.x, 0 - 135)
+        newX = pos.x > this.props.width ? this.props.width : newX;
+        return {
+            x: newX,
+            y: newY,
+        };
+    }
+
     // ===== CONTEXT MENU =====
 
     onContextMenu = (e) => {
@@ -360,6 +371,7 @@ class ScrollingStage extends React.Component {
                                     onDragMove={this.onPinDrag}
                                     onDragEnd={this.onPinDragEnd}
                                     onDblClick={this.onPinDoubleClick}
+                                    dragBoundFunc={this.dragBoundFunc}
                                 />
                             })
                         }
