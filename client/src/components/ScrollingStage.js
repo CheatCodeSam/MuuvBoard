@@ -33,6 +33,7 @@ class ScrollingStage extends React.Component {
             leftSideOfScreen: false,
             rightSideOfScreen: false,
             topOfScreen: false,
+            bottomOfScreen: false,
             horizontalPanningInterval: undefined,
             verticalPanningInterval: undefined,
             ...this.selectionBox.getState(),
@@ -57,11 +58,9 @@ class ScrollingStage extends React.Component {
 
         if (mousePos.y < 15) {
             this.moveUp()
-        }
-        // else if (mousePos.x > this.props.width - 15) {
-        //     this.moveRight()
-        // } 
-        else {
+        } else if (mousePos.y > this.props.height - 15) {
+            this.moveDown()
+        } else {
             this.stopVerticalPanning()
         }
 
@@ -102,10 +101,18 @@ class ScrollingStage extends React.Component {
             }, 1000 / 30)
             this.setState({ verticalPanningInterval: intervalId })
         }
-
+    }
+    moveDown = () => {
+        this.setState({ bottomOfScreen: true })
+        if (!this.state.verticalPanningInterval) {
+            const intervalId = setInterval(() => {
+                this.move(this.props.x, this.props.y - SCROLLINGSPEED)
+            }, 1000 / 30)
+            this.setState({ verticalPanningInterval: intervalId })
+        }
     }
     stopVerticalPanning = () => {
-        this.setState({ topOfScreen: false })
+        this.setState({ topOfScreen: false, bottomOfScreen: false })
         clearInterval(this.state.verticalPanningInterval)
         this.setState({ verticalPanningInterval: undefined })
     }
@@ -399,6 +406,17 @@ class ScrollingStage extends React.Component {
                                 name="e"
                                 x={0 - this.props.x}
                                 y={0 - this.props.y}
+                                height={15}
+                                width={this.props.width}
+                                fill="red"
+                                opacity={0.5}
+                            />
+                        )}
+                        {this.state.bottomOfScreen && (
+                            <Rect
+                                name="e"
+                                x={0 - this.props.x}
+                                y={(this.props.height - 15) - this.props.y}
                                 height={15}
                                 width={this.props.width}
                                 fill="red"
