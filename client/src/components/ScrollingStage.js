@@ -31,7 +31,7 @@ class ScrollingStage extends React.Component {
             grab: false,
             dragging: false,
             leftSideOfScreen: false,
-            intervalId: undefined,
+            panningInterval: undefined,
             ...this.selectionBox.getState(),
             ...this.contextMenu.getState(),
         }
@@ -46,25 +46,25 @@ class ScrollingStage extends React.Component {
         if (mousePos.x < 15) {
             this.moveLeft()
         } else {
-            this.stopMoveLeft()
+            this.stopPanning()
         }
     }
 
     moveLeft = () => {
         this.setState({ leftSideOfScreen: true })
-        if (!this.state.intervalId) {
+        if (!this.state.panningInterval) {
             console.log("Setting Interval")
             const intervalId = setInterval(() => {
                 this.move(this.props.x + SCROLLINGSPEED, this.props.y)
             }, 1000 / 30)
-            this.setState({ intervalId: intervalId })
+            this.setState({ panningInterval: intervalId })
 
         }
     }
-    stopMoveLeft = () => {
+    stopPanning = () => {
         this.setState({ leftSideOfScreen: false })
-        clearInterval(this.state.intervalId)
-        this.setState({ intervalId: undefined })
+        clearInterval(this.state.panningInterval)
+        this.setState({ panningInterval: undefined })
     }
 
 
@@ -159,7 +159,7 @@ class ScrollingStage extends React.Component {
 
     onMouseUpWindow = (e) => {
         const stage = this.stage.current;
-        this.stopMoveLeft()
+        this.stopPanning()
 
         if (this.selectionBox.isVisible(this.state)) {
             const pinShapes = stage.find('.pin')
