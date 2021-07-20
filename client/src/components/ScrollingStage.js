@@ -380,6 +380,7 @@ class ScrollingStage extends React.Component {
                     x={this.props.x}
                     y={this.props.y}
                 >
+
                     <Layer>
                         {
                             this.props.pins.map((pin) => {
@@ -458,6 +459,20 @@ class ScrollingStage extends React.Component {
                             />
                         )}
 
+
+                        {this.contextMenu.isVisible(this.state) && (
+                            <ContextMenu
+                                x={conMenu.x}
+                                y={conMenu.y}
+                                options={this.generateContextMenuOptions()}
+                            />
+                        )}
+                    </Layer>
+                    <Layer
+                        name="selectionBoxLayer"
+                        listening={false}
+
+                    >
                         {this.selectionBox.isVisible(this.state) && (
                             <Rect
                                 name="selection"
@@ -471,13 +486,7 @@ class ScrollingStage extends React.Component {
                                 stroke="blue"
                             />
                         )}
-                        {this.contextMenu.isVisible(this.state) && (
-                            <ContextMenu
-                                x={conMenu.x}
-                                y={conMenu.y}
-                                options={this.generateContextMenuOptions()}
-                            />
-                        )}
+
                     </Layer>
                 </Stage>
 
