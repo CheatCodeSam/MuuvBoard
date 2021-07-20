@@ -129,7 +129,7 @@ class CorkBoard extends React.Component {
 
     onSearch = async (query) => {
         const results = await this.request.onSearch(query)
-        this.setState({ searchResuts: results.data, showSearchResults: true })
+        this.setState({ searchResults: results.data, showSearchResults: true })
     }
 
     onGoToPin = (pin) => {
