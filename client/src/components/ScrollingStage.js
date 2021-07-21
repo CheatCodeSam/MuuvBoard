@@ -11,7 +11,7 @@ const MOUSEONE = 0;
 const MOUSETWO = 2;
 const MOUSETHREE = 1;
 
-const SCROLLINGSPEED = 34;
+const SCROLLINGSPEED = 17;
 
 //! REACT WAS NOT MADE TO SUPPORT CANVAS
 // All rules involving how React should operate
@@ -74,7 +74,7 @@ class ScrollingStage extends React.Component {
                     y: 0
                 };
                 this.moveSelectedPins(movement)
-            }, 1000 / 30)
+            }, 1000 / 60)
             this.setState({ horizontalPanningInterval: intervalId })
         }
     }
@@ -88,7 +88,7 @@ class ScrollingStage extends React.Component {
                     y: 0
                 };
                 this.moveSelectedPins(movement)
-            }, 1000 / 30)
+            }, 1000 / 60)
             this.setState({ horizontalPanningInterval: intervalId })
 
         }
@@ -109,7 +109,7 @@ class ScrollingStage extends React.Component {
                     y: -SCROLLINGSPEED
                 };
                 this.moveSelectedPins(movement)
-            }, 1000 / 30)
+            }, 1000 / 60)
             this.setState({ verticalPanningInterval: intervalId })
         }
     }
@@ -123,7 +123,7 @@ class ScrollingStage extends React.Component {
                     y: SCROLLINGSPEED
                 };
                 this.moveSelectedPins(movement)
-            }, 1000 / 30)
+            }, 1000 / 60)
             this.setState({ verticalPanningInterval: intervalId })
         }
     }
