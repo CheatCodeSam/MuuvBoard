@@ -13,6 +13,7 @@ const MOUSETHREE = 1;
 
 const SCROLLINGSPEED = 17;
 
+
 //! REACT WAS NOT MADE TO SUPPORT CANVAS
 // All rules involving how React should operate
 // should be taken with a grain of salt. We are 
@@ -43,6 +44,8 @@ class ScrollingStage extends React.Component {
 
 
     move = (x, y) => {
+
+
         this.props.onStagePan({ x: x, y: y })
     }
 

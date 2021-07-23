@@ -7,6 +7,7 @@ import PinView from './PinView'
 import SearchResultsView from './SearchResultsView';
 
 
+const MAXSTAGESIZE = 10_000
 
 
 
@@ -42,6 +43,17 @@ class CorkBoard extends React.Component {
     }
 
     // ===== UTIL =====
+
+    getBoundedCoords = (coords) => {
+        let newX = Math.max(coords.x, -MAXSTAGESIZE + this.state.boardWidth)
+        newX = Math.min(newX, MAXSTAGESIZE)
+        console.log(newX)
+
+        let newY = Math.max(coords.y, -MAXSTAGESIZE + this.state.boardHeight)
+        newY = Math.min(newY, MAXSTAGESIZE)
+
+        return { x: newX, y: newY }
+    }
 
     createPinForBoard = (pin) => {
         return {
@@ -123,7 +135,11 @@ class CorkBoard extends React.Component {
 
     onPinMove = (coords, ids) => {
         const PinsToMove = ids.map(id => this.getPinById(id))
-        const movedPins = PinsToMove.map(pin => { return { ...pin, x_coordinate: pin.x_coordinate + coords.x, y_coordinate: pin.y_coordinate + coords.y } })
+        const movedPins = PinsToMove.map(pin => {
+            const newCoords = this.getBoundedCoords({ x: pin.x_coordinate + coords.x, y: pin.y_coordinate + coords.y })
+            console.log(newCoords)
+            return { ...pin, x_coordinate: newCoords.x, y_coordinate: newCoords.y }
+        })
         this.setState({ pins: this.mergePinsbyId(this.state.pins, movedPins) })
     }
 
@@ -138,7 +154,7 @@ class CorkBoard extends React.Component {
     }
 
     onStagePan = coords => {
-        this.move(coords)
+        this.move(this.getBoundedCoords(coords))
     }
 
 
