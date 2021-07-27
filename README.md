@@ -45,4 +45,5 @@ testpass123
 testuser456
 ptDCaMzFaivL37V
 
+Set canvas size, and pin border size and parameters in server.
 
