@@ -7,7 +7,7 @@ import SelectionBoxEvents from "./SelectionBoxEvents"
 import ContextMenuEvents from "./ContextMenuEvents"
 
 const MOUSEONE = 0
-const MOUSETWO = 2
+// const MOUSETWO = 2
 const MOUSETHREE = 1
 
 const SCROLLINGSPEED = 17
@@ -165,7 +165,7 @@ class ScrollingStage extends React.Component {
                 height: 160,
             }
         })
-        if (pinCoords.length == 0) {
+        if (pinCoords.length === 0) {
             return null
         }
         const x1 = Math.min(...pinCoords.map(pin => pin.x))
@@ -433,6 +433,7 @@ class ScrollingStage extends React.Component {
                                 height={4}
                                 width={4}
                                 fill="red"
+                                listening={false}
                             />
                         )}
 

@@ -1,30 +1,28 @@
-import axios from 'axios'
-import React from 'react'
-import { MainContext } from '../context/MainContext';
-
-
+import axios from "axios"
+import React from "react"
+import { MainContext } from "../context/MainContext"
 
 class PinView extends React.Component {
-    static contextType = MainContext;
+    static contextType = MainContext
     constructor(props) {
-
         super(props)
         this.url = `${process.env.REACT_APP_BASE_URL}/api/pins/${this.props.pinId}/`
         this.state = { loading: true, data: {} }
-
     }
 
     componentDidMount() {
-        axios.get(this.url, {
-            headers: {
-                'Authorization': `token ${this.context.token}`
-            }
-        }).then(response => {
-            this.setState({
-                loading: false,
-                data: response.data
+        axios
+            .get(this.url, {
+                headers: {
+                    Authorization: `token ${this.context.token}`,
+                },
             })
-        })
+            .then(response => {
+                this.setState({
+                    loading: false,
+                    data: response.data,
+                })
+            })
     }
 
     getRender = () => {
@@ -32,9 +30,7 @@ class PinView extends React.Component {
             return this.renderLoading()
         } else {
             return this.renderPin()
-
         }
-
     }
 
     renderLoading = () => {
@@ -44,40 +40,39 @@ class PinView extends React.Component {
     renderPin = () => {
         return (
             <div>
-                {
-                    this.state.data.images.map(image => {
-                        return <img src={image.image} width={300} height={300} />
-                    })
-                }
+                {this.state.data.images.map(image => {
+                    return (
+                        <img
+                            src={image.image}
+                            width={300}
+                            height={300}
+                            alt=""
+                        />
+                    )
+                })}
                 <div>{this.state.data.title}</div>
                 <div>{this.state.data.id}</div>
                 <div>{this.state.data.image}</div>
-                <button onClick={() => this.props.onGoToPin(this.state.data)}>Go to pin.</button>
+                <button onClick={() => this.props.onGoToPin(this.state.data)}>
+                    Go to pin.
+                </button>
             </div>
         )
     }
 
-
-
-
     render() {
-
         return (
-            <div className='overlay'>
+            <div className="overlay">
                 <div className="pin-view">
-                    <div className='exit-button' onClick={this.props.onEscape}>
+                    <div className="exit-button" onClick={this.props.onEscape}>
                         X
                     </div>
 
                     {this.getRender()}
-
-
                 </div>
-
             </div>
         )
     }
-
 }
 
-export default PinView;
+export default PinView
