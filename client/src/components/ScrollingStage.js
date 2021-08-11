@@ -498,10 +498,10 @@ class ScrollingStage extends React.Component {
                                 y={selc.y}
                                 height={selc.height}
                                 width={selc.width}
-                                fill="teal"
-                                opacity={0.8}
+                                fill="#A9CCFA"
+                                opacity={0.4}
                                 strokeWidth={1}
-                                stroke="blue"
+                                stroke="#006EFF"
                             />
                         )}
                     </Layer>
