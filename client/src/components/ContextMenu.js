@@ -1,31 +1,29 @@
-import React from "react";
-import { Html } from "react-konva-utils";
-
-class ContextMenu extends React.Component {
-    render() {
-        return (
-            <Html
-                divProps={{
-                    style: {
-                        position: "absolute",
-                        top: this.props.y + 3 + "px",
-                        left: this.props.x + 3 + "px"
-                    },
-                    className: "menu"
-                }}
-            >
-                <div onContextMenu={e => e.preventDefault()}>
-                    {this.props.options.map((option) => {
-                        return (
-                            <button key={option.name} onClick={option.func}>
-                                {option.name}
-                            </button>
-                        );
-                    })}
-                </div>
-            </Html>
-        );
-    }
+const ContextMenu = props => {
+    const coords = { x: props.canvasX, y: props.canvasY }
+    return (
+        <div
+            className="menu"
+            style={{
+                top: props.y + 3 + "px",
+                left: props.x + 3 + "px",
+            }}
+            onContextMenu={e => e.preventDefault()}
+        >
+            {props.options?.map(option => {
+                return (
+                    <button
+                        key={option.name}
+                        onClick={_ => {
+                            option.func(coords)
+                            props.onAction()
+                        }}
+                    >
+                        {option.name}
+                    </button>
+                )
+            })}
+        </div>
+    )
 }
 
-export default ContextMenu;
+export default ContextMenu

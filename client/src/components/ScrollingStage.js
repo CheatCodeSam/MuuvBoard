@@ -61,6 +61,8 @@ class ScrollingStage extends React.Component {
 
         this.app = app
 
+        this.app.ticker.maxFPS = 60
+
         this.initializeBoard(this.app)
     }
 

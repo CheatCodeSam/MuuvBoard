@@ -177,8 +177,33 @@ class CorkBoard extends React.Component {
 
     // ===== PIN EDITOR =====
 
-    showPinEditor = (x, y) =>
-        this.setState({ showPinEditor: true, PinEditorX: x, PinEditorY: y })
+    showPinEditor = coords =>
+        this.setState({
+            showPinEditor: true,
+            PinEditorX: coords.x,
+            PinEditorY: coords.y,
+        })
+
+    contextMenuOptions = _ => {
+        const returnValue = []
+
+        returnValue.push({
+            name: "Create New Pin",
+            func: this.showPinEditor,
+        })
+
+        if (this.state.pins.filter(p => p.selected).length !== 0) {
+            returnValue.push({
+                name: "Delete Pin",
+                func: () => {
+                    this.onPinDelete(
+                        this.state.pins.filter(p => p.selected).map(p => p.id)
+                    )
+                },
+            })
+        }
+        return returnValue
+    }
 
     render() {
         return (
@@ -222,8 +247,9 @@ class CorkBoard extends React.Component {
                     onPinMoveEnd={this.onPinMoveEnd}
                     onPinView={this.onPinView}
                     onStagePan={this.onStagePan}
-                    height={this.state.boardHeight - 48}
+                    height={this.state.boardHeight}
                     width={this.state.boardWidth}
+                    contextMenuOptions={this.contextMenuOptions()}
                     x={this.state.boardX}
                     y={this.state.boardY}
                 />
