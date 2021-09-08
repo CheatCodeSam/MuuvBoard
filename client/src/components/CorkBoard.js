@@ -213,24 +213,24 @@ class CorkBoard extends React.Component {
                     onSearch={this.onSearch}
                 />
 
-                {/* {this.state.showPinEditor && (
+                {this.state.showPinEditor && (
                     <PinEditor
                         x={this.state.PinEditorX}
                         y={this.state.PinEditorY}
                         onEscape={() => this.setState({ showPinEditor: false })}
                         onPinCreate={this.onPinCreate}
                     />
-                )} */}
+                )}
 
-                {/* {this.state.showPinView && (
+                {this.state.showPinView && (
                     <PinView
                         pinId={this.state.pinToView}
                         onEscape={() => this.setState({ showPinView: false })}
                         onGoToPin={this.onGoToPin}
                     />
-                )} */}
+                )}
 
-                {/* {this.state.showSearchResults && (
+                {this.state.showSearchResults && (
                     <SearchResultsView
                         onEscape={() =>
                             this.setState({ showSearchResults: false })
@@ -238,7 +238,7 @@ class CorkBoard extends React.Component {
                         results={this.state.searchResults}
                         onPinView={this.onPinView}
                     />
-                )} */}
+                )}
 
                 <ScrollingStage
                     pins={this.state.pins}
