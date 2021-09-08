@@ -1,7 +1,7 @@
 Muuvboard
 (/mo͞ovbôrd/)
 
-A personal moodboard app written in Django, React, and Konva. Consider it a mixture of Pinterest, a Booru, and PureRef. No where near a presentable state, but being worked on at the moment.
+A personal moodboard app written in Django, React, and PIXI. Consider it a mixture of Pinterest, a Booru, and PureRef. No where near a presentable state, but being worked on at the moment.
 
 Objective
 Use libraries first, than refactor out as needed.
@@ -13,7 +13,6 @@ Refactor out Image Pin from Pins
 Boards show last updated as last updated pin
 Refactor Boards into viewset
 
-
 Interesting Links:
 https://codesandbox.io/s/react-konva-infinite-grid-kkndq
 https://longviewcoder.com/2021/01/18/html5-canvas-bottoms-up-with-konva/
@@ -24,20 +23,17 @@ https://datatracker.ietf.org/doc/html/rfc6902
 https://pixijs.io/examples/#/events/drag-n-drop.js
 Ensure PATCH request can only modify one board per request.
 
-
 Big features to still add in order:
 Zooming
 
-
 Authentication:
-* when entering page
-* * if no token, login
-* * if 403 error, validate token
-* * * if invalid token, login
-* * * if valid token, redirect to boards list
-* * if valid token, make all request on page with token
 
-
+-   when entering page
+-   -   if no token, login
+-   -   if 403 error, validate token
+-   -   -   if invalid token, login
+-   -   -   if valid token, redirect to boards list
+-   -   if valid token, make all request on page with token
 
 testuser123
 testpass123
@@ -46,4 +42,3 @@ testuser456
 ptDCaMzFaivL37V
 
 Set canvas size, and pin border size and parameters in server.
-
