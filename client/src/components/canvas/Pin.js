@@ -43,7 +43,12 @@ class Pin extends DraggableContainer {
         this.dropShadow.drawRoundedRect(0, 4, 128, 128, 12)
         this.dropShadow.endFill()
         this.dropShadow.alpha = 0.25
-        this.dropShadow.filters = [new PIXI.filters.BlurFilter(4)]
+
+        const isSafari = window.safari !== undefined
+        if (!!!isSafari) {
+            // This causes a lot of lag on safari
+            this.dropShadow.filters = [new PIXI.filters.BlurFilter(4)]
+        }
 
         this.selectionBorder = new PIXI.Graphics()
         this.selectionBorder.beginFill(0x89abe3)

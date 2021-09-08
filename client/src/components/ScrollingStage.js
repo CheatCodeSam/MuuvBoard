@@ -45,6 +45,7 @@ class ScrollingStage extends React.Component {
             resolution: 1,
             view: canvas,
             antialias: true,
+            sharedTicker: true,
         })
 
         app.renderer.resize(this.props.width, this.props.height)
@@ -61,7 +62,7 @@ class ScrollingStage extends React.Component {
 
         this.app = app
 
-        this.app.ticker.maxFPS = 60
+        PIXI.Ticker.shared.maxFPS = 60
 
         this.initializeBoard(this.app)
     }
@@ -171,6 +172,10 @@ class ScrollingStage extends React.Component {
                 .filter(p => !!!pinsOperatedOn.includes(p))
                 .forEach(this.deletePin)
         }
+    }
+
+    componentWillUnmount() {
+        this.app.destroy(true, true)
     }
 
     getPin = id => this.pins.find(p => p.id === id)
