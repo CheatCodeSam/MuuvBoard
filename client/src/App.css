@@ -1,11 +1,10 @@
-
 .menu {
     position: absolute;
     width: 100px;
     box-shadow: 0 0 5px grey;
     border-radius: 3px;
 }
-  
+
 .menu button {
     width: 100%;
     background-color: white;
@@ -13,7 +12,7 @@
     margin: 0;
     padding: 3px 10px;
 }
-  
+
 .menu button:hover {
     background-color: lightgray;
 }
@@ -21,7 +20,7 @@
 .grab {
     cursor: grab;
 }
-  
+
 .grabbing {
     cursor: grabbing;
 }
@@ -29,7 +28,6 @@
 :root {
     --toolbar-height: 48px;
 }
-
 
 .toolbar {
     cursor: default;
@@ -39,7 +37,7 @@
     height: var(--toolbar-height);
     width: 100%;
     background-color: #525252;
-    color:white;
+    color: white;
     font-size: 13px;
     box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
     z-index: 2;
@@ -54,12 +52,11 @@
     box-sizing: border-box;
     align-items: center;
     font-size: 14px;
-
 }
 
 .filename-title {
-display: inline-block;
-margin-right: 2px;
+    display: inline-block;
+    margin-right: 2px;
 }
 
 .chevron-container {
@@ -97,7 +94,6 @@ margin-right: 2px;
 .pin-editor-form {
     color: black;
     background-color: white;
-    
 }
 
 .scrolling-stage {
@@ -122,13 +118,49 @@ margin-right: 2px;
     background-color: rgba(0, 0, 0, 0);
     border-left: none;
     border-top: none;
-    border-right:none;
+    border-right: none;
     border-bottom: 1px black solid;
-
-
 }
 
-.searchbar-input:focus{
+.searchbar-input:focus {
     outline: none;
     border-bottom: 1px red solid;
+}
+
+.stage {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    top: 0;
+    left: 0;
+}
+
+.stage-background {
+    position: relative;
+    height: 100%;
+    width: 100%;
+    top: 0;
+    left: 0;
+    background-color: #e5e5f7;
+    opacity: 0.8;
+    background-image: radial-gradient(#444cf7 1.1px, #e5e5f7 1.1px);
+    background-size: 22px 22px;
+    z-index: -1;
+}
+
+.stage-canvas {
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+}
+
+.coordinate-display {
+    position: absolute;
+    top: 60px;
+    right: 0;
+    padding: 0;
+    margin: 0;
 }

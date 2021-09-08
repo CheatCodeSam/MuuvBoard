@@ -1,53 +1,49 @@
-import React from 'react';
-import ScrollingStage from './ScrollingStage'
-import PinRequest from './PinRequest'
-import Toolbar from './Toolbar'
-import PinEditor from './PinEditor';
-import PinView from './PinView'
-import SearchResultsView from './SearchResultsView';
-
+import React from "react"
+import ScrollingStage from "./ScrollingStage"
+import PinRequest from "./PinRequest"
+import Toolbar from "./Toolbar"
+import PinEditor from "./PinEditor"
+import PinView from "./PinView"
+import SearchResultsView from "./SearchResultsView"
 
 const MAXSTAGESIZE = 10_000
 
-
-
-
 class CorkBoard extends React.Component {
-
-
     constructor(props) {
         super(props)
-        this.request = new PinRequest(props.data.id, this.props.token);
+        this.request = new PinRequest(props.data.id, this.props.token)
         this.state = {
             pins: props.data.pins.map(pin => this.createPinForBoard(pin)),
             showPinView: false,
             pinToView: 0,
             showPinEditor: false,
-            PinEditorX: 0, PinEditorY: 0,
+            PinEditorX: 0,
+            PinEditorY: 0,
             showSearchResults: false,
             searchResults: [],
-            boardWidth: 0, boardHeight: 0,
-            boardX: 0, boardY: 0
+            boardWidth: 0,
+            boardHeight: 0,
+            boardX: 0,
+            boardY: 0,
         }
     }
 
     // ===== LIFE CYCLE =====
 
     componentDidMount() {
-        this.updateWindowDimensions();
-        window.addEventListener('resize', this.updateWindowDimensions);
+        this.updateWindowDimensions()
+        window.addEventListener("resize", this.updateWindowDimensions)
     }
 
     componentWillUnmount() {
-        window.removeEventListener('resize', this.updateWindowDimensions);
+        window.removeEventListener("resize", this.updateWindowDimensions)
     }
 
     // ===== UTIL =====
 
-    getBoundedCoords = (coords) => {
+    getBoundedCoords = coords => {
         let newX = Math.max(coords.x, -MAXSTAGESIZE + this.state.boardWidth)
         newX = Math.min(newX, MAXSTAGESIZE)
-        console.log(newX)
 
         let newY = Math.max(coords.y, -MAXSTAGESIZE + this.state.boardHeight)
         newY = Math.min(newY, MAXSTAGESIZE)
@@ -55,24 +51,27 @@ class CorkBoard extends React.Component {
         return { x: newX, y: newY }
     }
 
-    createPinForBoard = (pin) => {
+    createPinForBoard = pin => {
         return {
             ...pin,
-            selected: false
+            selected: false,
         }
     }
 
-    getIds = (pins) => pins.map(pin => { return pin.id })
+    getIds = pins =>
+        pins.map(pin => {
+            return pin.id
+        })
 
     mergePinsbyId = (entry, modified) => {
-        return entry.map((obj) => modified.find((o) => o.id === obj.id) || obj);
+        return entry.map(obj => modified.find(o => o.id === obj.id) || obj)
     }
 
-    getPinById = (id) => {
-        return this.state.pins.find(pin => pin.id === id);
-    };
+    getPinById = id => {
+        return this.state.pins.find(pin => pin.id === id)
+    }
 
-    pushPinsToTop = (ids) => {
+    pushPinsToTop = ids => {
         const pinsToPush = this.state.pins.filter(pin => ids.includes(pin.id))
         const otherPins = this.state.pins.filter(pin => !ids.includes(pin.id))
         this.setState({ pins: [...otherPins, ...pinsToPush] })
@@ -81,23 +80,25 @@ class CorkBoard extends React.Component {
     // ===== BOARD MOVEMENT/SIZING =====
 
     updateWindowDimensions = () => {
-        this.setState({ boardWidth: window.innerWidth, boardHeight: window.innerHeight });
+        this.setState({
+            boardWidth: window.innerWidth,
+            boardHeight: window.innerHeight,
+        })
     }
 
     move = coords => {
         this.setState({ boardX: coords.x, boardY: coords.y })
     }
 
-
     // ===== PROPS TO PASS =====
 
-    onPinSelect = (ids) => {
-        const _selectPinsById = (state) => {
+    onPinSelect = ids => {
+        const _selectPinsById = state => {
             return state.pins.map(pin => {
                 if (ids.includes(pin.id)) {
                     return { ...pin, selected: true }
                 } else {
-                    return { ...pin, selected: false };
+                    return { ...pin, selected: false }
                 }
             })
         }
@@ -105,50 +106,67 @@ class CorkBoard extends React.Component {
         this.setState(state => {
             return { pins: _selectPinsById(state) }
         })
-
     }
 
-    onPinMoveEnd = (pins) => {
-        this.request.onPinsMoveEnd(pins)
+    onPinMoveEnd = pins => {
+        this.request.onPinsMoveEnd(pins.map(id => this.getPinById(id)))
     }
 
-    onPinDelete = (pins) => {
-        this.setState({ pins: this.state.pins.filter(pin => !!!pins.includes(pin.id)) })
+    onPinDelete = pins => {
+        this.setState({
+            pins: this.state.pins.filter(pin => !!!pins.includes(pin.id)),
+        })
         this.request.onPinsDelete(pins)
     }
 
     // TODO This is very jank, refactor so it doesnt need to use a callback,
-    onPinCreate = (pin) => {
+    onPinCreate = pin => {
         this.request.onPinCreate(pin, this.makePin)
     }
 
-    makePin = async (data) => {
+    makePin = async data => {
         const pin = await data
         // TODO this is incredibly jank
-        pin.data.images = pin.data.images.map(img => { return { ...img, image: `${process.env.REACT_APP_BASE_URL}${img.image}` } })
+        pin.data.images = pin.data.images.map(img => {
+            return {
+                ...img,
+                image: `${process.env.REACT_APP_BASE_URL}${img.image}`,
+            }
+        })
         this.setState({
             pins: [...this.state.pins, this.createPinForBoard(pin.data)],
         })
     }
 
-    onPinView = (id) => this.setState({ showSearchResults: false, showPinView: true, pinToView: id })
+    onPinView = id =>
+        this.setState({
+            showSearchResults: false,
+            showPinView: true,
+            pinToView: id,
+        })
 
     onPinMove = (coords, ids) => {
         const PinsToMove = ids.map(id => this.getPinById(id))
         const movedPins = PinsToMove.map(pin => {
-            const newCoords = this.getBoundedCoords({ x: pin.x_coordinate + coords.x, y: pin.y_coordinate + coords.y })
-            console.log(newCoords)
-            return { ...pin, x_coordinate: newCoords.x, y_coordinate: newCoords.y }
+            const newCoords = this.getBoundedCoords({
+                x: pin.x_coordinate + coords.dx,
+                y: pin.y_coordinate + coords.dy,
+            })
+            return {
+                ...pin,
+                x_coordinate: newCoords.x,
+                y_coordinate: newCoords.y,
+            }
         })
         this.setState({ pins: this.mergePinsbyId(this.state.pins, movedPins) })
     }
 
-    onSearch = async (query) => {
+    onSearch = async query => {
         const results = await this.request.onSearch(query)
         this.setState({ searchResults: results.data, showSearchResults: true })
     }
 
-    onGoToPin = (pin) => {
+    onGoToPin = pin => {
         this.onPinSelect([pin.id])
         this.move({ x: -pin.x_coordinate, y: -pin.y_coordinate })
     }
@@ -157,50 +175,51 @@ class CorkBoard extends React.Component {
         this.move(this.getBoundedCoords(coords))
     }
 
-
     // ===== PIN EDITOR =====
 
-    showPinEditor = (x, y) => this.setState({ showPinEditor: true, PinEditorX: x, PinEditorY: y })
+    showPinEditor = (x, y) =>
+        this.setState({ showPinEditor: true, PinEditorX: x, PinEditorY: y })
 
     render() {
         return (
             <>
-                <Toolbar title={this.props.data.title} onSearch={this.onSearch} />
+                <Toolbar
+                    title={this.props.data.title}
+                    onSearch={this.onSearch}
+                />
 
-                {this.state.showPinEditor &&
+                {this.state.showPinEditor && (
                     <PinEditor
                         x={this.state.PinEditorX}
                         y={this.state.PinEditorY}
                         onEscape={() => this.setState({ showPinEditor: false })}
                         onPinCreate={this.onPinCreate}
                     />
-                }
+                )}
 
-                {this.state.showPinView &&
+                {this.state.showPinView && (
                     <PinView
                         pinId={this.state.pinToView}
                         onEscape={() => this.setState({ showPinView: false })}
                         onGoToPin={this.onGoToPin}
                     />
-                }
+                )}
 
-                {this.state.showSearchResults &&
+                {this.state.showSearchResults && (
                     <SearchResultsView
-                        onEscape={() => this.setState({ showSearchResults: false })}
+                        onEscape={() =>
+                            this.setState({ showSearchResults: false })
+                        }
                         results={this.state.searchResults}
                         onPinView={this.onPinView}
                     />
-                }
+                )}
 
                 <ScrollingStage
                     pins={this.state.pins}
                     onPinSelect={this.onPinSelect}
                     onPinMove={this.onPinMove}
                     onPinMoveEnd={this.onPinMoveEnd}
-                    onPinCreate={this.onPinCreate}
-                    onPinDelete={this.onPinDelete}
-                    showPinEditor={this.showPinEditor}
-                    onPinEditorEscape={this.showPinEditor}
                     onPinView={this.onPinView}
                     onStagePan={this.onStagePan}
                     height={this.state.boardHeight - 48}
@@ -210,9 +229,7 @@ class CorkBoard extends React.Component {
                 />
             </>
         )
-
     }
-
 }
 
-export default CorkBoard;
+export default CorkBoard

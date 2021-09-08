@@ -1,15 +1,15 @@
-import './App.css';
-import { Switch, Route } from "react-router-dom";
+import "./App.css"
+import { Switch, Route } from "react-router-dom"
 
-import Board from './components/Board';
+import Board from "./components/Board"
 
-import ListOfBoards from './components/ListOfBoards'
+import ListOfBoards from "./components/ListOfBoards"
 
-import LogIn from './components/LogIn';
-import { useContext } from 'react';
-import { MainContext } from './context/MainContext';
+import LogIn from "./components/LogIn"
+import { useContext } from "react"
+import { MainContext } from "./context/MainContext"
 
-
+import "./components/canvas/dblclick"
 
 function App() {
     const { token } = useContext(MainContext)
@@ -26,9 +26,7 @@ function App() {
                 <Route path="/" component={ListOfBoards} />
             </Switch>
         </>
-    );
+    )
 }
 
-
-
-export default App;
+export default App
