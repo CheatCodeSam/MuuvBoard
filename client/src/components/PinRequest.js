@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios from "axios"
 
 const fileCreationUrl = `${process.env.REACT_APP_BASE_URL}/api/files/`
 
@@ -11,22 +11,22 @@ class PinRequest {
     }
 
     // TODO work with ids and coords instead of pins object.
-    onPinsMoveEnd = (pins) => {
+    onPinsMoveEnd = pins => {
         const modifiedPins = pins.map(pin => {
             return {
                 path: pin.id,
                 op: "move",
-                values: { x: pin.x_coordinate, y: pin.y_coordinate }
+                values: { x: pin.x_coordinate, y: pin.y_coordinate },
             }
         })
         axios.patch(this.url, modifiedPins, {
             headers: {
-                'Authorization': `token ${this.token}`
-            }
-        });
+                Authorization: `token ${this.token}`,
+            },
+        })
     }
 
-    onPinsDelete = (pinIds) => {
+    onPinsDelete = pinIds => {
         const modifiedPins = pinIds.map(pinId => {
             return {
                 path: pinId,
@@ -35,17 +35,17 @@ class PinRequest {
         })
         axios.patch(this.url, modifiedPins, {
             headers: {
-                'Authorization': `token ${this.token}`
-            }
+                Authorization: `token ${this.token}`,
+            },
         })
     }
 
-    onSearch = async (query) => {
+    onSearch = async query => {
         const searchUrl = `${this.url}?search=${query}&board=${this.id}`
         return axios.get(searchUrl, {
             headers: {
-                'Authorization': `token ${this.token}`
-            }
+                Authorization: `token ${this.token}`,
+            },
         })
     }
 
@@ -58,10 +58,6 @@ class PinRequest {
             const finalResults = this._onPinCreate(pin, fileIds)
             callback(finalResults)
         })
-
-
-
-
     }
 
     _onPinCreate = (pin, files) => {
@@ -70,35 +66,29 @@ class PinRequest {
             images: files,
             x_coordinate: pin.x_coordinate,
             y_coordinate: pin.y_coordinate,
-            board: this.id
+            board: this.id,
         }
 
         return axios.post(this.url, pinData, {
             headers: {
-                'Authorization': `token ${this.token}`
-            }
+                Authorization: `token ${this.token}`,
+            },
         })
-
     }
 
-    _onFileCreate = (files) => {
-
-
+    _onFileCreate = files => {
         const x = files.map(file => {
-            const formData = new FormData();
-            formData.append('image', file);
+            const formData = new FormData()
+            formData.append("image", file)
             return axios.post(fileCreationUrl, formData, {
                 headers: {
-                    'Authorization': `token ${this.token}`
-                }
+                    Authorization: `token ${this.token}`,
+                },
             })
         })
 
         this.promises = x
-
-
     }
-
 }
 
-export default PinRequest;
+export default PinRequest

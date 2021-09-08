@@ -1,7 +1,6 @@
-version: '3.8'
+version: "3.8"
 
 services:
-
     muuvboard-server:
         build:
             context: ./server
@@ -17,8 +16,8 @@ services:
         ports:
             - 8003:8000
             - 3000:3000
-        volumes: 
-        - ./server:/usr/src/app
+        volumes:
+            - ./server:/usr/src/app
 
     muuvboard-database:
         container_name: muuvboard-database
@@ -30,7 +29,7 @@ services:
             - 5432
         volumes:
             - muuvboard-database:/var/lib/postgresql/data
-    
+
     muuvboard-client:
         build:
             context: ./client

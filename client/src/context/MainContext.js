@@ -1,9 +1,9 @@
 import React, { useState } from "react"
 
-const MainContext = React.createContext();
+const MainContext = React.createContext()
 
 function MainContextProvider({ children }) {
-    const [token, setToken] = useState('');
+    const [token, setToken] = useState("")
 
     return (
         <MainContext.Provider value={{ token, setToken }}>

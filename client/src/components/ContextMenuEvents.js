@@ -1,4 +1,3 @@
-
 class ContextMenuEvents {
     constructor(setState) {
         this.setState = setState
@@ -8,11 +7,11 @@ class ContextMenuEvents {
         return {
             contextMenuVisible: false,
             contextMenuX: null,
-            contextMenuY: null
+            contextMenuY: null,
         }
     }
 
-    getCoords = (state) => {
+    getCoords = state => {
         return { x: state.contextMenuX, y: state.contextMenuY }
     }
 
@@ -20,19 +19,14 @@ class ContextMenuEvents {
 
     isVisible = state => state.contextMenuVisible
 
-    createContextMenu = (coords) => {
+    createContextMenu = coords => {
         const { x, y } = coords
         this.setState({
             contextMenuVisible: true,
             contextMenuX: x,
-            contextMenuY: y
+            contextMenuY: y,
         })
     }
-
-
-
 }
 
-
-
-export default ContextMenuEvents;
+export default ContextMenuEvents
