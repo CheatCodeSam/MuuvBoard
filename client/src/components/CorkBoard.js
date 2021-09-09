@@ -58,10 +58,7 @@ class CorkBoard extends React.Component {
         }
     }
 
-    getIds = pins =>
-        pins.map(pin => {
-            return pin.id
-        })
+    getIds = pins => pins.map(p => p.id)
 
     mergePinsbyId = (entry, modified) => {
         return entry.map(obj => modified.find(o => o.id === obj.id) || obj)
