@@ -148,6 +148,7 @@ class ScrollingStage extends React.Component {
 
         if (this.props.pins !== prevProps.pins) {
             let pinsOperatedOn = []
+            let index = 1
             this.props.pins.forEach(pinPOD => {
                 let pinToModify = this.getPin(pinPOD.id)
 
@@ -165,6 +166,9 @@ class ScrollingStage extends React.Component {
                 if (pinToModify.selected !== pinPOD.selected) {
                     pinToModify.selected = pinPOD.selected
                 }
+
+                pinToModify.zIndex = index
+                index++
 
                 pinsOperatedOn.push(pinToModify)
             })

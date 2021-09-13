@@ -5,6 +5,7 @@ import Toolbar from "./Toolbar"
 import PinEditor from "./PinEditor"
 import PinView from "./PinView"
 import SearchResultsView from "./SearchResultsView"
+import hotkeys from "hotkeys-js"
 
 const MAXSTAGESIZE = 10_000
 
@@ -57,8 +58,6 @@ class CorkBoard extends React.Component {
             selected: false,
         }
     }
-
-    getIds = pins => pins.map(p => p.id)
 
     mergePinsbyId = (entry, modified) => {
         return entry.map(obj => modified.find(o => o.id === obj.id) || obj)
