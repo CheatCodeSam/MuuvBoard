@@ -241,7 +241,7 @@ class CorkBoard extends React.Component {
                     onPinSelect={this.onPinSelect}
                     onPinMove={this.onPinMove}
                     onPinMoveEnd={this.onPinMoveEnd}
-                    onPinView={this.onPinView}
+                    onPinDblClick={this.onPinView}
                     onStagePan={this.onStagePan}
                     height={this.state.boardHeight}
                     width={this.state.boardWidth}

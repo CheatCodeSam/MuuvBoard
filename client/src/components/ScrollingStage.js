@@ -207,7 +207,7 @@ class ScrollingStage extends React.Component {
         const pinContainer = new Pin(pinData)
         pinContainer.on("dragmove", moveSelectedPins)
         pinContainer.on("dragend", pinMoveEnd)
-        pinContainer.on("dblclick", _ => this.props.onPinView(pinData.id))
+        pinContainer.on("dblclick", _ => this.props.onPinDblClick(pinData.id))
         pinContainer.x = pinData.x_coordinate
         pinContainer.y = pinData.y_coordinate
         pinContainer.zIndex = 1
