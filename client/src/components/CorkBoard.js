@@ -204,37 +204,48 @@ class CorkBoard extends React.Component {
     render() {
         return (
             <>
-                <Toolbar
-                    title={this.props.data.title}
-                    onSearch={this.onSearch}
-                />
-
-                {this.state.showPinEditor && (
-                    <PinEditor
-                        x={this.state.PinEditorX}
-                        y={this.state.PinEditorY}
-                        onEscape={() => this.setState({ showPinEditor: false })}
-                        onPinCreate={this.onPinCreate}
+                <div className="stage-overlay">
+                    <Toolbar
+                        title={this.props.data.title}
+                        onSearch={this.onSearch}
                     />
-                )}
+                    <div className="overlay">
+                        <p className="coordinate-display">
+                            {this.state.boardX}, {this.state.boardY}
+                        </p>
 
-                {this.state.showPinView && (
-                    <PinView
-                        pinId={this.state.pinToView}
-                        onEscape={() => this.setState({ showPinView: false })}
-                        onGoToPin={this.onGoToPin}
-                    />
-                )}
+                        {this.state.showPinEditor && (
+                            <PinEditor
+                                x={this.state.PinEditorX}
+                                y={this.state.PinEditorY}
+                                onEscape={() =>
+                                    this.setState({ showPinEditor: false })
+                                }
+                                onPinCreate={this.onPinCreate}
+                            />
+                        )}
 
-                {this.state.showSearchResults && (
-                    <SearchResultsView
-                        onEscape={() =>
-                            this.setState({ showSearchResults: false })
-                        }
-                        results={this.state.searchResults}
-                        onPinView={this.onPinView}
-                    />
-                )}
+                        {this.state.showPinView && (
+                            <PinView
+                                pinId={this.state.pinToView}
+                                onEscape={() =>
+                                    this.setState({ showPinView: false })
+                                }
+                                onGoToPin={this.onGoToPin}
+                            />
+                        )}
+
+                        {this.state.showSearchResults && (
+                            <SearchResultsView
+                                onEscape={() =>
+                                    this.setState({ showSearchResults: false })
+                                }
+                                results={this.state.searchResults}
+                                onPinView={this.onPinView}
+                            />
+                        )}
+                    </div>
+                </div>
 
                 <ScrollingStage
                     pins={this.state.pins}

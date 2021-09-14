@@ -317,9 +317,6 @@ class ScrollingStage extends React.Component {
                     className="stage-canvas"
                     onContextMenu={e => e.preventDefault()}
                 />
-                <p className="coordinate-display">
-                    {this.props.x}, {this.props.y}
-                </p>
                 {this.state.contextMenuVisible && (
                     <ContextMenu
                         x={this.state.contextMenuShowX}

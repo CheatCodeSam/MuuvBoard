@@ -62,7 +62,7 @@ class PinView extends React.Component {
 
     render() {
         return (
-            <div className="overlay">
+            <div className="old-overlay">
                 <div className="pin-view">
                     <div className="exit-button" onClick={this.props.onEscape}>
                         X

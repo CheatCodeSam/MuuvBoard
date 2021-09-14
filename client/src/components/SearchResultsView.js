@@ -3,7 +3,7 @@ import React from "react"
 class SearchResultsView extends React.Component {
     render() {
         return (
-            <div className="overlay" onClick={this.props.onEscape}>
+            <div className="old-overlay" onClick={this.props.onEscape}>
                 <div
                     className="search-resutls"
                     onClick={e => e.stopPropagation()}
