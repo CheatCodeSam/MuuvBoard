@@ -40,20 +40,20 @@ class ScrollingStage extends React.Component {
     componentDidMount() {
         const canvas = this.canvasRef.current
 
+        PIXI.settings.PREFER_ENV = PIXI.ENV.WEBGL2
+
         const app = new PIXI.Application({
             backgroundAlpha: 0,
-            resolution: 1,
+            resolution: 2,
             view: canvas,
-            antialias: true,
+            // antialias: true,
             sharedTicker: true,
+            roundPixels: true,
+            powerPreference: "high-performance",
+            // forceCanvas: true,
         })
 
         app.renderer.resize(this.props.width, this.props.height)
-
-        const isSafari = window.safari !== undefined
-        if (isSafari) {
-            PIXI.settings.PREFER_ENV = PIXI.ENV.WEBGL
-        }
 
         app.stage.interactive = true
         app.stage.hitArea = app.renderer.screen
@@ -62,7 +62,7 @@ class ScrollingStage extends React.Component {
 
         this.app = app
 
-        PIXI.Ticker.shared.maxFPS = 60
+        PIXI.Ticker.shared.maxFPS = 30
 
         this.initializeBoard(this.app)
     }
