@@ -179,6 +179,10 @@ class CorkBoard extends React.Component {
             PinEditorY: coords.y,
         })
 
+    // Option ideas:
+    // * Combine Pins
+    // * Mass tag
+    // * Reset size
     contextMenuOptions = _ => {
         const returnValue = []
 
