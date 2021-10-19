@@ -58,23 +58,6 @@ class Pin extends DraggableContainer {
         this.selectionBorder.endFill()
         this.selectionBorder.visible = false
 
-        // this.number_of_images_container = new PIXI.Graphics()
-        // this.number_of_images_container.beginFill(0x0, 0.8)
-        // this.number_of_images_container.drawRoundedRect(91, 10, 27, 18, 45)
-        // this.number_of_images_container.endFill()
-
-        // const style = new PIXI.TextStyle({
-        //     fontFamily: "Arial",
-        //     fontSize: 10,
-        //     fill: 0xffffff, // gradient
-        // })
-        // this.number_of_images_number = new PIXI.Text(
-        //     this.number_of_images.toString(),
-        //     style
-        // )
-        // this.number_of_images_number.x = 101
-        // this.number_of_images_number.y = 14
-
         // if (this.number_of_images <= 1) {
         //     this.number_of_images_container.visible = false
         //     this.number_of_images_number.visible = false
@@ -82,12 +65,18 @@ class Pin extends DraggableContainer {
 
         this.number_of_images_container = new PinIndex(
             this.number_of_images,
-            "",
-            ""
+            i => {
+                this.image.texture = PIXI.Texture.from(
+                    this.data.images[i].thumbnail
+                )
+            }
         )
 
         this.number_of_images_container.x = 91
         this.number_of_images_container.y = 10
+
+        this.mouseover = this._mouseOver
+        this.mouseout = this._mouseOut
 
         this.addChild(this.dropShadow)
         this.addChild(this.selectionBorder)
@@ -105,6 +94,14 @@ class Pin extends DraggableContainer {
     set selected(value) {
         this._isSelected = value
         this.drawSelection()
+    }
+
+    _mouseOver = () => {
+        this.number_of_images_container.interactive = true
+    }
+
+    _mouseOut = () => {
+        this.number_of_images_container.interactive = false
     }
 
     drawSelection = () => {
