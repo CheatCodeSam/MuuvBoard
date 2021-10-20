@@ -85,6 +85,8 @@ class ScrollingStage extends React.Component {
             .pinch()
             .mouseEdges({ distance: 20, speed: 12, allowButtons: true })
 
+        viewport.plugins.get("mouse-edges").pause()
+
         viewport.on("moved", viewport => {
             this.hideContextMenu()
 
@@ -92,8 +94,6 @@ class ScrollingStage extends React.Component {
                 dx: this.props.x - -viewport.viewport.left,
                 dy: this.props.y - -viewport.viewport.top,
             }
-            console.log(movement)
-
             if (viewport.type === "mouse-edges") {
                 this.props.onPinMove(
                     movement,
