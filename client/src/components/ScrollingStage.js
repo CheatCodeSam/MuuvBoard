@@ -90,9 +90,12 @@ class ScrollingStage extends React.Component {
         viewport.on("moved", viewport => {
             this.hideContextMenu()
 
+            const x = Math.floor(viewport.viewport.left)
+            const y = Math.floor(viewport.viewport.top)
+
             const movement = {
-                dx: this.props.x - -viewport.viewport.left,
-                dy: this.props.y - -viewport.viewport.top,
+                dx: this.props.x - -x,
+                dy: this.props.y - -y,
             }
             if (viewport.type === "mouse-edges") {
                 this.props.onPinMove(
@@ -102,8 +105,8 @@ class ScrollingStage extends React.Component {
             }
 
             this.props.onStagePan({
-                x: -viewport.viewport.left,
-                y: -viewport.viewport.top,
+                x: -x,
+                y: -y,
             })
         })
 

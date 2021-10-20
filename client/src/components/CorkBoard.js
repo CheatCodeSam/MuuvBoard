@@ -82,7 +82,10 @@ class CorkBoard extends React.Component {
     }
 
     move = coords => {
-        this.setState({ boardX: coords.x, boardY: coords.y })
+        this.setState({
+            boardX: coords.x,
+            boardY: coords.y,
+        })
     }
 
     // ===== PROPS TO PASS =====
