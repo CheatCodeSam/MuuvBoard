@@ -1,5 +1,5 @@
-import React, { useEffect, useState, component, useContext } from "react"
-import { useParams, Link } from "react-router-dom"
+import React, { useEffect, useState, useContext } from "react"
+import { Link } from "react-router-dom"
 
 import axios from "axios"
 import CreateBoard from "./CreateBoard"
@@ -27,7 +27,7 @@ function ListOfBoards(props) {
                 const loadedBoards = response.data
                 setAppState({ loading: false, boards: loadedBoards })
             })
-    }, [setAppState, url])
+    }, [setAppState, url, token])
 
     const loadBoards = () => {
         if (!appState.boards) {

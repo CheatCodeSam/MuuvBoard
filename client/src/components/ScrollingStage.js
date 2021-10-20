@@ -187,26 +187,28 @@ class ScrollingStage extends React.Component {
     // === PINS ===
 
     createNewPin = pinData => {
-        const moveSelectedPins = (e, movement) => {
-            const ids = []
-            this.pins.forEach(pin => {
-                if (pin.selected) {
-                    pin.x += movement.dx
-                    pin.y += movement.dy
-                    ids.push(pin.id)
-                }
-            })
-
-            this.props.onPinMove(movement, ids)
+        const moveSelectedPins = (_, movement) => {
+            this.props.onPinMove(
+                movement,
+                this.getSelectedPins().map(p => p.id)
+            )
         }
 
         const pinMoveEnd = _ => {
             this.props.onPinMoveEnd(this.getSelectedPins().map(p => p.id))
         }
 
+        const selectPin = id => {
+            const pin = this.getPin(id)
+            if (!!!pin.selected) {
+                this.selectPins([pin])
+            }
+        }
+
         const pinContainer = new Pin(pinData)
         pinContainer.on("dragmove", moveSelectedPins)
         pinContainer.on("dragend", pinMoveEnd)
+        pinContainer.on("pointerdown", _ => selectPin(pinData.id))
         pinContainer.on("dblclick", _ => this.props.onPinDblClick(pinData.id))
         pinContainer.x = pinData.x_coordinate
         pinContainer.y = pinData.y_coordinate
@@ -262,22 +264,10 @@ class ScrollingStage extends React.Component {
                     absolutePosition(e.data.global, this.viewport)
                 )
             }
-            if (this.pins.includes(e.target)) {
-                const pin = e.target
-                if (!!!pin.selected) {
-                    this.selectPins([pin])
-                }
-            }
         }
         if (e.data.originalEvent.button === MOUSETWO) {
             if (e.target === this.viewport) {
                 this.selectPins([])
-            }
-            if (this.pins.includes(e.target)) {
-                const pin = e.target
-                if (!!!pin.selected) {
-                    this.selectPins([pin])
-                }
             }
             this.showContextMenu(e.data.global)
         }

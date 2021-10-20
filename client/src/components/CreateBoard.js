@@ -1,6 +1,5 @@
 import React from "react"
 import { Formik } from "formik"
-import axios from "axios"
 
 function CreateBoard(props) {
     return (

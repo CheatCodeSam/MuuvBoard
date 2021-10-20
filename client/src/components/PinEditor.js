@@ -2,10 +2,6 @@ import React from "react"
 import { Formik } from "formik"
 
 class PinEditor extends React.Component {
-    constructor(props) {
-        super(props)
-    }
-
     onSubmit = values => {
         const pin = {
             x_coordinate: this.props.x,

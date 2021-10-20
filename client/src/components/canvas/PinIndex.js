@@ -43,7 +43,7 @@ class PinIndex extends PIXI.Container {
     }
 
     _updateNumberOfImages = () => {
-        if (this.currently_shown_image == 1) {
+        if (this.currently_shown_image === 1) {
             this.number_of_images_number.text = this.number_of_images.toString()
         } else {
             this.number_of_images_number.text =

@@ -46,8 +46,8 @@ class DraggableContainer extends PIXI.Container {
 
     _dragMove = e => {
         if (this._dragging) {
-            // this.x = this.x + e.data.global.x - this._dx;
-            // this.y = this.y + e.data.global.y - this._dy;
+            this.x = this.x + e.data.global.x - this._dx
+            this.y = this.y + e.data.global.y - this._dy
 
             const movement = {
                 dx: e.data.global.x - this._dx,
