@@ -80,10 +80,27 @@ class ScrollingStage extends React.Component {
 
         viewport.sortableChildren = true
 
-        viewport.drag({ mouseButtons: "middle" }).pinch()
+        viewport
+            .drag({ mouseButtons: "middle" })
+            .pinch()
+            .mouseEdges({ distance: 20, speed: 12, allowButtons: true })
 
         viewport.on("moved", viewport => {
             this.hideContextMenu()
+
+            const movement = {
+                dx: this.props.x - -viewport.viewport.left,
+                dy: this.props.y - -viewport.viewport.top,
+            }
+            console.log(movement)
+
+            if (viewport.type === "mouse-edges") {
+                this.props.onPinMove(
+                    movement,
+                    this.getSelectedPins().map(p => p.id)
+                )
+            }
+
             this.props.onStagePan({
                 x: -viewport.viewport.left,
                 y: -viewport.viewport.top,
@@ -195,6 +212,7 @@ class ScrollingStage extends React.Component {
         }
 
         const pinMoveEnd = _ => {
+            this.viewport.plugins.get("mouse-edges").pause()
             this.props.onPinMoveEnd(this.getSelectedPins().map(p => p.id))
         }
 
@@ -205,7 +223,12 @@ class ScrollingStage extends React.Component {
             }
         }
 
+        const beginDrag = _ => {
+            this.viewport.plugins.get("mouse-edges").resume()
+        }
+
         const pinContainer = new Pin(pinData)
+        pinContainer.on("dragstart", beginDrag)
         pinContainer.on("dragmove", moveSelectedPins)
         pinContainer.on("dragend", pinMoveEnd)
         pinContainer.on("pointerdown", _ => selectPin(pinData.id))
