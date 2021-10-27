@@ -67,6 +67,7 @@ class PinRequest {
             x_coordinate: pin.x_coordinate,
             y_coordinate: pin.y_coordinate,
             board: this.id,
+            tags: pin.tags,
         }
 
         return axios.post(this.url, pinData, {
